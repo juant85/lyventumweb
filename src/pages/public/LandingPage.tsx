@@ -406,19 +406,19 @@ const LandingPage: React.FC = () => {
           : 'bg-transparent border-b border-transparent'
           } safe-area-top`}
       >
-        <div className="px-4 sm:px-6 py-4 flex items-center justify-between max-w-7xl mx-auto">
-          <div className="flex items-center gap-3">
+        <div className="px-5 sm:px-6 py-3.5 flex items-center justify-between gap-3 max-w-7xl mx-auto w-full">
+          <div className="flex items-center gap-2 sm:gap-2.5 flex-shrink min-w-0">
             {/* Hamburger Menu Trigger */}
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="p-1 text-white focus:outline-none"
+              className="p-1.5 -ml-1.5 sm:ml-0 text-white focus:outline-none flex-shrink-0"
               aria-label="Open menu"
             >
               <Menu className="w-6 h-6" />
             </button>
-            <div className="flex items-center gap-2.5" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-              <LyVentumLogo variant="gradient" className="h-9 w-auto" />
-              <span className="text-base font-bold uppercase tracking-wider text-white font-montserrat">
+            <div className="flex items-center gap-2 min-w-0" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+              <LyVentumLogo variant="gradient" className="h-7 sm:h-9 w-auto flex-shrink-0" />
+              <span className="hidden xs:inline text-sm sm:text-base font-bold uppercase tracking-wider text-white font-montserrat truncate">
                 {APP_NAME}
               </span>
             </div>
@@ -427,7 +427,7 @@ const LandingPage: React.FC = () => {
             onClick={() => navigate(AppRoute.ClientPortal)}
             variant="primary"
             size="sm"
-            className="text-sm px-4 py-2 shadow-lg shadow-primary-500/20"
+            className="text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 shadow-lg shadow-primary-500/20 flex-shrink-0"
           >
             {t(localeKeys.eventAccess)}
           </Button>
@@ -528,7 +528,7 @@ const LandingPage: React.FC = () => {
       <section
         id="hero"
         aria-label="Sección principal con descripción del producto LyVenTum"
-        className="relative min-h-[100vh] md:min-h-[90vh] flex items-center pt-20 md:pt-24 pb-12 px-4 overflow-hidden safe-area-top safe-area-bottom"
+        className="relative min-h-[100vh] md:min-h-[90vh] flex items-center pt-20 md:pt-24 pb-12 px-5 sm:px-6 md:px-8 overflow-hidden safe-area-top safe-area-bottom"
       >
         {/* Anchor for Skip Link */}
         <div id="main-content" className="sr-only"></div>
@@ -619,7 +619,7 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* FEATURES SECTION */}
-      <section id="features" className="relative pt-32 md:pt-24 pb-24 md:pb-32 px-4 overflow-hidden" >
+      <section id="features" className="relative pt-32 md:pt-24 pb-24 md:pb-32 px-5 sm:px-6 md:px-8 overflow-hidden" >
         {/* Gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary-600/5 via-transparent to-green-600/5" />
         <div className="max-w-7xl mx-auto">
@@ -957,7 +957,7 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* PRICING SECTION */}
-      <section id="pricing" className="relative py-24 md:py-32 px-4 overflow-hidden" >
+      <section id="pricing" className="relative py-24 md:py-32 px-5 sm:px-6 md:px-8 overflow-hidden" >
         {/* Gradient background - Optimized */}
         <div className="absolute inset-0 bg-gradient-to-br from-purple-600/10 via-transparent to-primary-600/10" />
         <div className="max-w-7xl mx-auto">
@@ -1054,12 +1054,12 @@ const LandingPage: React.FC = () => {
                   </div>
 
                   {/* Footer Area - Merged with Card */}
-                  <div className="p-8 mt-auto pt-0 flex justify-center pb-10">
+                  <div className="p-6 sm:p-8 mt-auto pt-0 flex justify-center pb-8 sm:pb-10">
                     <Button
                       onClick={() => setIsContactModalOpen(true)}
                       variant={plan.isPopular ? 'primary' : 'secondary'}
                       size="lg"
-                      className={`w-auto px-12 py-4 text-sm font-bold tracking-wide transition-all duration-300 rounded-full min-w-[220px]
+                      className={`w-full sm:w-auto px-8 sm:px-10 md:px-12 py-3 sm:py-4 text-sm font-bold tracking-wide transition-all duration-300 rounded-full
                         ${plan.isPopular
                           ? 'shadow-xl shadow-primary-500/30 hover:shadow-primary-500/50 hover:-translate-y-1'
                           : 'bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-slate-500 text-white shadow-md'
