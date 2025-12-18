@@ -58,7 +58,7 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer, index }) => {
     >
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full p-4 md:p-6 rounded-2xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-slate-700/50 hover:border-primary-500/50 transition-all duration-300 text-left"
+        className="w-full p-5 md:p-6 rounded-2xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-slate-700/50 hover:border-primary-500/50 transition-all duration-300 text-left"
       >
         <div className="flex justify-between items-center gap-3 md:gap-4">
           <h3 className="text-base md:text-lg font-semibold text-white group-hover:text-primary-100 transition-colors">
@@ -406,7 +406,7 @@ const LandingPage: React.FC = () => {
           : 'bg-transparent border-b border-transparent'
           } safe-area-top`}
       >
-        <div className="px-5 sm:px-6 py-3.5 flex items-center justify-between gap-3 max-w-7xl mx-auto w-full">
+        <div className="px-5 sm:px-6 py-3.5 flex items-center justify-between gap-4 sm:gap-6 max-w-7xl mx-auto w-full">
           <div className="flex items-center gap-2 sm:gap-2.5 flex-shrink min-w-0">
             {/* Hamburger Menu Trigger */}
             <button
@@ -424,7 +424,7 @@ const LandingPage: React.FC = () => {
             onClick={() => navigate(AppRoute.ClientPortal)}
             variant="primary"
             size="sm"
-            className="text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 shadow-lg shadow-primary-500/20 flex-shrink-0 mr-2 sm:mr-3"
+            className="text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 shadow-lg shadow-primary-500/20 flex-shrink-0"
           >
             {t(localeKeys.eventAccess)}
           </Button>
@@ -610,7 +610,7 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* FEATURES SECTION */}
-      <section id="features" className="relative pt-24 md:pt-32 pb-24 md:pb-32 px-5 sm:px-6 md:px-8 overflow-hidden" >
+      <section id="features" className="relative pt-16 md:pt-24 pb-24 md:pb-32 px-5 sm:px-6 md:px-8 overflow-hidden" >
         {/* Gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary-600/5 via-transparent to-green-600/5" />
         <div className="max-w-7xl mx-auto">
@@ -1087,7 +1087,7 @@ const LandingPage: React.FC = () => {
             </p>
           </motion.div>
 
-          <div className="space-y-5 max-w-4xl mx-auto">
+          <div className="space-y-5 max-w-3xl mx-auto px-2">
             {[
               {
                 question: "How does QR code scanning work?",
