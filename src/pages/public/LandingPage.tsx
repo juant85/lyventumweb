@@ -418,7 +418,7 @@ const LandingPage: React.FC = () => {
             </button>
             <div className="flex items-center gap-2 min-w-0" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
               <LyVentumLogo variant="gradient" className="h-7 sm:h-9 w-auto flex-shrink-0" />
-              <span className="hidden xs:inline text-sm sm:text-base font-bold uppercase tracking-wider text-white font-montserrat truncate">
+              <span className="text-xs sm:text-sm md:text-base font-bold uppercase tracking-wider text-white font-montserrat truncate">
                 {APP_NAME}
               </span>
             </div>
@@ -427,7 +427,7 @@ const LandingPage: React.FC = () => {
             onClick={() => navigate(AppRoute.ClientPortal)}
             variant="primary"
             size="sm"
-            className="text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 shadow-lg shadow-primary-500/20 flex-shrink-0"
+            className="text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 shadow-lg shadow-primary-500/20 flex-shrink-0 mr-1"
           >
             {t(localeKeys.eventAccess)}
           </Button>
@@ -559,12 +559,12 @@ const LandingPage: React.FC = () => {
               <p className="text-lg md:text-xl text-slate-400 mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed">
                 {t(localeKeys.landingSubtitle)}
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center">
+              <div className="flex justify-center w-full">
                 <Button
                   onClick={() => navigate(AppRoute.ClientPortal)}
                   variant="primary"
                   size="lg"
-                  className="text-base md:text-lg px-8 py-3 my-4 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/40 transition-all flex items-center justify-center font-bold rounded-full w-full sm:w-auto"
+                  className="text-sm md:text-base px-6 py-2.5 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/40 transition-all flex items-center justify-center font-bold rounded-full w-auto"
                 >
                   {/* Changed to 'Event Access' pointing to Client Portal (Company Events) */}
                   {t(localeKeys.eventAccess)}
@@ -595,7 +595,7 @@ const LandingPage: React.FC = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
 
               {/* Floating Badge - Centered with proper clearance */}
-              <div className="absolute -bottom-8 md:-bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md p-3 md:p-4 rounded-full border border-slate-800/50 flex items-center gap-4 md:gap-6 shadow-xl max-w-[85%] md:max-w-[90%] w-auto z-20">
+              <div className="absolute -bottom-10 md:-bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md p-3 md:p-4 rounded-full border border-slate-800/50 flex items-center gap-4 md:gap-6 shadow-xl max-w-[85%] md:max-w-[90%] w-auto z-20">
                 <div className="flex -space-x-3 md:-space-x-4">
                   {[1, 2, 3].map(i => (
                     <div key={i} className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-slate-900 bg-slate-800 flex items-center justify-center text-xs overflow-hidden">
@@ -611,7 +611,7 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* FEATURES SECTION */}
-      <section id="features" className="relative pt-32 md:pt-24 pb-24 md:pb-32 px-5 sm:px-6 md:px-8 overflow-hidden" >
+      <section id="features" className="relative pt-36 md:pt-24 pb-24 md:pb-32 px-5 sm:px-6 md:px-8 overflow-hidden" >
         {/* Gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary-600/5 via-transparent to-green-600/5" />
         <div className="max-w-7xl mx-auto">
@@ -1088,7 +1088,7 @@ const LandingPage: React.FC = () => {
             </p>
           </motion.div>
 
-          <div className="space-y-4">
+          <div className="space-y-5 max-w-4xl mx-auto">
             {[
               {
                 question: "How does QR code scanning work?",
@@ -1192,7 +1192,7 @@ const LandingPage: React.FC = () => {
                 onClick={() => setIsContactModalOpen(true)}
                 variant="primary"
                 size="lg"
-                className="w-full sm:w-auto text-lg px-10 py-4 group shadow-2xl shadow-primary-500/50 hover:shadow-primary-500/70 transition-all"
+                className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-10 py-3 sm:py-4 group shadow-2xl shadow-primary-500/50 hover:shadow-primary-500/70 transition-all"
               >
                 Request Information
                 <ArrowRightIcon className="w-6 h-6 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -1202,7 +1202,7 @@ const LandingPage: React.FC = () => {
                 onClick={() => setIsContactModalOpen(true)}
                 variant="neutral"
                 size="lg"
-                className="w-full sm:w-auto text-lg px-10 py-4"
+                className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-10 py-3 sm:py-4"
               >
                 Schedule a Demo
               </Button>
