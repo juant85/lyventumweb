@@ -406,7 +406,7 @@ const LandingPage: React.FC = () => {
           : 'bg-transparent border-b border-transparent'
           } safe-area-top`}
       >
-        <div className="px-4 sm:px-8 max-w-7xl mx-auto w-full flex items-center justify-between py-4">
+        <div className="px-6 sm:px-10 max-w-7xl mx-auto w-full flex items-center justify-between py-4">
           <div className="flex items-center gap-3 md:gap-4 flex-shrink-0">
             {/* Hamburger Menu Trigger */}
             <button
@@ -1087,7 +1087,7 @@ const LandingPage: React.FC = () => {
             </p>
           </motion.div>
 
-          <div className="space-y-6 max-w-3xl mx-auto px-4 md:px-6">
+          <div className="space-y-6 max-w-3xl mx-auto px-6 md:px-8">
             {[
               {
                 question: "How does QR code scanning work?",
