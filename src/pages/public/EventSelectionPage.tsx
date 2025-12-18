@@ -85,29 +85,35 @@ const EventSelectionPage: React.FC = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.1, duration: 0.5 }}
-                        className="bg-slate-800/60 rounded-xl overflow-hidden shadow-lg border border-slate-700 transition-all duration-300 hover:shadow-primary-500/20 hover:border-primary-500/50"
+                        className="bg-slate-900/50 backdrop-blur-md rounded-2xl overflow-hidden border border-white/10 transition-all duration-300 hover:border-primary-500/50 group"
                     >
-                        <div className="flex flex-col sm:flex-row">
-                            {/* Left side: Album Art */}
-                            <div className="w-full sm:w-40 h-40 sm:h-auto bg-slate-700 flex items-center justify-center flex-shrink-0">
+                        <div className="p-8 flex flex-col items-center text-center">
+                            {/* Album Art / Logo */}
+                            <div className="w-32 h-32 bg-slate-800/50 rounded-xl flex items-center justify-center mb-6 border border-white/5">
                                 {event.eventLogoUrl ? (
-                                    <img src={event.eventLogoUrl} alt={`${event.name} Logo`} className="w-full h-full object-cover" />
+                                    <img src={event.eventLogoUrl} alt={`${event.name} Logo`} className="w-full h-full object-cover rounded-xl" />
                                 ) : (
-                                    <BuildingStorefrontIcon className="w-16 h-16 text-slate-500" />
+                                    <BuildingStorefrontIcon className="w-12 h-12 text-slate-600" />
                                 )}
                             </div>
-                            {/* Right side: Details */}
-                            <div className="flex flex-col justify-center p-4 sm:p-6 flex-grow">
-                                <h3 className="text-2xl font-bold text-slate-100 font-montserrat">{event.name}</h3>
-                                <p className="font-semibold text-slate-300 mt-1">{event.location || 'Location TBD'}</p>
-                                <p className="text-sm text-slate-400 mt-1">{formatDateRange(event.startDate, event.endDate)}</p>
+
+                            {/* Details */}
+                            <h3 className="text-2xl font-bold text-slate-100 font-montserrat tracking-tight mb-2">{event.name}</h3>
+                            <p className="font-medium text-slate-300 mb-1">{event.location || 'Location TBD'}</p>
+                            <p className="text-sm text-slate-500 mb-8">{formatDateRange(event.startDate, event.endDate)}</p>
+
+                            {/* Action Buttons */}
+                            <div className="w-full grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <Button className="w-full justify-center" onClick={() => handleLoginClick(event.id, AppRoute.Login)} variant="primary" leftIcon={<LoginIcon className="w-5 h-5" />}>
+                                    {t(localeKeys.organizerLogin)}
+                                </Button>
+                                <Button className="w-full justify-center" onClick={() => handleLoginClick(event.id, AppRoute.AttendeePortalLogin)} variant="secondary" leftIcon={<UserIcon className="w-5 h-5" />}>
+                                    {t(localeKeys.attendeePortalAccess)}
+                                </Button>
+                                <Button className="w-full justify-center" onClick={() => handleLoginClick(event.id, AppRoute.BoothLogin)} variant="neutral" leftIcon={<QrCodeIcon className="w-5 h-5" />}>
+                                    {t(localeKeys.vendorBoothAccess)}
+                                </Button>
                             </div>
-                        </div>
-                        {/* Bottom part: Action Buttons */}
-                        <div className="bg-slate-900/50 p-4 border-t border-slate-700 flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3">
-                            <Button className="w-full sm:w-auto justify-center" onClick={() => handleLoginClick(event.id, AppRoute.Login)} variant="primary" leftIcon={<LoginIcon className="w-5 h-5" />}>{t(localeKeys.organizerLogin)}</Button>
-                            <Button className="w-full sm:w-auto justify-center" onClick={() => handleLoginClick(event.id, AppRoute.AttendeePortalLogin)} variant="secondary" leftIcon={<UserIcon className="w-5 h-5" />}>{t(localeKeys.attendeePortalAccess)}</Button>
-                            <Button className="w-full sm:w-auto justify-center" onClick={() => handleLoginClick(event.id, AppRoute.BoothLogin)} variant="neutral" leftIcon={<QrCodeIcon className="w-5 h-5" />}>{t(localeKeys.vendorBoothAccess)}</Button>
                         </div>
                     </motion.div>
                 ))}

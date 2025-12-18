@@ -58,14 +58,14 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer, index }) => {
     >
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full p-5 md:p-8 rounded-2xl bg-slate-900/50 backdrop-blur-md border border-white/10 hover:border-primary-500/50 transition-all duration-300 text-left group"
+        className="w-full h-full p-6 md:p-8 rounded-3xl bg-slate-900/50 backdrop-blur-md border border-white/10 hover:border-primary-500/50 transition-all duration-300 text-center group flex flex-col items-center justify-center"
       >
-        <div className="flex justify-between items-center gap-3 md:gap-4">
-          <h3 className="text-base md:text-lg font-semibold text-white group-hover:text-primary-100 transition-colors tracking-tight">
+        <div className="flex flex-col items-center gap-4">
+          <h3 className="text-lg md:text-xl font-bold text-white group-hover:text-primary-100 transition-colors tracking-tight">
             {question}
           </h3>
           <ChevronDown
-            className={`w-5 h-5 flex-shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180 text-primary-400' : 'text-white'
+            className={`w-6 h-6 flex-shrink-0 transition-transform duration-300 ${isOpen ? 'rotate-180 text-primary-400' : 'text-slate-500'
               }`}
           />
         </div>
@@ -406,7 +406,7 @@ const LandingPage: React.FC = () => {
           : 'bg-transparent border-b border-transparent'
           } safe-area-top`}
       >
-        <div className="px-6 sm:px-10 max-w-7xl mx-auto w-full flex items-center justify-between py-4">
+        <div className="px-6 md:px-8 max-w-5xl mx-auto w-full flex items-center justify-between py-4">
           <div className="flex items-center gap-3 md:gap-4 flex-shrink-0">
             {/* Hamburger Menu Trigger */}
             <button
@@ -1087,7 +1087,7 @@ const LandingPage: React.FC = () => {
             </p>
           </motion.div>
 
-          <div className="space-y-6 max-w-3xl mx-auto px-6 md:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto px-6">
             {[
               {
                 question: "How does QR code scanning work?",
