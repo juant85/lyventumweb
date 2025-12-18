@@ -9,7 +9,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { Icon, IconName } from './ui';
 
 const SidebarSkeleton: React.FC<{ isOpen: boolean }> = ({ isOpen }) => (
-  <aside className={`fixed top-0 left-0 z-50 w-64 h-screen bg-slate-950 border-r border-white/5 transition-transform duration-300 ease-out ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
+  <aside className={`fixed top-0 left-0 z-50 w-64 h-screen bg-slate-950 border-r border-white/5 transition-transform duration-300 ease-out ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
     <div className="h-full flex flex-col p-4">
       {/* Header Skeleton */}
       <div className="flex items-center gap-3 px-2 mb-8 mt-2">
@@ -104,7 +104,7 @@ const Sidebar: React.FC<{ isOpen: boolean; currentUser: User | null }> = ({ isOp
         bg-[#0B1120] border-r border-white/5
         shadow-2xl shadow-black/50
         transition-all duration-300 ease-out
-        ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0
+        ${isOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0
       `}
     >
       <div className="h-full flex flex-col">

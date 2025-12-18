@@ -256,7 +256,7 @@ const AttendeeDashboardPage = () => {
         if (isBreak) SessionIcon = CogIcon; // Just a placeholder or maybe Coffee icon if we had it
 
         return (
-            <div key={reg.id} className="relative flex gap-4">
+            <div key={reg.id} className="relative flex gap-2 sm:gap-4">
                 {/* Timeline Line */}
                 <div className="flex flex-col items-center">
                     <div className={`w-3 h-3 rounded-full border-2 z-10 ${isNow ? 'bg-primary-500 border-primary-500 animate-pulse' : isPast ? 'bg-slate-300 border-slate-300' : 'bg-white border-primary-500'}`}></div>
@@ -271,26 +271,28 @@ const AttendeeDashboardPage = () => {
                     <div className={`p-4 rounded-xl border ${isNow ? 'bg-white/90 border-primary-200 shadow-md ring-1 ring-primary-100' : 'bg-white/60 border-slate-100 shadow-sm'} backdrop-blur-sm transition-all`}>
                         <div className="flex justify-between items-start">
                             <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-1">
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-1">
                                     <h3 className="font-bold text-slate-800 dark:text-slate-100 line-clamp-2">{reg.sessionDetails?.name}</h3>
                                     {/* Session Type Badge */}
-                                    {isPresentation && (
-                                        <span className="px-2 py-0.5 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full flex items-center gap-1">
-                                            <PresentationChartLineIcon className="w-3 h-3" />
-                                            CHARLA
-                                        </span>
-                                    )}
-                                    {isNetworking && (
-                                        <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs font-semibold rounded-full flex items-center gap-1">
-                                            <UsersGroupIcon className="w-3 h-3" />
-                                            NETWORKING
-                                        </span>
-                                    )}
-                                    {isBreak && (
-                                        <span className="px-2 py-0.5 bg-slate-100 text-slate-700 text-xs font-semibold rounded-full">
-                                            PAUSA
-                                        </span>
-                                    )}
+                                    <div className="flex flex-wrap gap-2">
+                                        {isPresentation && (
+                                            <span className="px-2 py-0.5 bg-purple-100 text-purple-700 text-xs font-semibold rounded-full flex items-center gap-1 w-fit">
+                                                <PresentationChartLineIcon className="w-3 h-3" />
+                                                CHARLA
+                                            </span>
+                                        )}
+                                        {isNetworking && (
+                                            <span className="px-2 py-0.5 bg-green-100 text-green-700 text-xs font-semibold rounded-full flex items-center gap-1 w-fit">
+                                                <UsersGroupIcon className="w-3 h-3" />
+                                                NETWORKING
+                                            </span>
+                                        )}
+                                        {isBreak && (
+                                            <span className="px-2 py-0.5 bg-slate-100 text-slate-700 text-xs font-semibold rounded-full w-fit">
+                                                PAUSA
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>

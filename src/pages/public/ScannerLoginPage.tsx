@@ -147,8 +147,9 @@ const ScannerLoginPage: React.FC = () => {
               required
               value={accessCode}
               onChange={(e) => setAccessCode(e.target.value.toUpperCase())}
-              placeholder="e.g., INNO-A4B8 o SESSION-A2B4"
+              placeholder="e.g., INNO-A4B8"
               wrapperClassName="!mb-0"
+              className="text-base sm:text-sm"
               disabled={isLoading}
             />
             <Button type="submit" variant="secondary" className="w-full !py-3" disabled={isLoading}>

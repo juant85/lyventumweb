@@ -104,10 +104,10 @@ const EventSelectionPage: React.FC = () => {
                             </div>
                         </div>
                         {/* Bottom part: Action Buttons */}
-                        <div className="bg-slate-900/50 p-4 border-t border-slate-700 flex flex-col sm:flex-row items-center justify-end gap-3">
-                            <Button onClick={() => handleLoginClick(event.id, AppRoute.Login)} variant="primary" leftIcon={<LoginIcon className="w-5 h-5" />}>{t(localeKeys.organizerLogin)}</Button>
-                            <Button onClick={() => handleLoginClick(event.id, AppRoute.AttendeePortalLogin)} variant="secondary" leftIcon={<UserIcon className="w-5 h-5" />}>{t(localeKeys.attendeePortalAccess)}</Button>
-                            <Button onClick={() => handleLoginClick(event.id, AppRoute.BoothLogin)} variant="neutral" leftIcon={<QrCodeIcon className="w-5 h-5" />}>{t(localeKeys.vendorBoothAccess)}</Button>
+                        <div className="bg-slate-900/50 p-4 border-t border-slate-700 flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3">
+                            <Button className="w-full sm:w-auto justify-center" onClick={() => handleLoginClick(event.id, AppRoute.Login)} variant="primary" leftIcon={<LoginIcon className="w-5 h-5" />}>{t(localeKeys.organizerLogin)}</Button>
+                            <Button className="w-full sm:w-auto justify-center" onClick={() => handleLoginClick(event.id, AppRoute.AttendeePortalLogin)} variant="secondary" leftIcon={<UserIcon className="w-5 h-5" />}>{t(localeKeys.attendeePortalAccess)}</Button>
+                            <Button className="w-full sm:w-auto justify-center" onClick={() => handleLoginClick(event.id, AppRoute.BoothLogin)} variant="neutral" leftIcon={<QrCodeIcon className="w-5 h-5" />}>{t(localeKeys.vendorBoothAccess)}</Button>
                         </div>
                     </motion.div>
                 ))}
@@ -118,22 +118,22 @@ const EventSelectionPage: React.FC = () => {
     return (
         <div className="min-h-screen bg-slate-950 flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8" style={{ backgroundImage: `radial-gradient(circle at 1px 1px, rgba(100, 116, 139, 0.2) 1px, transparent 0)`, backgroundSize: '20px 20px' }}>
             <div className="w-full max-w-4xl mx-auto flex-grow flex flex-col justify-center">
-                <header className="text-center mb-12">
-                    <Link to={AppRoute.ClientPortal} className="text-sm text-slate-400 hover:text-white inline-flex items-center mb-8 transition-colors">
+                <header className="text-center mb-8 sm:mb-12 px-2">
+                    <Link to={AppRoute.ClientPortal} className="text-sm text-slate-400 hover:text-white inline-flex items-center mb-6 transition-colors">
                         {t(localeKeys.backToCompanyList)}
                     </Link>
                     {company?.logo_url && (
                         <motion.img
                             src={company.logo_url}
                             alt={`${company.name} Logo`}
-                            className="h-24 w-auto mx-auto mb-4 rounded-md object-contain"
+                            className="h-20 sm:h-24 w-auto mx-auto mb-4 rounded-md object-contain"
                             initial={{ opacity: 0, y: -20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5 }}
                         />
                     )}
                     <motion.h1
-                        className="text-5xl font-bold text-slate-100 font-montserrat mt-2"
+                        className="text-3xl sm:text-5xl font-bold text-slate-100 font-montserrat mt-2 px-2"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.1 }}
@@ -141,7 +141,7 @@ const EventSelectionPage: React.FC = () => {
                         {t(localeKeys.companyEventsTitle, { companyName: company?.name || '...' })}
                     </motion.h1>
                     <motion.p
-                        className="text-lg text-slate-400 mt-4"
+                        className="text-base sm:text-lg text-slate-400 mt-4 px-2"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.2 }}

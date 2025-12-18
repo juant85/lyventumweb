@@ -111,7 +111,8 @@ const LandingPage: React.FC = () => {
   const { currentUser, loadingAuth } = useAuth();
   const { t } = useLanguage();
   const { scrollY } = useScroll();
-  const [showMobileHeader, setShowMobileHeader] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
 
   // Show mobile header on scroll - Optimized threshold
@@ -120,7 +121,8 @@ const LandingPage: React.FC = () => {
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          setShowMobileHeader(window.scrollY > 150);
+          setIsScrolled(window.scrollY > 20);
+          setShowBackToTop(window.scrollY > 300);
 
           // Calculate scroll progress
           const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -387,37 +389,35 @@ const LandingPage: React.FC = () => {
         Skip to main content
       </a>
 
-      {/* STICKY MOBILE HEADER - Only visible on mobile/tablet */}
-      <AnimatePresence>
-        {showMobileHeader && (
-          <motion.header
-            role="banner"
-            aria-label="Navegación principal móvil"
-            initial={{ y: -100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -100, opacity: 0 }}
-            transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-            className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-xl border-b border-slate-800/50 shadow-xl safe-area-top"
+      {/* STICKY MOBILE HEADER - Always visible on mobile/tablet (Variant based on scroll) */}
+      <motion.header
+        role="banner"
+        aria-label="Navegación principal móvil"
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className={`lg:hidden fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+          ? 'bg-slate-900/95 backdrop-blur-xl border-b border-slate-800/50 shadow-xl'
+          : 'bg-transparent border-b border-transparent'
+          } safe-area-top`}
+      >
+        <div className="px-4 py-3 flex items-center justify-between max-w-7xl mx-auto">
+          <div className="flex items-center gap-2">
+            <LyVentumLogo variant="gradient" className="h-8 w-auto" />
+            <span className="text-sm font-bold uppercase tracking-wider text-white font-montserrat">
+              {APP_NAME}
+            </span>
+          </div>
+          <Button
+            onClick={() => navigate(AppRoute.ClientPortal)}
+            variant="primary"
+            size="sm"
+            className="text-sm px-4 py-2 shadow-lg shadow-primary-500/20 ml-4"
           >
-            <div className="px-4 py-3 flex items-center justify-between max-w-7xl mx-auto">
-              <div className="flex items-center gap-2">
-                <LyVentumLogo variant="gradient" className="h-8 w-auto" />
-                <span className="text-sm font-bold uppercase tracking-wider text-white font-montserrat">
-                  {APP_NAME}
-                </span>
-              </div>
-              <Button
-                onClick={() => navigate(AppRoute.ClientPortal)}
-                variant="primary"
-                size="sm"
-                className="text-sm px-4 py-2 shadow-lg shadow-primary-500/20 ml-4"
-              >
-                {t(localeKeys.eventAccess)}
-              </Button>
-            </div>
-          </motion.header>
-        )}
-      </AnimatePresence>
+            {t(localeKeys.eventAccess)}
+          </Button>
+        </div>
+      </motion.header>
 
       {/* HERO SECTION */}
       <section
@@ -1251,7 +1251,7 @@ const LandingPage: React.FC = () => {
       </footer >
       {/* Back to Top Button */}
       <AnimatePresence>
-        {showMobileHeader && (
+        {showBackToTop && (
           <motion.button
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}

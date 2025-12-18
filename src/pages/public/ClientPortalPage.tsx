@@ -134,7 +134,7 @@ const ClientPortalPage: React.FC = () => {
                     >
                         <Link to={AppRoute.EventSelection.replace(':companyId', company.id)} className="block h-full group">
                             <BackgroundGradient containerClassName="rounded-xl h-full">
-                                <div className="bg-slate-900/80 hover:bg-slate-800/90 transition-colors duration-300 backdrop-blur-sm rounded-[11px] p-6 flex flex-col items-center justify-between text-center h-64">
+                                <div className="bg-slate-900/80 hover:bg-slate-800/90 transition-colors duration-300 backdrop-blur-sm rounded-[11px] p-6 flex flex-col items-center justify-between text-center min-h-[16rem] h-auto">
                                     <div className="flex-grow flex items-center justify-center">
                                         {company.logo_url ? (
                                             <img src={company.logo_url} alt={`${company.name} logo`} className="h-24 w-auto max-w-[12rem] object-contain" />
@@ -143,7 +143,7 @@ const ClientPortalPage: React.FC = () => {
                                         )}
                                     </div>
                                     <div className="w-full pt-4 border-t border-slate-700/50">
-                                        <h3 className="text-xl font-bold text-slate-100 font-montserrat truncate">{company.name}</h3>
+                                        <h3 className="text-xl font-bold text-slate-100 font-montserrat truncate w-full">{company.name}</h3>
                                         <div className="flex items-center justify-center mt-2 text-sm font-semibold text-primary-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                             View Events <ArrowRightIcon className="w-4 h-4 ml-1.5 transform group-hover:translate-x-1 transition-transform" />
                                         </div>
@@ -167,7 +167,7 @@ const ClientPortalPage: React.FC = () => {
                             LyVenTum
                         </p>
                     </Link>
-                    <h1 className="text-4xl sm:text-5xl font-bold text-slate-100 font-montserrat mt-4">{t(localeKeys.clientPortalTitle)}</h1>
+                    <h1 className="text-3xl sm:text-5xl font-bold text-slate-100 font-montserrat mt-4">{t(localeKeys.clientPortalTitle)}</h1>
                     <p className="text-lg text-slate-400 mt-2 max-w-2xl mx-auto">{t(localeKeys.clientPortalSubtitle)}</p>
                 </header>
 

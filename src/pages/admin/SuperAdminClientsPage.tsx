@@ -52,11 +52,11 @@ const SuperAdminClientsPage: React.FC = () => {
             }
         }
     };
-    
+
     const filteredCompanies = useMemo(() => {
         if (!searchTerm) return companies;
         const lowercasedFilter = searchTerm.toLowerCase();
-        return companies.filter(c => 
+        return companies.filter(c =>
             c.name.toLowerCase().includes(lowercasedFilter) ||
             (c.country || '').toLowerCase().includes(lowercasedFilter)
         );
@@ -71,13 +71,13 @@ const SuperAdminClientsPage: React.FC = () => {
                 <div className="flex flex-wrap gap-4 justify-between items-center mb-4">
                     <Input wrapperClassName="!mb-0 flex-grow" placeholder="Search by name or country..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} disabled={loading} />
                     <Link to={AppRoute.SuperAdminClientDetail.replace(':companyId', 'new')}>
-                        <Button leftIcon={<PlusCircleIcon className="w-5 h-5"/>} disabled={loading}>
+                        <Button leftIcon={<PlusCircleIcon className="w-5 h-5" />} disabled={loading}>
                             Add New Company
                         </Button>
                     </Link>
                 </div>
 
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto -mx-6 sm:mx-0">
                     <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
                         <thead className="bg-slate-50 dark:bg-slate-700/50">
                             <tr>
@@ -87,7 +87,7 @@ const SuperAdminClientsPage: React.FC = () => {
                                 <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
-                         <tbody className="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
+                        <tbody className="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
                             {loading ? (
                                 <tr><td colSpan={4} className="p-4 text-center text-slate-500">Loading companies...</td></tr>
                             ) : filteredCompanies.length === 0 ? (
@@ -96,7 +96,7 @@ const SuperAdminClientsPage: React.FC = () => {
                                 filteredCompanies.map(company => (
                                     <tr key={company.id}>
                                         <td className="px-4 py-3 text-sm font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-3">
-                                            {company.logo_url ? <img src={company.logo_url} alt="logo" className="h-8 w-8 object-contain rounded-sm"/> : <div className="h-8 w-8 bg-slate-200 dark:bg-slate-700 rounded-sm"></div>}
+                                            {company.logo_url ? <img src={company.logo_url} alt="logo" className="h-8 w-8 object-contain rounded-sm" /> : <div className="h-8 w-8 bg-slate-200 dark:bg-slate-700 rounded-sm"></div>}
                                             <Link to={AppRoute.SuperAdminClientDetail.replace(':companyId', company.id)} className="hover:underline text-primary-600 dark:text-primary-400 font-bold">
                                                 {company.name}
                                             </Link>
@@ -107,14 +107,14 @@ const SuperAdminClientsPage: React.FC = () => {
                                         <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300">{[company.city, company.country].filter(Boolean).join(', ') || 'N/A'}</td>
                                         <td className="px-4 py-3 text-sm space-x-2">
                                             <Link to={AppRoute.SuperAdminClientDetail.replace(':companyId', company.id)}>
-                                                <Button size="sm" variant="neutral" leftIcon={<PencilSquareIcon className="w-4 h-4"/>}>Details</Button>
+                                                <Button size="sm" variant="neutral" leftIcon={<PencilSquareIcon className="w-4 h-4" />}>Details</Button>
                                             </Link>
-                                            <Button size="sm" variant="accent" onClick={() => handleDeleteCompany(company)} leftIcon={<TrashIcon className="w-4 h-4"/>}>Delete</Button>
+                                            <Button size="sm" variant="accent" onClick={() => handleDeleteCompany(company)} leftIcon={<TrashIcon className="w-4 h-4" />}>Delete</Button>
                                         </td>
                                     </tr>
                                 ))
                             )}
-                         </tbody>
+                        </tbody>
                     </table>
                 </div>
             </Card>

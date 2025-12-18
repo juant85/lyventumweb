@@ -154,15 +154,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       {!isAttendeePortal && <Sidebar isOpen={isSidebarOpen} currentUser={currentUser} />}
 
+      {/* Mobile/Tablet Overlay */}
       {isSidebarOpen && !isAttendeePortal && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
           aria-hidden="true"
         ></div>
       )}
 
-      <div className={!isAttendeePortal ? "md:ml-64 flex flex-col min-h-screen" : "flex flex-col min-h-screen"}>
+      <div className={!isAttendeePortal ? "lg:ml-64 flex flex-col min-h-screen" : "flex flex-col min-h-screen"}>
         {isSimulating && (
           <div className="sticky top-0 z-50 bg-gradient-to-r from-amber-400 to-amber-500 text-slate-900 p-2 text-center text-sm font-semibold flex items-center justify-center shadow-md">
             <span className="flex items-center gap-2">
@@ -194,7 +195,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 {!isAttendeePortal && (
                   <button
                     onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                    className="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 md:hidden mr-4"
+                    className="text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 lg:hidden mr-4"
                     aria-controls="sidebar"
                     aria-expanded={isSidebarOpen}
                   >
