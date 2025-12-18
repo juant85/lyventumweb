@@ -406,7 +406,7 @@ const LandingPage: React.FC = () => {
           : 'bg-transparent border-b border-transparent'
           } safe-area-top`}
       >
-        <div className="px-4 py-3 flex items-center justify-between max-w-7xl mx-auto">
+        <div className="px-4 sm:px-6 py-4 flex items-center justify-between max-w-7xl mx-auto">
           <div className="flex items-center gap-3">
             {/* Hamburger Menu Trigger */}
             <button
@@ -416,9 +416,9 @@ const LandingPage: React.FC = () => {
             >
               <Menu className="w-6 h-6" />
             </button>
-            <div className="flex items-center gap-2" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-              <LyVentumLogo variant="gradient" className="h-8 w-auto" />
-              <span className="text-sm font-bold uppercase tracking-wider text-white font-montserrat">
+            <div className="flex items-center gap-2.5" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+              <LyVentumLogo variant="gradient" className="h-9 w-auto" />
+              <span className="text-base font-bold uppercase tracking-wider text-white font-montserrat">
                 {APP_NAME}
               </span>
             </div>
@@ -602,11 +602,11 @@ const LandingPage: React.FC = () => {
               {/* Subtle overlay to integrate with dark theme */}
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
 
-              {/* Floating Badge - Centered */}
-              <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md p-4 rounded-full border border-slate-800/50 flex items-center gap-6 shadow-xl max-w-[90%] w-auto z-20">
-                <div className="flex -space-x-4">
+              {/* Floating Badge - Centered with proper clearance */}
+              <div className="absolute -bottom-8 md:-bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md p-3 md:p-4 rounded-full border border-slate-800/50 flex items-center gap-4 md:gap-6 shadow-xl max-w-[85%] md:max-w-[90%] w-auto z-20">
+                <div className="flex -space-x-3 md:-space-x-4">
                   {[1, 2, 3].map(i => (
-                    <div key={i} className="w-10 h-10 rounded-full border-2 border-slate-900 bg-slate-800 flex items-center justify-center text-xs overflow-hidden">
+                    <div key={i} className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-slate-900 bg-slate-800 flex items-center justify-center text-xs overflow-hidden">
                       <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="User" />
                     </div>
                   ))}
@@ -619,7 +619,7 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* FEATURES SECTION */}
-      <section id="features" className="relative py-24 md:py-32 px-4 overflow-hidden" >
+      <section id="features" className="relative pt-32 md:pt-24 pb-24 md:pb-32 px-4 overflow-hidden" >
         {/* Gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary-600/5 via-transparent to-green-600/5" />
         <div className="max-w-7xl mx-auto">
@@ -642,26 +642,26 @@ const LandingPage: React.FC = () => {
             {features.map((feature, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 50 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group relative p-8 rounded-3xl
+                viewport={{ once: true, margin: "-80px", amount: 0.3 }}
+                transition={{ duration: 0.4, delay: Math.min(index * 0.08, 0.3), ease: "easeOut" }}
+                className="group relative p-6 md:p-8 rounded-3xl
                            bg-gradient-to-br from-slate-800/40 via-slate-800/30 to-slate-900/40
                            backdrop-blur-xl border border-slate-700/50
                            hover:border-primary-500/50
-                           transition-all duration-500
-                           lg:hover:scale-105 lg:hover:shadow-2xl lg:hover:shadow-primary-500/20
+                           transition-all duration-300
+                           lg:hover:scale-[1.02] lg:hover:shadow-xl lg:hover:shadow-primary-500/10
                            overflow-hidden"
               >
-                {/* Hover glow effect */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary-500/0 via-primary-500/0 to-primary-500/0 group-hover:from-primary-500/10 group-hover:via-transparent group-hover:to-green-500/10 transition-all duration-500 rounded-3xl" />
+                {/* Hover glow effect - Simplified for mobile performance */}
+                <div className="hidden md:block absolute inset-0 bg-gradient-to-br from-primary-500/0 via-primary-500/0 to-primary-500/0 group-hover:from-primary-500/10 group-hover:via-transparent group-hover:to-green-500/10 transition-all duration-300 rounded-3xl" />
 
                 {/* Icon with gradient background */}
-                <div className="relative mb-6">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500/20 to-green-500/20 flex items-center justify-center
-                                group-hover:scale-110 group-hover:rotate-3 transition-all duration-500
-                                shadow-lg shadow-primary-500/10 group-hover:shadow-primary-500/30">
+                <div className="relative mb-5">
+                  <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-primary-500/20 to-green-500/20 flex items-center justify-center
+                                lg:group-hover:scale-105 transition-all duration-300
+                                shadow-lg shadow-primary-500/10">
                     <div className="text-primary-400 group-hover:text-primary-300 transition-colors">
                       {feature.icon}
                     </div>
