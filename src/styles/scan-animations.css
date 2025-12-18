@@ -1,0 +1,57 @@
+/* Custom animations for ScanResultCard - Add to index.css */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.6);
+  }
+}
+
+/* Apply to scan result cards for extra polish */
+.scan-card-success {
+  animation: slideInUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.scan-icon-bounce {
+  animation: bounce 0.6s ease-in-out;
+}

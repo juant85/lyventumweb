@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Daily Agenda</title>
+</head>
+
+<body
+    style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f4f4f4;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f4f4f4; padding: 20px 0;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" border="0"
+                    style="background-color: #ffffff; border-radius: 8px; overflow: hidden; max-width: 600px;">
+
+                    <!-- Header -->
+                    <tr>
+                        <td
+                            style="background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%); padding: 40px 20px; text-align: center;">
+                            {{#if EVENT_LOGO_URL}}
+                            <img src="{{EVENT_LOGO_URL}}" alt="{{EVENT_NAME}}"
+                                style="max-width: 200px; height: auto; margin-bottom: 20px;">
+                            {{/if}}
+                            <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 700;">Your Agenda for
+                                {{AGENDA_DATE}}</h1>
+                        </td>
+                    </tr>
+
+                    <!-- Intro -->
+                    <tr>
+                        <td style="padding: 30px 30px 20px 30px;">
+                            <p style="color: #64748b; font-size: 16px; line-height: 1.6; margin: 0;">
+                                Hi {{ATTENDEE_NAME}},
+                            </p>
+                            <p style="color: #64748b; font-size: 16px; line-height: 1.6; margin: 15px 0 0 0;">
+                                Here's your schedule for tomorrow. You have <strong>{{SESSION_COUNT}} session{{#if
+                                    MULTIPLE_SESSIONS}}s{{/if}}</strong> scheduled.
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Sessions List -->
+                    <tr>
+                        <td style="padding: 0 30px 30px 30px;">
+                            {{#each SESSIONS}}
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0"
+                                style="background-color: #f8fafc; border-left: 4px solid #8b5cf6; border-radius: 6px; margin-bottom: 15px;">
+                                <tr>
+                                    <td style="padding: 20px;">
+                                        <div
+                                            style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                                            <h3 style="color: #1e293b; margin: 0; font-size: 18px; font-weight: 600;">
+                                                {{this.name}}</h3>
+                                        </div>
+
+                                        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                            <tr>
+                                                <td style="padding: 5px 0; color: #64748b; font-size: 14px;">
+                                                    <strong>🕐 Time:</strong> {{this.time}}
+                                                </td>
+                                            </tr>
+                                            {{#if this.booth}}
+                                            <tr>
+                                                <td style="padding: 5px 0; color: #64748b; font-size: 14px;">
+                                                    <strong>📍 Location:</strong> {{this.booth}}
+                                                </td>
+                                            </tr>
+                                            {{/if}}
+                                            {{#if this.status}}
+                                            <tr>
+                                                <td style="padding: 5px 0;">
+                                                    <span
+                                                        style="display: inline-block; background-color: {{#if this.attended}}#10b981{{else}}#f59e0b{{/if}}; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600;">
+                                                        {{this.status}}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            {{/if}}
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            {{/each}}
+
+                            <!-- CTA Button -->
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top: 20px;">
+                                <tr>
+                                    <td align="center">
+                                        <a href="{{AGENDA_URL}}"
+                                            style="display: inline-block; background-color: #8b5cf6; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 6px; font-size: 16px; font-weight: 600;">
+                                            View Full Agenda
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- Sponsors -->
+                    {{#if PLATINUM_SPONSOR}}
+                    <tr>
+                        <td style="padding: 30px; background-color: #f8fafc; border-top: 1px solid #e2e8f0;">
+                            <h3
+                                style="color: #1e293b; text-align: center; margin: 0 0 20px 0; font-size: 16px; font-weight: 600;">
+                                Proudly Sponsored By</h3>
+
+                            <!-- Platinum -->
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 20px;">
+                                <tr>
+                                    <td align="center">
+                                        <p
+                                            style="color: #94a3b8; font-size: 11px; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 1px;">
+                                            Platinum Sponsor</p>
+                                        <a href="{{PLATINUM_SPONSOR.website}}"
+                                            style="display: inline-block; text-decoration: none;">
+                                            <img src="{{PLATINUM_SPONSOR.logo}}" alt="{{PLATINUM_SPONSOR.name}}"
+                                                style="max-width: 200px; height: auto;">
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Gold Sponsors -->
+                            {{#if GOLD_SPONSORS}}
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                    <td align="center">
+                                        <p
+                                            style="color: #94a3b8; font-size: 11px; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 1px;">
+                                            Gold Sponsors</p>
+                                        <table cellpadding="0" cellspacing="0" border="0"
+                                            style="display: inline-block;">
+                                            <tr>
+                                                {{#each GOLD_SPONSORS}}
+                                                <td style="padding: 0 10px;">
+                                                    <a href="{{this.website}}"
+                                                        style="display: inline-block; text-decoration: none;">
+                                                        <img src="{{this.logo}}" alt="{{this.name}}"
+                                                            style="max-width: 150px; height: auto;">
+                                                    </a>
+                                                </td>
+                                                {{/each}}
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            {{/if}}
+                        </td>
+                    </tr>
+                    {{/if}}
+
+                    <!-- Footer -->
+                    <tr>
+                        <td style="padding: 30px; text-align: center; background-color: #1e293b; color: #94a3b8;">
+                            <p style="margin: 0 0 10px 0; font-size: 14px; color: #cbd5e1;">
+                                <strong style="color: #ffffff;">{{EVENT_NAME}}</strong>
+                            </p>
+                            <p style="margin: 0; font-size: 12px;">
+                                Need help? Contact <a href="mailto:{{SUPPORT_EMAIL}}"
+                                    style="color: #06b6d4; text-decoration: none;">{{SUPPORT_EMAIL}}</a>
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>

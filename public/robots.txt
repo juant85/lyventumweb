@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /attendee/
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://lyventum.com/sitemap.xml

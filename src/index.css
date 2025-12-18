@@ -1,0 +1,344 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Professional Animations */
+@import './styles/animations.css';
+
+/* Premium UI Utilities */
+.glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.dark .glass {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+}
+
+.dark .glass-card {
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+.text-gradient {
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-image: linear-gradient(to right, #2563eb, #7c3aed);
+}
+
+.dark .text-gradient {
+    background-image: linear-gradient(to right, #60a5fa, #a78bfa);
+}
+
+.card-hover {
+    transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
+}
+
+.dark .card-hover:hover {
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+}
+
+/* Touch optimization for mobile devices */
+@media (hover: none) and (pointer: coarse) {
+
+    /* Larger tap targets for touch devices */
+    button,
+    a[role="button"],
+    input[type="checkbox"],
+    input[type="radio"],
+    select {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    /* Remove hover states on touch devices */
+    .hover\:scale-105:hover {
+        transform: none !important;
+    }
+
+    .hover\:-translate-y-1:hover {
+        transform: none !important;
+    }
+
+    /* Faster transitions for immediate feedback */
+    * {
+        transition-duration: 150ms !important;
+    }
+
+    /* Make range inputs easier to use */
+    input[type="range"] {
+        min-height: 32px !important;
+    }
+}
+
+/* Disable text selection on interactive elements */
+.booth-cell,
+button,
+.draggable,
+[draggable="true"] {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Smooth scrolling - Cross-browser */
+html {
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    /* iOS Safari */
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 100%;
+}
+
+body {
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+#root {
+    overflow-x: hidden;
+    min-height: 100%;
+}
+
+/* Firefox-specific smooth scrolling */
+@-moz-document url-prefix() {
+    html {
+        scroll-behavior: smooth;
+    }
+}
+
+/* Better focus visibility for keyboard navigation - Cross-browser */
+*:focus-visible {
+    outline: 2px solid theme('colors.primary.500');
+    outline-offset: 2px;
+}
+
+/* Firefox fallback for focus */
+*:-moz-focusring {
+    outline: 2px solid theme('colors.primary.500');
+    outline-offset: 2px;
+}
+
+/* NEW: Pulse ring animation for recently changed booths */
+@keyframes pulse-ring {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+    }
+
+    50% {
+        box-shadow: 0 0 0 8px rgba(74, 222, 128, 0);
+    }
+}
+
+.animate-pulse-ring {
+    animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Safe area for iOS notch (top and bottom) */
+@supports (padding: max(0px)) {
+    .safe-area-bottom {
+        padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    }
+
+    .safe-area-top {
+        padding-top: max(1rem, env(safe-area-inset-top));
+    }
+}
+
+/* Attendee Portal - Mobile optimizations - Cross-browser */
+.-webkit-overflow-scrolling-touch {
+    -webkit-overflow-scrolling: touch;
+    /* iOS Safari */
+    overflow-scrolling: touch;
+    /* Future standard */
+}
+
+/* Better overflow container behavior */
+.overflow-auto,
+.overflow-y-auto,
+.overflow-x-auto {
+    scrollbar-width: thin;
+    /* Firefox */
+    -webkit-overflow-scrolling: touch;
+    /* iOS Safari */
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.animate-shimmer {
+    animation: shimmer 2s infinite;
+}
+
+.animate-slideIn {
+    animation: slideIn 0.3s ease-out backwards;
+}
+
+.animate-slideDown {
+    animation: slideDown 0.3s ease-out;
+}
+
+/* Smooth transitions utility */
+.transition-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Tiptap Editor Styles */
+.ProseMirror {
+    min-height: 384px;
+}
+
+.ProseMirror:focus {
+    outline: none;
+}
+
+.ProseMirror p {
+    margin: 0.5em 0;
+}
+
+.ProseMirror h1 {
+    font-size: 2em;
+    font-weight: bold;
+    margin: 0.67em 0;
+}
+
+.ProseMirror h2 {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 0.75em 0;
+}
+
+.ProseMirror ul,
+.ProseMirror ol {
+    padding-left: 1.5em;
+    margin: 0.5em 0;
+}
+
+.ProseMirror blockquote {
+    border-left: 4px solid #cbd5e0;
+    padding-left: 1em;
+    margin: 1em 0;
+    color: #64748b;
+}
+
+.ProseMirror code {
+    background-color: #f1f5f9;
+    border-radius: 0.25em;
+    padding: 0.125em 0.25em;
+    font-family: 'Courier New', monospace;
+}
+
+.ProseMirror pre {
+    background-color: #1e293b;
+    color: #e2e8f0;
+    border-radius: 0.5em;
+    padding: 1em;
+    overflow-x: auto;
+    margin: 1em 0;
+}
+
+.ProseMirror pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+}
+
+/* Dark mode adjustments */
+.dark .ProseMirror blockquote {
+    border-left-color: #475569;
+    color: #94a3b8;
+}
+
+.dark .ProseMirror code {
+    background-color: #1e293b;
+    color: #e2e8f0;
+}
+
+/* ========================================
+   MOBILE PERFORMANCE OPTIMIZATIONS
+   ======================================== */
+
+/* Reduce motion for accessibility and performance */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Smooth scroll anchor positioning - accounts for sticky header */
+section {
+    scroll-margin-top: 5rem;
+}
+
+/* Mobile-specific performance optimizations */
+@media (max-width: 768px) {
+
+    /* Disable expensive blur effects on mobile for better performance */
+    .blur-3xl,
+    .blur-\[100px\],
+    .blur-\[50px\],
+    .blur-2xl {
+        filter: none !important;
+    }
+
+    /* Simplify backdrop blur on mobile */
+    .backdrop-blur-xl,
+    .backdrop-blur-md {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        background-color: rgba(15, 23, 42, 0.95) !important;
+    }
+
+    /* Reduce animation complexity on mobile */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* Smooth scroll snap for mobile section navigation */
+    body {
+        scroll-snap-type: y proximity;
+    }
+
+    section {
+        scroll-snap-align: start;
+        scroll-snap-stop: normal;
+        scroll-margin-top: 4rem;
+    }
+}

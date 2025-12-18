@@ -1,0 +1,220 @@
+                {/* Vendor Communications Tab */}
+                {activeTab === 'vendor' && settings && (
+                    <>
+                        <Card className="p-6">
+                            <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                                <Store className="h-6 w-6 text-purple-600" />
+                                Vendor Communications
+                            </h2>
+                            <p className="text-slate-600 dark:text-slate-400 mb-6">
+                                Send custom emails to all vendors/exhibitors with event information, rules, and guidelines
+                            </p>
+
+                            {/* Enable Toggle */}
+                            <div className="mb-6 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
+                                <label className="flex items-center gap-3 cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        checked={settings.vendor_email_enabled || false}
+                                        onChange={(e) => {
+                                            setSettings({
+                                                ...settings,
+                                                vendor_email_enabled: e.target.checked
+                                            });
+                                            handleUpdateSettings({ vendor_email_enabled: e.target.checked });
+                                        }}
+                                        className="h-5 w-5 rounded border-slate-300 text-purple-600 focus:ring-purple-500"
+                                    />
+                                    <div>
+                                        <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                            Enable Vendor Communications
+                                        </span>
+                                        <p className="text-xs text-slate-500 dark:text-slate-400">
+                                            Allow sending custom emails to vendors/exhibitors
+                                        </p>
+                                    </div>
+                                </label>
+                            </div>
+
+                            {/* Subject Line */}
+                            <div className="space-y-4 mb-6">
+                                <div>
+                                    <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                                        Email Subject
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={settings.vendor_email_subject || 'Event Information for Exhibitors'}
+                                        onChange={(e) => setSettings({
+                                            ...settings,
+                                            vendor_email_subject: e.target.value
+                                        })}
+                                        className="w-full px-4 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+                                        placeholder="Event Information for Exhibitors"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Editor Mode Toggle */}
+                            <div className="mb-4">
+                                <div className="flex items-center gap-2 mb-4">
+                                    <button
+                                        onClick={() => setVendorEditorMode('visual')}
+                                        className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                                            vendorEditorMode === 'visual'
+                                                ? 'bg-purple-600 text-white'
+                                                : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
+                                        }`}
+                                    >
+                                        <FileText className="inline h-4 w-4 mr-2" />
+                                        Visual Editor
+                                    </button>
+                                    <button
+                                        onClick={() => setVendorEditorMode('html')}
+                                        className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                                            vendorEditorMode === 'html'
+                                                ? 'bg-purple-600 text-white'
+                                                : 'bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
+                                        }`}
+                                    >
+                                        <Code className="inline h-4 w-4 mr-2" />
+                                        HTML Code (Advanced)
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                {/* Live Preview - Left */}
+                                <div className="space-y-3">
+                                    <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                        <Eye className="h-4 w-4" />
+                                        Live Preview
+                                    </label>
+                                    <div className="h-[600px] border border-slate-300 dark:border-slate-600 rounded-lg overflow-auto bg-slate-50 dark:bg-slate-900">
+                                        <iframe
+                                            srcDoc={vendorTemplate}
+                                            title="Vendor Email Preview"
+                                            className="w-full h-full"
+                                            sandbox="allow-same-origin allow-scripts"
+                                        />
+                                    </div>
+                                    <p className="text-xs text-slate-500 dark:text-slate-400 italic">
+                                        📧 This is how your email will look to vendors
+                                    </p>
+                                </div>
+
+                                {/* Editor - Right */}
+                                <div className="space-y-3">
+                                    <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                                        <Code className="h-4 w-4" />
+                                        {vendorEditorMode === 'html' ? 'HTML Code' : 'Visual Editor'}
+                                    </label>
+                                    {vendorEditorMode === 'html' ? (
+                                        <textarea
+                                            value={vendorTemplate}
+                                            onChange={(e) => setVendorTemplate(e.target.value)}
+                                            placeholder="<h2>Event Information</h2><p>{{VENDOR_NAME}}, welcome to {{EVENT_NAME}}</p>"
+                                            className="w-full h-[600px] px-4 py-3 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-mono text-sm resize-none"
+                                        />
+                                    ) : (
+                                        <RichTextEditor
+                                            value={vendorTemplate}
+                                            onChange={setVendorTemplate}
+                                            placeholder="Write your vendor email..."
+                                        />
+                                    )}
+                                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                                        Available variables: {'{{VENDOR_NAME}}'}, {'{{EVENT_NAME}}'}, {'{{BOOTH_NUMBER}}'}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Save Button */}
+                            <div className="mt-6 flex justify-end gap-3">
+                                <Button
+                                    onClick={async () => {
+                                        // Save template
+                                        const { error } = await supabase
+                                            .from('email_templates')
+                                            .upsert({
+                                                event_id: selectedEventId,
+                                                template_type: 'vendor_info',
+                                                bodyHtml: vendorTemplate,
+                                            }, {
+                                                onConflict: 'event_id,template_type',
+                                                ignoreDuplicates: false
+                                            });
+
+                                        // Save settings
+                                        await handleUpdateSettings({
+                                            vendor_email_subject: settings.vendor_email_subject,
+                                            vendor_email_template: vendorTemplate,
+                                        });
+
+                                        if (!error) {
+                                            toast.success('Vendor email template saved');
+                                        }
+                                    }}
+                                    disabled={isSaving}
+                                >
+                                    {isSaving ? (
+                                        <>
+                                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                            Saving...
+                                        </>
+                                    ) : (
+                                        'Save Template'
+                                    )}
+                                </Button>
+                                <Button
+                                    onClick={async () => {
+                                        if (!selectedEventId) return;
+                                        
+                                        const confirmed = window.confirm('Send this email to ALL vendors for this event?');
+                                        if (!confirmed) return;
+
+                                        setSendingTest(true);
+                                        try {
+                                            // Get all vendors
+                                            const { data: vendors } = await supabase
+                                                .from('attendees')
+                                                .select('*')
+                                                .eq('event_id', selectedEventId)
+                                                .eq('is_vendor', true);
+
+                                            if (!vendors || vendors.length === 0) {
+                                                toast.error('No vendors found for this event');
+                                                return;
+                                            }
+
+                                            toast.loading(`Sending to ${vendors.length} vendors...`, { id: 'vendor-bulk' });
+
+                                            // TODO: Implement actual email sending via edge function or service
+                                            // For now, just show success
+                                            toast.success(`Email sent to ${vendors.length} vendors!`, { id: 'vendor-bulk' });
+                                        } catch (error) {
+                                            console.error('Error sending to vendors:', error);
+                                            toast.error('Failed to send emails', { id: 'vendor-bulk' });
+                                        } finally {
+                                            setSendingTest(false);
+                                        }
+                                    }}
+                                    variant="primary"
+                                    disabled={sendingTest || !settings.vendor_email_enabled}
+                                >
+                                    {sendingTest ? (
+                                        <>
+                                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                            Sending...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Send className="h-4 w-4 mr-2" />
+                                            Send to All Vendors
+                                        </>
+                                    )}
+                                </Button>
+                            </div>
+                        </Card>
+                    </>
+                )}

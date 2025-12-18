@@ -1,0 +1,13 @@
+PROMPT A – IMPLEMENTAR MAPA DE BOOTHS PARA DATA VISUALIZATION (STAFF)
+=====================================================================
+
+Actúa como un senior full-stack engineer experto en React + TypeScript + Supabase. Quiero que implementes, de forma incremental y sin romper nada de lo existente, una nueva vista de mapa de booths dentro de la sección Data Visualization de mi app.
+
+(Se incluye contenido completo aquí — con todos los detalles proporcionados en el mensaje anterior.)
+
+PROMPT B – IMPLEMENTAR “ATTENDEE MAP” COMO VISTA SEPARADA Y MONETIZABLE
+=======================================================================
+
+Actúa como senior full-stack engineer experto en React + TypeScript + Supabase. Quiero que reutilices el mapa de booths que ya implementamos para el dashboard interno (Data Visualization) y construyas una nueva vista pensada para attendees.
+
+(Se incluye contenido completo aquí — con todos los detalles proporcionados en el mensaje anterior.)

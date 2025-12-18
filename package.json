@@ -1,0 +1,59 @@
+{
+  "name": "lyventum-viernes187-1020am",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An advanced, real-time event management platform with flexible attendee imports, live dashboards, multi-tiered plans, and integrated chat functionalities for attendees and vendors.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "start": "echo \"Error: no start script specified. This project is served directly via index.html.\" && exit 1"
+  },
+  "dependencies": {
+    "@hello-pangea/dnd": "^18.0.1",
+    "@react-email/components": "^1.0.1",
+    "@react-email/render": "^2.0.0",
+    "@supabase/supabase-js": "^2.50.2",
+    "@tanstack/react-query": "^5.51.1",
+    "@tiptap/extension-color": "^3.13.0",
+    "@tiptap/extension-text-style": "^3.13.0",
+    "@tiptap/react": "^3.13.0",
+    "@tiptap/starter-kit": "^3.13.0",
+    "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.2.0",
+    "dexie": "^4.2.1",
+    "framer-motion": "^12.23.0",
+    "ical-generator": "^10.0.0",
+    "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
+    "lucide-react": "^0.555.0",
+    "qrcode": "^1.5.3",
+    "qrcode.react": "^4.0.0",
+    "react": "^19.1.0",
+    "react-datepicker": "^9.0.0",
+    "react-dom": "^19.1.0",
+    "react-hot-toast": "^2.5.2",
+    "react-router-dom": "^7.6.3",
+    "recharts": "^3.0.2",
+    "resend": "^6.5.2",
+    "vite-plugin-pwa": "^1.2.0",
+    "workbox-window": "^7.4.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/qrcode": "^1.5.6",
+    "@types/react": "^18.3.3",
+    "@types/react-datepicker": "^6.2.0",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "typescript": "^5.4.5",
+    "vite": "^5.3.4"
+  },
+  "keywords": [
+    "react",
+    "supabase",
+    "event-management"
+  ],
+  "author": "LyVenTum",
+  "license": "SEE LICENSE IN LICENSE.md"
+}

@@ -1,0 +1,139 @@
+MAPA DE BOOTHS – IMPLEMENTACIÓN (VISUALIZACIÓN + VISTA PARA ATTENDEES)
+
+===============================================================
+A. MAPA DE BOOTHS PARA DATA VISUALIZATION (STAFF)
+===============================================================
+
+1. OBJETIVO (PRODUCTO / UX)
+- Agregar una vista tipo “mapa” con los booths como rectángulos en 4 filas.
+- Mostrar: número de booth, asistentes actuales, capacidad esperada, colores según estado.
+- Click en booth → filtra tabla (igual que los cards actuales).
+- Hover en desktop → tooltip con resumen.
+- Ubicado dentro de Data Visualization como un toggle: Cards / Map.
+
+2. ESTRATEGIA DE CODIFICACIÓN
+--------------------------------
+
+2.1. Datos necesarios
+Se puede comenzar sin tocar la base de datos creando un archivo estático:
+boothLayoutConfig.ts:
+[
+  { boothNumber: 1, row: 1, col: 1, colSpan: 1 },
+  { boothNumber: 2, row: 1, col: 2, colSpan: 1 },
+  ...
+]
+
+Luego, cuando el diseño esté estable, mover estos valores a Supabase:
+ALTER TABLE booths
+ADD COLUMN IF NOT EXISTS layout_row int,
+ADD COLUMN IF NOT EXISTS layout_col int,
+ADD COLUMN IF NOT EXISTS layout_col_span int DEFAULT 1;
+
+2.2. Componente BoothMap
+Props:
+type BoothStatus = {
+  boothId: string;
+  boothNumber: number;
+  currentCount: number;
+  maxExpected: number;
+};
+
+type BoothLayout = {
+  boothNumber: number;
+  row: number;
+  col: number;
+  colSpan?: number;
+};
+
+type BoothMapProps = {
+  booths: BoothStatus[];
+  layout: BoothLayout[];
+  onBoothClick?: (boothNumber: number) => void;
+};
+
+UI usando CSS Grid:
+Contenedor con gridTemplateColumns="repeat(12, minmax(0, 1fr))"
+
+2.3. Lógica de colores unificada
+function getBoothStatus(booth):
+  if currentCount === 0 → "empty"
+  if currentCount >= maxExpected → "full"
+  else → "partial"
+
+function getBoothClasses(status):
+  empty → rojo
+  partial → amarillo
+  full → verde
+
+2.4. Integración en Data Visualization
+Agregar tabs: Cards | Map
+Usar BoothMap en la tab de Map pasando boothsStatus y layout.
+
+===============================================================
+B. MAPA COMO GUÍA PARA ATTENDEES (MONETIZABLE)
+===============================================================
+
+1. OBJETIVO (PRODUCTO / UX)
+- Vista separada para attendees con:
+  - Su meeting actual.
+  - Su siguiente meeting.
+  - El mismo mapa, pero resaltando booths actuales/próximos.
+- Acceso posible por QR del badge o link:
+  https://lyventum.com/attendee-map?event=E1&attendee=A123
+
+2. ESTRATEGIA DE CODIFICACIÓN
+--------------------------------
+
+2.1. Datos necesarios
+meetings: boothNumber, startTime, endTime.
+
+2.2. Lógica de meetings
+function splitMeetingsByTime(meetings, now):
+  current = meeting donde now está entre startTime y endTime
+  next = el meeting con startTime futuro más cercano
+
+2.3. Componente AttendeeMap
+Props:
+{
+  meetings: AttendeeMeeting[],
+  layout: BoothLayout[],
+  now?: Date
+}
+
+2.4. Colores en vista Attendee
+Booth actual:
+  border-4 border-blue-500 bg-blue-100
+Booth siguiente:
+  border-2 border-green-500 bg-green-100
+El resto:
+  bg-gray-200
+
+===============================================================
+C. PLAN DE IMPLEMENTACIÓN POR PASOS
+===============================================================
+
+PASO 1 — Implementar mapa en Data Visualization (frontend solo)
+- Crear boothLayoutConfig estático.
+- Crear BoothMap.
+- Añadir toggle Cards/Map.
+
+PASO 2 — Unificar lógica de colores
+- Crear helpers getBoothStatus y getBoothClasses.
+- Reutilizar en cuadrados y en el mapa.
+
+PASO 3 — Mover layout a Supabase (opcional)
+- Añadir columnas layout_row, layout_col, layout_col_span.
+- Cargar valores con un script SQL.
+- Leer layout desde Supabase en el frontend.
+
+PASO 4 — Implementar “Attendee Map”
+- Nueva página /attendee/map/:eventId/:attendeeId.
+- Consultar reuniones desde Supabase.
+- Usar el mismo layout.
+- Resaltar current y next booth.
+- Mostrar timeline simple abajo.
+
+===============================================================
+Este archivo resume el plan completo para implementar:
+- Mapa para visualización interna (staff).
+- Mapa para attendees (monetizable).

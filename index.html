@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LyVenTum - Event Management Platform | Real-time Analytics & QR Check-in</title>
+  <meta name="theme-color" content="#2563eb" />
+
+  <!-- Mobile Optimization -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+
+  <!-- SEO Meta Tags -->
+  <meta name="description"
+    content="Optimiza los check-ins, monitorea el tráfico en los stands y obtén información en tiempo real. LyVenTum te permite gestionar eventos exitosos con facilidad.">
+  <meta name="keywords"
+    content="event management, booth tracking, QR scanning, event analytics, gestión de eventos, análisis en tiempo real, check-in eventos">
+  <meta name="author" content="LyVenTum">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://lyventum.com/">
+  <meta property="og:title" content="LyVenTum - Event Management Platform">
+  <meta property="og:description"
+    content="Optimiza los check-ins, monitorea el tráfico en los stands y obtén información en tiempo real con nuestra plataforma de gestión de eventos.">
+  <meta property="og:image" content="https://lyventum.com/analytics.png">
+  <meta property="og:site_name" content="LyVenTum">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://lyventum.com/">
+  <meta name="twitter:title" content="LyVenTum - Event Management Platform">
+  <meta name="twitter:description"
+    content="Optimiza los check-ins, monitorea el tráfico en los stands y obtén información en tiempo real.">
+  <meta name="twitter:image" content="https://lyventum.com/analytics.png">
+
+  <!-- Favicon & App Icons -->
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512x512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png">
+
+  <link rel="canonical" href="https://lyventum.com/">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  </script>
+  <style type="text/tailwindcss">
+    html {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: theme('colors.slate.100');
+      color: theme('colors.slate.700');
+    }
+    html.dark body {
+        background-color: theme('colors.slate.900');
+        color: theme('colors.slate.200');
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      color: theme('colors.slate.900');
+    }
+    html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark h5, html.dark h6 {
+        color: theme('colors.slate.100');
+    }
+    .brand-gradient-text {
+        background: linear-gradient(to right, theme('colors.primary.500'), theme('colors.secondary.500'));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    /* Custom Scrollbar - Cross-browser support */
+    
+    /* Firefox scrollbar styling */
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: theme('colors.slate.300') theme('colors.slate.100');
+    }
+    html.dark * {
+        scrollbar-color: theme('colors.slate.600') theme('colors.slate.800');
+    }
+    
+    /* Webkit browsers (Chrome, Safari, Edge) */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+        background: theme('colors.slate.100');
+    }
+    html.dark ::-webkit-scrollbar-track {
+        background: theme('colors.slate.800');
+    }
+    ::-webkit-scrollbar-thumb {
+        background: theme('colors.slate.300');
+        border-radius: 10px;
+    }
+    html.dark ::-webkit-scrollbar-thumb {
+        background: theme('colors.slate.600');
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: theme('colors.slate.400');
+    }
+    html.dark ::-webkit-scrollbar-thumb:hover {
+        background: theme('colors.slate.500');
+    }
+    
+    /* Better overflow behavior - handled in index.css */
+    *, *:before, *:after {
+        box-sizing: inherit;
+    }
+    .chip {
+        @apply px-3 py-1.5 rounded-full border-2 text-sm font-semibold transition-all duration-200;
+        @apply bg-slate-100 border-slate-300 text-slate-600;
+        @apply dark:bg-slate-700 dark:border-slate-600 dark:text-slate-200;
+    }
+    .chip:hover {
+        @apply bg-slate-200 dark:bg-slate-600 ring-2 ring-primary-500/50;
+    }
+    .chip--active {
+        @apply !bg-primary-600 !border-primary-600 !text-white;
+        @apply dark:!bg-primary-500 dark:!border-primary-500;
+    }
+  </style>
+  <style>
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+
+      #printable-area,
+      #printable-area * {
+        visibility: visible;
+      }
+
+      #printable-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+      }
+
+      .print-hide {
+        display: none;
+      }
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            montserrat: ['Montserrat', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            primary: { '50': '#eff6ff', '100': '#dbeafe', '200': '#bfdbfe', '300': '#93c5fd', '400': '#60a5fa', '500': '#3b82f6', '600': '#2563eb', '700': '#1d4ed8', '800': '#1e40af', '900': '#1e3a8a' }, // Blue
+            secondary: { '50': '#ecfeff', '100': '#cffafe', '200': '#a5f3fc', '300': '#67e8f9', '400': '#22d3ee', '500': '#06b6d4', '600': '#0891b2', '700': '#0e7490', '800': '#155e75', '900': '#164e63' }, // Cyan/Teal
+            accent: { '50': '#fff1f2', '100': '#ffe4e6', '200': '#fecdd3', '300': '#fda4af', '400': '#fb7185', '500': '#f43f5e', '600': '#e11d48', '700': '#be123c', '800': '#9f1239', '900': '#881337' }, // Rose/Red
+            slate: { '50': '#f8fafc', '100': '#f1f5f9', '200': '#e2e8f0', '300': '#cbd5e1', '400': '#94a3b8', '500': '#64748b', '600': '#475569', '700': '#334155', '800': '#1e293b', '900': '#0f172a' },
+            neutral: { '50': '#fafafa', '100': '#f5f5f5', '200': '#e5e5e5', '300': '#d4d4d4', '400': '#a3a3a3', '500': '#737373', '600': '#525252', '700': '#404040', '800': '#262626', '900': '#171717', '950': '#0a0a0a' },
+            zinc: { '50': '#fafafa', '100': '#f4f4f5', '200': '#e4e4e7', '300': '#d4d4d8', '400': '#a1a1aa', '500': '#71717a', '600': '#52525b', '700': '#3f3f46', '800': '#27272a', '900': '#18181b', '950': '#09090b' },
+            brandBlue: '#2563eb',
+            inputBorder: '#cbd5e1', // slate-300
+            // Data Visualization Booths
+            boothEmptyBorder: '#e11d48', // accent-600
+            boothEmptyBg: '#fff1f2', // accent-50
+            boothPartialBorder: '#f97316', // orange-500
+            boothPartialBg: '#fff7ed', // orange-50
+            boothFullBorder: '#16a34a', // secondary-600
+            boothFullBg: '#f0fdf4', // secondary-50
+          },
+          animation: {
+            'pulse-border': 'pulse-border 2s infinite',
+            'ping': 'ping 1s cubic-bezier(0, 0, 0.2, 1) infinite',
+            'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'gradient-animation': 'gradient-animation 5s ease infinite',
+          },
+          keyframes: {
+            'pulse-border': {
+              '0%, 100%': { ringColor: 'transparent' },
+              '50%': { ringColor: 'theme("colors.secondary.400")' },
+            },
+            'ping': {
+              '75%, 100%': {
+                transform: 'scale(2)',
+                opacity: '0'
+              }
+            },
+            pulse: {
+              '0%, 100%': { opacity: 1 },
+              '50%': { opacity: .5 },
+            },
+            'gradient-animation': {
+              '0%, 100%': { 'background-position': '0% 50%' },
+              '50%': { 'background-position': '100% 50%' },
+            },
+          },
+          boxShadow: {
+            'sm': '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+            'DEFAULT': '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
+            'md': '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+            'lg': '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
+            'xl': '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
+            'inner': 'inset 0 2px 4px 0 rgb(0 0 0 / 0.05)',
+          }
+        }
+      }
+    }
+  </script>
+  <!-- html5-qrcode library -->
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.1.0",
+    "react/": "https://esm.sh/react@^19.1.0/",
+    "react-router-dom": "https://esm.sh/react-router-dom@^7.6.3",
+    "recharts": "https://esm.sh/recharts@^3.0.2",
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@^2.50.2",
+    "react-hot-toast": "https://esm.sh/react-hot-toast@^2.5.2",
+    "react-dom/": "https://esm.sh/react-dom@^19.1.0/",
+    "jspdf": "https://esm.sh/jspdf@^3.0.1",
+    "jspdf-autotable": "https://esm.sh/jspdf-autotable@^5.0.2",
+    "xlsx": "https://esm.sh/xlsx@^0.18.5",
+    "qrcode.react": "https://esm.sh/qrcode.react@^4.0.0",
+    "qrcode": "https://esm.sh/qrcode@^1.5.3",
+    "framer-motion": "https://esm.sh/framer-motion@^12.23.0",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^4.7.0",
+    "vite": "https://esm.sh/vite@^7.0.5",
+    "@tabler/icons-react": "https://esm.sh/@tabler/icons-react@^3.34.1",
+    "@tanstack/react-query": "https://esm.sh/@tanstack/react-query@^5.51.1"
+  }
+}
+</script>
+  <link rel="stylesheet" href="/index.css">
+</head>
+
+<body class="font-sans">
+  <div id="root"></div>
+  <script type="module" src="/src/index.tsx"></script>
+
+  <!-- PWA Service Worker Registration -->
+  <script>
+    // Service Worker enabled for production only
+    if ('serviceWorker' in navigator && window.location.hostname !== 'localhost') {
+      window.addEventListener('load', () => {
+        // Register service worker
+        navigator.serviceWorker.register('/sw.js')
+          .then(registration => {
+            console.log('[PWA] Service Worker registered:', registration.scope);
+
+            // Check for updates periodically
+            setInterval(() => {
+              registration.update();
+            }, 60 * 60 * 1000); // Every hour
+          })
+          .catch(error => {
+            console.warn('[PWA] Service Worker registration failed:', error);
+          });
+      });
+    }
+
+    // PWA Install Prompt
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent the mini-infobar from appearing on mobile
+      e.preventDefault();
+      // Stash the event so it can be triggered later
+      deferredPrompt = e;
+      console.log('[PWA] Install prompt available');
+
+      // You can show your own install button here
+      // For now, just log that it's available
+    });
+
+    window.addEventListener('appinstalled', () => {
+      console.log('[PWA] App installed successfully');
+      deferredPrompt = null;
+    });
+  </script>
+</body>
+
+</html>
