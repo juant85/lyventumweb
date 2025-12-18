@@ -58,7 +58,7 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer, index }) => {
     >
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full p-6 md:p-8 rounded-2xl bg-slate-900/50 backdrop-blur-md border border-white/10 hover:border-primary-500/50 transition-all duration-300 text-left group"
+        className="w-full p-5 md:p-8 rounded-2xl bg-slate-900/50 backdrop-blur-md border border-white/10 hover:border-primary-500/50 transition-all duration-300 text-left group"
       >
         <div className="flex justify-between items-center gap-3 md:gap-4">
           <h3 className="text-base md:text-lg font-semibold text-white group-hover:text-primary-100 transition-colors tracking-tight">
@@ -406,7 +406,7 @@ const LandingPage: React.FC = () => {
           : 'bg-transparent border-b border-transparent'
           } safe-area-top`}
       >
-        <div className="px-6 sm:px-8 max-w-7xl mx-auto w-full flex items-center justify-between py-4">
+        <div className="px-4 sm:px-8 max-w-7xl mx-auto w-full flex items-center justify-between py-4">
           <div className="flex items-center gap-3 md:gap-4 flex-shrink-0">
             {/* Hamburger Menu Trigger */}
             <button
@@ -557,7 +557,7 @@ const LandingPage: React.FC = () => {
                 transition={{ duration: 0.6, delay: 0.1 }}
                 className="mb-6 md:mb-8"
               >
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-widest brand-gradient-text">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-widest brand-gradient-text">
                   {APP_NAME}
                 </h2>
               </motion.div>
@@ -1009,7 +1009,7 @@ const LandingPage: React.FC = () => {
                       </h3>
 
                       <div className="flex items-baseline justify-center gap-1 mb-4 h-14 md:h-16 items-center">
-                        <span className={`${plan.price.length > 8 ? 'text-2xl md:text-3xl' : 'text-4xl lg:text-5xl'} font-bold text-white tracking-tight leading-none`}>
+                        <span className={`${plan.price.length > 8 ? 'text-3xl md:text-4xl' : 'text-5xl lg:text-6xl'} font-bold text-white tracking-tight leading-none`}>
                           {plan.price}
                         </span>
                         {plan.price !== 'Custom' && plan.price.length < 8 && (
@@ -1087,7 +1087,7 @@ const LandingPage: React.FC = () => {
             </p>
           </motion.div>
 
-          <div className="space-y-6 max-w-3xl mx-auto px-6">
+          <div className="space-y-6 max-w-3xl mx-auto px-4 md:px-6">
             {[
               {
                 question: "How does QR code scanning work?",
