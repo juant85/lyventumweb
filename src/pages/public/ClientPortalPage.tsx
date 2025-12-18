@@ -102,17 +102,17 @@ const ClientPortalPage: React.FC = () => {
                         className="w-full max-w-lg"
                     >
                         <BackgroundGradient containerClassName="rounded-2xl">
-                            <div className="bg-slate-900/80 backdrop-blur-sm rounded-[21px] p-8 flex flex-col items-center text-center">
+                            <div className="bg-slate-900/80 backdrop-blur-sm rounded-[21px] p-6 sm:p-8 flex flex-col items-center text-center">
                                 {company.logo_url ? (
-                                    <img src={company.logo_url} alt={`${company.name} logo`} className="h-32 w-auto max-w-xs object-contain mb-6" />
+                                    <img src={company.logo_url} alt={`${company.name} logo`} className="h-24 sm:h-32 w-auto max-w-[240px] sm:max-w-xs object-contain mb-4 sm:mb-6" />
                                 ) : (
-                                    <BuildingStorefrontIcon className="w-24 h-24 text-slate-500 mb-6" />
+                                    <BuildingStorefrontIcon className="w-20 sm:w-24 h-20 sm:h-24 text-slate-500 mb-4 sm:mb-6" />
                                 )}
-                                <h3 className="text-3xl font-bold text-slate-100 font-montserrat">{company.name}</h3>
-                                <p className="text-slate-400 mt-2 mb-8">Welcome to the official event portal.</p>
+                                <h3 className="text-2xl sm:text-3xl font-bold text-slate-100 font-montserrat">{company.name}</h3>
+                                <p className="text-sm sm:text-base text-slate-400 mt-2 mb-6 sm:mb-8">Welcome to the official event portal.</p>
                                 <Link to={AppRoute.EventSelection.replace(':companyId', company.id)}>
-                                    <Button size="lg" variant="primary">
-                                        View Events <ArrowRightIcon className="w-5 h-5 ml-2" />
+                                    <Button size="lg" variant="primary" className="text-sm sm:text-base px-6 sm:px-8">
+                                        View Events <ArrowRightIcon className="w-4 sm:w-5 h-4 sm:h-5 ml-2" />
                                     </Button>
                                 </Link>
                             </div>
@@ -124,7 +124,7 @@ const ClientPortalPage: React.FC = () => {
 
         // Multiple Companies View
         return (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
                 {companies.map((company, index) => (
                     <motion.div
                         key={company.id}
@@ -134,18 +134,18 @@ const ClientPortalPage: React.FC = () => {
                     >
                         <Link to={AppRoute.EventSelection.replace(':companyId', company.id)} className="block h-full group">
                             <BackgroundGradient containerClassName="rounded-xl h-full">
-                                <div className="bg-slate-900/80 hover:bg-slate-800/90 transition-colors duration-300 backdrop-blur-sm rounded-[11px] p-6 flex flex-col items-center justify-between text-center min-h-[16rem] h-auto">
+                                <div className="bg-slate-900/80 hover:bg-slate-800/90 transition-colors duration-300 backdrop-blur-sm rounded-[11px] p-5 sm:p-6 flex flex-col items-center justify-between text-center min-h-[14rem] sm:min-h-[16rem] h-auto">
                                     <div className="flex-grow flex items-center justify-center">
                                         {company.logo_url ? (
-                                            <img src={company.logo_url} alt={`${company.name} logo`} className="h-24 w-auto max-w-[12rem] object-contain" />
+                                            <img src={company.logo_url} alt={`${company.name} logo`} className="h-16 sm:h-24 w-auto max-w-[10rem] sm:max-w-[12rem] object-contain" />
                                         ) : (
-                                            <BuildingStorefrontIcon className="w-20 h-20 text-slate-500" />
+                                            <BuildingStorefrontIcon className="w-16 sm:w-20 h-16 sm:h-20 text-slate-500" />
                                         )}
                                     </div>
-                                    <div className="w-full pt-4 border-t border-slate-700/50">
-                                        <h3 className="text-xl font-bold text-slate-100 font-montserrat truncate w-full">{company.name}</h3>
-                                        <div className="flex items-center justify-center mt-2 text-sm font-semibold text-primary-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                            View Events <ArrowRightIcon className="w-4 h-4 ml-1.5 transform group-hover:translate-x-1 transition-transform" />
+                                    <div className="w-full pt-3 sm:pt-4 border-t border-slate-700/50">
+                                        <h3 className="text-lg sm:text-xl font-bold text-slate-100 font-montserrat truncate w-full">{company.name}</h3>
+                                        <div className="flex items-center justify-center mt-2 text-xs sm:text-sm font-semibold text-primary-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                            View Events <ArrowRightIcon className="w-3.5 sm:w-4 h-3.5 sm:h-4 ml-1.5 transform group-hover:translate-x-1 transition-transform" />
                                         </div>
                                     </div>
                                 </div>
@@ -160,15 +160,15 @@ const ClientPortalPage: React.FC = () => {
     return (
         <div className="min-h-screen bg-slate-950 flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8" style={{ backgroundImage: `radial-gradient(circle at 1px 1px, rgba(100, 116, 139, 0.2) 1px, transparent 0)`, backgroundSize: '20px 20px' }}>
             <div className="w-full max-w-5xl mx-auto flex-grow flex flex-col justify-center">
-                <header className="text-center mb-12">
+                <header className="text-center mb-8 sm:mb-12">
                     <Link to={AppRoute.Landing} className="inline-block group mb-4">
-                        <LyVentumLogo className="h-16 w-auto mx-auto filter drop-shadow-[0_4px_10px_rgba(59,130,246,0.25)] dark:drop-shadow-[0_5px_15px_rgba(96,165,250,0.25)] transition-transform duration-300 group-hover:scale-105" />
+                        <LyVentumLogo className="h-12 sm:h-16 w-auto mx-auto filter drop-shadow-[0_4px_10px_rgba(59,130,246,0.25)] dark:drop-shadow-[0_5px_15px_rgba(96,165,250,0.25)] transition-transform duration-300 group-hover:scale-105" />
                         <p className="mt-2 text-xs font-bold uppercase tracking-widest text-slate-400 transition-colors group-hover:text-white font-montserrat">
                             LyVenTum
                         </p>
                     </Link>
-                    <h1 className="text-3xl sm:text-5xl font-bold text-slate-100 font-montserrat mt-4">{t(localeKeys.clientPortalTitle)}</h1>
-                    <p className="text-lg text-slate-400 mt-2 max-w-2xl mx-auto">{t(localeKeys.clientPortalSubtitle)}</p>
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-100 font-montserrat mt-4">{t(localeKeys.clientPortalTitle)}</h1>
+                    <p className="text-base sm:text-lg text-slate-400 mt-2 max-w-2xl mx-auto px-4">{t(localeKeys.clientPortalSubtitle)}</p>
                 </header>
 
                 <main className="flex-grow flex flex-col">
