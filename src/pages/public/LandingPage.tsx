@@ -553,14 +553,6 @@ const LandingPage: React.FC = () => {
               transition={{ duration: 0.5 }}
               className="w-full flex flex-col items-center"
             >
-              {/* BRANDING: Logo & Name */}
-              <div className="flex items-center justify-center gap-3 mb-6 md:mb-8 group cursor-default">
-                <LyVentumLogo variant="gradient" className="h-12 w-auto" />
-                <span className="text-xl font-bold uppercase tracking-widest text-white font-montserrat opacity-90 group-hover:opacity-100 transition-opacity">
-                  {APP_NAME}
-                </span>
-              </div>
-
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-montserrat mb-6 md:mb-8 tracking-tight leading-[1.1] text-white">
                 <span dangerouslySetInnerHTML={{ __html: t(localeKeys.landingTitle) }} />
               </h1>
