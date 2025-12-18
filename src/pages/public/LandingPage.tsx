@@ -406,7 +406,7 @@ const LandingPage: React.FC = () => {
           : 'bg-transparent border-b border-transparent'
           } safe-area-top`}
       >
-        <div className="px-6 sm:px-12 md:px-20 py-4 flex items-center justify-between mx-auto w-full">
+        <div className="px-6 sm:px-8 max-w-7xl mx-auto w-full flex items-center justify-between py-4">
           <div className="flex items-center gap-3 md:gap-4 flex-shrink-0">
             {/* Hamburger Menu Trigger */}
             <button
@@ -1008,12 +1008,12 @@ const LandingPage: React.FC = () => {
                         {plan.name}
                       </h3>
 
-                      <div className="flex items-baseline justify-center gap-1 mb-4">
-                        <span className="text-4xl lg:text-5xl font-bold text-white tracking-tight">
+                      <div className="flex items-baseline justify-center gap-1 mb-4 h-14 md:h-16 items-center">
+                        <span className={`${plan.price.length > 8 ? 'text-2xl md:text-3xl' : 'text-4xl lg:text-5xl'} font-bold text-white tracking-tight leading-none`}>
                           {plan.price}
                         </span>
-                        {plan.price !== 'Custom' && (
-                          <span className="text-sm font-medium text-slate-500">{plan.priceSubtitle}</span>
+                        {plan.price !== 'Custom' && plan.price.length < 8 && (
+                          <span className="text-sm font-medium text-slate-500 ml-1">{plan.priceSubtitle}</span>
                         )}
                       </div>
 
