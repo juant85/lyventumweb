@@ -33,6 +33,7 @@ import {
 import { getHomePathForRole } from '../../components/Layout';
 import LyVentumLogo from '../../components/Logo';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { ContactFormModal } from '../../components/landing/ContactFormModal';
 import Button from '../../components/ui/Button';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { localeKeys } from '../../i18n/locales';
@@ -116,6 +117,7 @@ const LandingPage: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
 
   // Show mobile header on scroll - Optimized threshold
@@ -1053,19 +1055,18 @@ const LandingPage: React.FC = () => {
 
                   {/* Footer Area - Merged with Card */}
                   <div className="p-8 mt-auto pt-0 flex justify-center pb-10">
-                    <Link to={AppRoute.Login} className="block w-auto">
-                      <Button
-                        variant={plan.isPopular ? 'primary' : 'secondary'}
-                        size="lg"
-                        className={`w-auto px-12 py-4 text-sm font-bold tracking-wide transition-all duration-300 rounded-full min-w-[220px]
-                          ${plan.isPopular
-                            ? 'shadow-xl shadow-primary-500/30 hover:shadow-primary-500/50 hover:-translate-y-1'
-                            : 'bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-slate-500 text-white shadow-md'
-                          }`}
-                      >
-                        {plan.cta}
-                      </Button>
-                    </Link>
+                    <Button
+                      onClick={() => setIsContactModalOpen(true)}
+                      variant={plan.isPopular ? 'primary' : 'secondary'}
+                      size="lg"
+                      className={`w-auto px-12 py-4 text-sm font-bold tracking-wide transition-all duration-300 rounded-full min-w-[220px]
+                        ${plan.isPopular
+                          ? 'shadow-xl shadow-primary-500/30 hover:shadow-primary-500/50 hover:-translate-y-1'
+                          : 'bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-slate-500 text-white shadow-md'
+                        }`}
+                    >
+                      {plan.cta}
+                    </Button>
                   </div>
                 </div>
               </motion.div>
@@ -1114,8 +1115,8 @@ const LandingPage: React.FC = () => {
                 answer: "All data is encrypted in transit and at rest using industry-standard encryption. We use Supabase for secure cloud storage with automatic backups. You maintain full ownership of your data and can export it anytime."
               },
               {
-                question: "What's included in the free trial?",
-                answer: "The 14-day free trial includes full access to all features: unlimited scans, real-time analytics, booth management, and data export. No credit card required to start."
+                question: "How does pricing work?",
+                answer: "We offer three flexible pricing tiers (Essentials, Professional, Enterprise) with custom pricing based on your event size and specific needs. All plans include core features like real-time analytics and QR scanning. Contact us for a personalized quote tailored to your event."
               },
               {
                 question: t(localeKeys.walkinFaqQuestion),
@@ -1196,17 +1197,17 @@ const LandingPage: React.FC = () => {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
               <Button
-                onClick={() => navigate(AppRoute.Login)}
+                onClick={() => setIsContactModalOpen(true)}
                 variant="primary"
                 size="lg"
                 className="w-full sm:w-auto text-lg px-10 py-4 group shadow-2xl shadow-primary-500/50 hover:shadow-primary-500/70 transition-all"
               >
-                Start Free Trial
+                Request Information
                 <ArrowRightIcon className="w-6 h-6 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
 
               <Button
-                onClick={() => navigate(AppRoute.Login)}
+                onClick={() => setIsContactModalOpen(true)}
                 variant="neutral"
                 size="lg"
                 className="w-full sm:w-auto text-lg px-10 py-4"
@@ -1219,15 +1220,15 @@ const LandingPage: React.FC = () => {
             <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-slate-400">
               <div className="flex items-center gap-2">
                 <CheckCircleIcon className="w-5 h-5 text-green-400" />
-                <span>No credit card required</span>
+                <span>Custom pricing for your needs</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircleIcon className="w-5 h-5 text-green-400" />
-                <span>14-day free trial</span>
+                <span>Schedule a demo to see it in action</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircleIcon className="w-5 h-5 text-green-400" />
-                <span>Cancel anytime</span>
+                <span>Trusted by event professionals</span>
               </div>
             </div>
           </motion.div>
@@ -1410,6 +1411,12 @@ const LandingPage: React.FC = () => {
             ]
           })
         }}
+      />
+
+      {/* Contact Form Modal */}
+      <ContactFormModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
       />
     </div>
   );
