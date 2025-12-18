@@ -5,7 +5,7 @@ import { Session, ScanRecord, Booth, SessionRegistration, BoothLayoutConfig } fr
 import Card from '../../components/ui/Card';
 import Button from '../../components/ui/Button';
 import { TableCellsIcon, CheckCircleIcon, XMarkIcon, UserIcon, UserPlusIcon, ExclamationTriangleIcon } from '../../components/Icons';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement, ChartOptions } from 'chart.js';
+
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../supabaseClient';
 import { useAutoRefresh, getTimeAgoString, REFRESH_INTERVALS } from '../../hooks/useAutoRefresh';
