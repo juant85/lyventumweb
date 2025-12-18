@@ -58,7 +58,7 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer, index }) => {
     >
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full p-6 md:p-8 rounded-2xl bg-slate-900/50 backdrop-blur-md border border-white/10 hover:border-primary-500/50 transition-all duration-300 text-left group"
+        className="w-full p-4 sm:p-5 md:p-6 lg:p-8 rounded-2xl bg-slate-900/50 backdrop-blur-md border border-white/10 hover:border-primary-500/50 transition-all duration-300 text-left group"
       >
         <div className="flex justify-between items-start gap-4">
           <h3 className="text-base md:text-lg font-semibold text-white group-hover:text-primary-100 transition-colors tracking-tight flex-1">
@@ -425,7 +425,7 @@ const LandingPage: React.FC = () => {
             onClick={() => navigate(AppRoute.ClientPortal)}
             variant="primary"
             size="sm"
-            className="text-xs font-semibold tracking-wide px-6 py-2.5 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 transition-all rounded-full"
+            className="text-[11px] sm:text-xs font-semibold tracking-normal sm:tracking-wide px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 transition-all rounded-full whitespace-nowrap flex-shrink-0"
           >
             {t(localeKeys.eventAccess)}
           </Button>
@@ -1088,7 +1088,7 @@ const LandingPage: React.FC = () => {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 max-w-4xl mx-auto px-4 sm:px-6">
             {[
               {
                 question: "How does QR code scanning work?",
