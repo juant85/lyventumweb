@@ -418,16 +418,13 @@ const LandingPage: React.FC = () => {
             </button>
             <div className="flex items-center gap-2 min-w-0" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
               <LyVentumLogo variant="gradient" className="h-7 sm:h-9 w-auto flex-shrink-0" />
-              <span className="text-xs sm:text-sm md:text-base font-bold uppercase tracking-wider text-white font-montserrat truncate">
-                {APP_NAME}
-              </span>
             </div>
           </div>
           <Button
             onClick={() => navigate(AppRoute.ClientPortal)}
             variant="primary"
             size="sm"
-            className="text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 shadow-lg shadow-primary-500/20 flex-shrink-0 mr-1"
+            className="text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 shadow-lg shadow-primary-500/20 flex-shrink-0 mr-2 sm:mr-3"
           >
             {t(localeKeys.eventAccess)}
           </Button>
@@ -553,6 +550,18 @@ const LandingPage: React.FC = () => {
               transition={{ duration: 0.5 }}
               className="w-full flex flex-col items-center"
             >
+              {/* Hero Branding - Centered */}
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="mb-6 md:mb-8"
+              >
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-widest brand-gradient-text">
+                  {APP_NAME}
+                </h2>
+              </motion.div>
+
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-montserrat mb-6 md:mb-8 tracking-tight leading-[1.1] text-white">
                 <span dangerouslySetInnerHTML={{ __html: t(localeKeys.landingTitle) }} />
               </h1>
@@ -594,16 +603,6 @@ const LandingPage: React.FC = () => {
               {/* Subtle overlay to integrate with dark theme */}
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
 
-              {/* Floating Badge - Centered with proper clearance */}
-              <div className="absolute -bottom-10 md:-bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur-md p-3 md:p-4 rounded-full border border-slate-800/50 flex items-center gap-4 md:gap-6 shadow-xl max-w-[85%] md:max-w-[90%] w-auto z-20">
-                <div className="flex -space-x-3 md:-space-x-4">
-                  {[1, 2, 3].map(i => (
-                    <div key={i} className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-slate-900 bg-slate-800 flex items-center justify-center text-xs overflow-hidden">
-                      <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="User" />
-                    </div>
-                  ))}
-                </div>
-              </div>
             </div>
           </motion.div>
 
@@ -611,7 +610,7 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* FEATURES SECTION */}
-      <section id="features" className="relative pt-36 md:pt-24 pb-24 md:pb-32 px-5 sm:px-6 md:px-8 overflow-hidden" >
+      <section id="features" className="relative pt-24 md:pt-32 pb-24 md:pb-32 px-5 sm:px-6 md:px-8 overflow-hidden" >
         {/* Gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary-600/5 via-transparent to-green-600/5" />
         <div className="max-w-7xl mx-auto">
