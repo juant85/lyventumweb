@@ -58,10 +58,10 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer, index }) => {
     >
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full p-5 md:p-6 rounded-2xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-slate-700/50 hover:border-primary-500/50 transition-all duration-300 text-left"
+        className="w-full p-4 md:p-5 rounded-xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-slate-700/50 hover:border-primary-500/50 transition-all duration-300 text-left"
       >
         <div className="flex justify-between items-center gap-3 md:gap-4">
-          <h3 className="text-base md:text-lg font-semibold text-white group-hover:text-primary-100 transition-colors">
+          <h3 className="text-sm md:text-base font-semibold text-white group-hover:text-primary-100 transition-colors">
             {question}
           </h3>
           <ChevronDown
@@ -406,25 +406,25 @@ const LandingPage: React.FC = () => {
           : 'bg-transparent border-b border-transparent'
           } safe-area-top`}
       >
-        <div className="px-5 sm:px-6 py-3.5 flex items-center justify-between gap-4 sm:gap-6 max-w-7xl mx-auto w-full">
-          <div className="flex items-center gap-2 sm:gap-2.5 flex-shrink min-w-0">
+        <div className="px-4 py-3 flex items-center justify-between max-w-md sm:max-w-lg md:max-w-xl mx-auto w-full">
+          <div className="flex items-center gap-2 flex-shrink-0">
             {/* Hamburger Menu Trigger */}
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="p-1.5 -ml-1.5 sm:ml-0 text-white focus:outline-none flex-shrink-0"
+              className="p-2 text-white focus:outline-none"
               aria-label="Open menu"
             >
-              <Menu className="w-6 h-6" />
+              <Menu className="w-5 h-5" />
             </button>
-            <div className="flex items-center gap-2 min-w-0" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-              <LyVentumLogo variant="gradient" className="h-7 sm:h-9 w-auto flex-shrink-0" />
+            <div className="flex items-center" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+              <LyVentumLogo variant="gradient" className="h-8 w-auto" />
             </div>
           </div>
           <Button
             onClick={() => navigate(AppRoute.ClientPortal)}
             variant="primary"
             size="sm"
-            className="text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 shadow-lg shadow-primary-500/20 flex-shrink-0"
+            className="text-xs px-3 py-1.5 shadow-lg shadow-primary-500/20"
           >
             {t(localeKeys.eventAccess)}
           </Button>
@@ -1004,7 +1004,7 @@ const LandingPage: React.FC = () => {
                     )}
 
                     <div className="text-center mb-8">
-                      <h3 className={`text-xl font-bold font-montserrat mb-4 ${plan.isPopular ? 'text-white' : 'text-slate-200'}`}>
+                      <h3 className={`text-2xl md:text-3xl font-bold font-montserrat mb-4 ${plan.isPopular ? 'text-white' : 'text-slate-200'}`}>
                         {plan.name}
                       </h3>
 
@@ -1050,7 +1050,7 @@ const LandingPage: React.FC = () => {
                       onClick={() => setIsContactModalOpen(true)}
                       variant={plan.isPopular ? 'primary' : 'secondary'}
                       size="lg"
-                      className={`w-full sm:w-auto px-8 sm:px-10 md:px-12 py-3 sm:py-4 text-sm font-bold tracking-wide transition-all duration-300 rounded-full
+                      className={`w-full sm:w-auto px-6 py-2.5 text-xs font-bold tracking-wide transition-all duration-300 rounded-full
                         ${plan.isPopular
                           ? 'shadow-xl shadow-primary-500/30 hover:shadow-primary-500/50 hover:-translate-y-1'
                           : 'bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-slate-500 text-white shadow-md'
@@ -1087,7 +1087,7 @@ const LandingPage: React.FC = () => {
             </p>
           </motion.div>
 
-          <div className="space-y-5 max-w-3xl mx-auto px-2">
+          <div className="space-y-4 max-w-2xl mx-auto px-4">
             {[
               {
                 question: "How does QR code scanning work?",
