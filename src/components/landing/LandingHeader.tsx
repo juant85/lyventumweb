@@ -141,46 +141,40 @@ export const LandingHeader: React.FC = () => {
                                 <LanguageSwitcher />
                             </div>
 
-                            {/* Nav Links */}
+                            {/* Nav Links - Professional sizing */}
                             {NAV_LINKS.map((link) => (
                                 <a
                                     key={link.href}
                                     href={link.href}
                                     onClick={() => setIsMobileMenuOpen(false)}
-                                    className="text-2xl font-semibold text-slate-300 hover:text-white transition-colors block py-2"
+                                    className="text-lg font-semibold text-slate-300 hover:text-white transition-colors block py-1.5"
                                 >
                                     {link.labelKey === 'FAQ' ? 'FAQ' : t(link.labelKey)}
                                 </a>
                             ))}
 
-                            {/* CTA Buttons */}
-                            <div className="mt-auto pt-6 border-t border-white/10 flex flex-col gap-3">
-                                {/* Event Access - PRIMARY (First) */}
+                            {/* CTA Buttons - Left Aligned for Consistency */}
+                            <div className="mt-auto pt-6 border-t border-white/10 flex flex-col gap-3 items-start w-full">
+                                {/* Event Access - PRIMARY CTA (Prominent) */}
                                 <button
                                     onClick={() => {
                                         navigate(AppRoute.ClientPortal);
                                         setIsMobileMenuOpen(false);
                                     }}
-                                    className="flex items-center justify-between w-full py-4 px-4 text-base font-medium text-slate-100 bg-slate-900 hover:bg-slate-800 rounded-xl border border-slate-800 transition-colors"
+                                    className="flex items-center justify-center gap-2 px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-primary-600 to-blue-600 hover:from-primary-500 hover:to-blue-500 rounded-lg shadow-lg shadow-primary-500/30 transition-all min-h-[48px]"
                                 >
-                                    <span className="flex items-center gap-3">
-                                        <Calendar className="w-5 h-5 text-primary-400" />
-                                        {t(localeKeys.eventAccess)}
-                                    </span>
-                                    <span className="text-slate-500">→</span>
+                                    <Calendar className="w-5 h-5" />
+                                    {t(localeKeys.eventAccess)}
                                 </button>
 
-                                {/* Organizer Login - Secondary */}
+                                {/* Organizer Login - SECONDARY (Brand-aligned cyan) */}
                                 <Link
                                     to={AppRoute.Login}
                                     onClick={() => setIsMobileMenuOpen(false)}
-                                    className="flex items-center justify-between w-full py-4 px-4 text-base font-medium text-slate-100 bg-slate-900 hover:bg-slate-800 rounded-xl border border-slate-800 transition-colors"
+                                    className="flex items-center justify-center gap-2 px-6 py-2.5 text-sm font-medium text-cyan-100 hover:text-white bg-cyan-900/60 hover:bg-cyan-900/80 border border-cyan-800/70 hover:border-cyan-700 rounded-lg transition-all min-h-[44px]"
                                 >
-                                    <span className="flex items-center gap-3">
-                                        <User className="w-5 h-5 text-slate-400" />
-                                        {t(localeKeys.footerLinkOrganizerLogin)}
-                                    </span>
-                                    <span className="text-slate-500">→</span>
+                                    <User className="w-4 h-4" />
+                                    {t(localeKeys.footerLinkOrganizerLogin)}
                                 </Link>
                             </div>
                         </div>

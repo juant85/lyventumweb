@@ -61,23 +61,23 @@ export const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onCl
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            className="bg-slate-900 rounded-2xl shadow-2xl border border-slate-700 max-w-lg w-full relative overflow-hidden"
+                            className="bg-slate-900 rounded-2xl shadow-2xl border border-slate-700 max-w-lg w-full relative overflow-hidden max-h-[90vh] flex flex-col"
                         >
-                            {/* Header */}
-                            <div className="relative bg-gradient-to-br from-primary-600 to-indigo-600 px-6 py-8 text-center">
+                            {/* Header - Mobile optimized */}
+                            <div className="relative bg-gradient-to-br from-primary-600 to-indigo-600 px-4 sm:px-6 py-5 sm:py-6 text-center flex-shrink-0">
                                 <button
                                     onClick={onClose}
-                                    className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/20 transition-colors"
+                                    className="absolute top-3 sm:top-4 right-3 sm:right-4 p-2 rounded-full hover:bg-white/20 transition-colors touch-manipulation"
                                     aria-label="Close"
                                 >
                                     <X className="w-5 h-5 text-white" />
                                 </button>
-                                <h2 className="text-2xl font-bold text-white mb-2">Get in Touch</h2>
-                                <p className="text-primary-100">Let's discuss how LyVentum can transform your events</p>
+                                <h2 className="text-xl sm:text-2xl font-bold text-white mb-1 sm:mb-2">Get in Touch</h2>
+                                <p className="text-sm sm:text-base text-primary-100">Let's discuss how LyVentum can transform your events</p>
                             </div>
 
-                            {/* Form */}
-                            <div className="p-6">
+                            {/* Form - Mobile optimized with scroll */}
+                            <div className="p-4 sm:p-6 overflow-y-auto flex-grow">
                                 {isSuccess ? (
                                     <motion.div
                                         initial={{ opacity: 0, y: 10 }}
@@ -93,10 +93,10 @@ export const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onCl
                                         <p className="text-slate-400">We'll get back to you shortly.</p>
                                     </motion.div>
                                 ) : (
-                                    <form onSubmit={handleSubmit} className="space-y-4">
+                                    <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
                                         {/* Name */}
                                         <div>
-                                            <label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-2">
+                                            <label htmlFor="name" className="block text-sm font-medium text-slate-200 mb-1.5">
                                                 Your Name *
                                             </label>
                                             <input
@@ -104,14 +104,14 @@ export const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onCl
                                                 id="name"
                                                 name="name"
                                                 required
-                                                className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                                                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all touch-manipulation"
                                                 placeholder="John Doe"
                                             />
                                         </div>
 
                                         {/* Email */}
                                         <div>
-                                            <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
+                                            <label htmlFor="email" className="block text-sm font-medium text-slate-200 mb-1.5">
                                                 Email *
                                             </label>
                                             <input
@@ -119,34 +119,34 @@ export const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onCl
                                                 id="email"
                                                 name="email"
                                                 required
-                                                className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                                                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all touch-manipulation"
                                                 placeholder="john@company.com"
                                             />
                                         </div>
 
                                         {/* Organization */}
                                         <div>
-                                            <label htmlFor="organization" className="block text-sm font-medium text-slate-300 mb-2">
+                                            <label htmlFor="organization" className="block text-sm font-medium text-slate-200 mb-1.5">
                                                 Company / Organization
                                             </label>
                                             <input
                                                 type="text"
                                                 id="organization"
                                                 name="organization"
-                                                className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                                                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all touch-manipulation"
                                                 placeholder="Acme Corp"
                                             />
                                         </div>
 
                                         {/* Plan Interest */}
                                         <div>
-                                            <label htmlFor="interest" className="block text-sm font-medium text-slate-300 mb-2">
+                                            <label htmlFor="interest" className="block text-sm font-medium text-slate-200 mb-1.5">
                                                 Interested In
                                             </label>
                                             <select
                                                 id="interest"
                                                 name="interest"
-                                                className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                                                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all touch-manipulation"
                                             >
                                                 <option value="">Select a plan...</option>
                                                 <option value="essentials">Essentials Plan</option>
@@ -158,23 +158,23 @@ export const ContactFormModal: React.FC<ContactFormModalProps> = ({ isOpen, onCl
 
                                         {/* Message */}
                                         <div>
-                                            <label htmlFor="message" className="block text-sm font-medium text-slate-300 mb-2">
+                                            <label htmlFor="message" className="block text-sm font-medium text-slate-200 mb-1.5">
                                                 Tell us about your event
                                             </label>
                                             <textarea
                                                 id="message"
                                                 name="message"
-                                                rows={4}
-                                                className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all resize-none"
+                                                rows={3}
+                                                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all resize-none touch-manipulation sm:rows-4"
                                                 placeholder="Number of attendees, event type, specific needs..."
                                             />
                                         </div>
 
-                                        {/* Submit Button */}
+                                        {/* Submit Button - Mobile optimized */}
                                         <button
                                             type="submit"
                                             disabled={isSubmitting}
-                                            className="w-full bg-gradient-to-r from-primary-600 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:from-primary-500 hover:to-indigo-500 transition-all shadow-lg shadow-primary-500/50 hover:shadow-primary-500/70 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="w-full bg-gradient-to-r from-primary-600 to-indigo-600 text-white font-bold py-3 sm:py-3.5 px-6 rounded-lg hover:from-primary-500 hover:to-indigo-500 transition-all shadow-lg shadow-primary-500/50 hover:shadow-primary-500/70 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation min-h-[48px]"
                                         >
                                             {isSubmitting ? 'Sending...' : 'Send Request'}
                                         </button>

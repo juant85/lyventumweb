@@ -473,10 +473,16 @@ const LandingPage: React.FC = () => {
             {features.map((feature, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px", amount: 0.3 }}
-                transition={{ duration: 0.4, delay: Math.min(index * 0.08, 0.3), ease: "easeOut" }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 20,
+                  mass: 1,
+                  delay: index * 0.1
+                }}
                 className="group relative p-6 md:p-8 rounded-3xl
                            bg-gradient-to-br from-slate-800/40 via-slate-800/30 to-slate-900/40
                            backdrop-blur-xl border border-slate-700/50
