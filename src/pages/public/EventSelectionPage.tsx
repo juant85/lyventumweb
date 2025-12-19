@@ -28,6 +28,9 @@ const EventSelectionPage: React.FC = () => {
         const fetchCompany = async () => {
             if (!companyId) return;
             const { data, error } = await supabase
+                .from('companies')
+                .select('id, name, logo_url')
+                .eq('id', companyId)
                 .single();
             if (data) setCompany(data);
             else console.error("Could not fetch company:", error);
