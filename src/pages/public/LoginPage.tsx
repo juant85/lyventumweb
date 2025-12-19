@@ -57,21 +57,21 @@ const LoginPage: React.FC = () => {
 
   return (
     <div
-      className="min-h-screen bg-slate-950 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
+      className="min-h-screen bg-slate-950 flex flex-col items-center justify-center py-6 sm:py-12 px-4 sm:px-6 lg:px-8 overflow-x-hidden"
       style={{ backgroundImage: `radial-gradient(circle at 1px 1px, rgba(100, 116, 139, 0.2) 1px, transparent 0)`, backgroundSize: '20px 20px' }}
     >
-      <div className="max-w-md w-full space-y-8">
+      <div className="max-w-md w-[90%] sm:w-full mx-auto space-y-6 sm:space-y-8">
         <div className="text-center mb-10">
           <Link to={AppRoute.Landing} className="inline-block group">
-            <LyVentumLogo className="h-20 w-auto filter drop-shadow-[0_4px_10px_rgba(59,130,246,0.25)] dark:drop-shadow-[0_5px_15px_rgba(96,165,250,0.25)] transition-transform duration-300 group-hover:scale-105" />
+            <LyVentumLogo className="h-12 sm:h-16 md:h-20 w-auto filter drop-shadow-[0_4px_10px_rgba(59,130,246,0.25)] dark:drop-shadow-[0_5px_15px_rgba(96,165,250,0.25)] transition-transform duration-300 group-hover:scale-105" />
             <p className="mt-2 text-sm font-bold uppercase tracking-widest text-slate-400 transition-colors group-hover:text-white font-montserrat">
               LyVenTum
             </p>
           </Link>
         </div>
 
-        <BackgroundGradient containerClassName="rounded-2xl" className="bg-slate-900/80 backdrop-blur-md rounded-[22px] p-8 space-y-6">
-          <h2 className="text-2xl font-bold text-center text-slate-100">
+        <BackgroundGradient containerClassName="rounded-2xl" className="bg-slate-900/80 backdrop-blur-md rounded-[22px] p-4 sm:p-6 md:p-8 space-y-4 sm:space-y-6">
+          <h2 className="text-xl sm:text-2xl font-bold text-center text-slate-100">
             {t(localeKeys.accountLogin)}
           </h2>
           {error && <Alert type="error" message={error} className="mb-4" />}

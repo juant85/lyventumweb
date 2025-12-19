@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Critical: Ensure border-box for all elements */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
 /* Professional Animations */
 @import './styles/animations.css';
 
