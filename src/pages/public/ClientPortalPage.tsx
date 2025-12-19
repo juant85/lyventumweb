@@ -102,17 +102,31 @@ const ClientPortalPage: React.FC = () => {
                         className="w-full max-w-lg"
                     >
                         <BackgroundGradient containerClassName="rounded-2xl">
-                            <div className="bg-slate-900/80 backdrop-blur-sm rounded-[21px] p-6 sm:p-8 flex flex-col items-center text-center">
+                            <div className="bg-slate-900/80 backdrop-blur-sm rounded-[21px] p-8 sm:p-10 flex flex-col items-center text-center">
+                                {/* Logo */}
                                 {company.logo_url ? (
-                                    <img src={company.logo_url} alt={`${company.name} logo`} className="h-24 sm:h-32 w-auto max-w-[240px] sm:max-w-xs object-contain mb-4 sm:mb-6" />
+                                    <img src={company.logo_url} alt={`${company.name} logo`} className="h-28 sm:h-36 w-auto max-w-[280px] sm:max-w-sm object-contain mb-6 sm:mb-8" />
                                 ) : (
-                                    <BuildingStorefrontIcon className="w-20 sm:w-24 h-20 sm:h-24 text-slate-500 mb-4 sm:mb-6" />
+                                    <BuildingStorefrontIcon className="w-24 sm:w-28 h-24 sm:h-28 text-slate-500 mb-6 sm:mb-8" />
                                 )}
-                                <h3 className="text-2xl sm:text-3xl font-bold text-slate-100 font-montserrat">{company.name}</h3>
-                                <p className="text-sm sm:text-base text-slate-400 mt-2 mb-6 sm:mb-8">Welcome to the official event portal.</p>
-                                <Link to={AppRoute.EventSelection.replace(':companyId', company.id)}>
-                                    <Button size="lg" variant="primary" className="text-sm sm:text-base px-6 sm:px-8">
-                                        View Events <ArrowRightIcon className="w-4 sm:w-5 h-4 sm:h-5 ml-2" />
+
+                                {/* Gradient Divider */}
+                                <div className="w-full h-px bg-gradient-to-r from-transparent via-slate-700/50 to-transparent mb-6 sm:mb-8" />
+
+                                {/* Company Name */}
+                                <h3 className="text-3xl sm:text-4xl font-bold text-slate-100 font-montserrat mb-3 sm:mb-4">{company.name}</h3>
+
+                                {/* Description */}
+                                <p className="text-base sm:text-lg text-slate-400 mb-8 sm:mb-10">Welcome to the official event portal.</p>
+
+                                {/* Button */}
+                                <Link to={AppRoute.EventSelection.replace(':companyId', company.id)} className="w-full block">
+                                    <Button
+                                        size="lg"
+                                        variant="primary"
+                                        className="w-full sm:w-auto text-base sm:text-lg px-8 sm:px-10 py-3 sm:py-4 font-bold shadow-2xl shadow-primary-500/40 hover:shadow-primary-500/60 hover:scale-[1.03] transition-all duration-300"
+                                    >
+                                        View Events <ArrowRightIcon className="w-5 h-5 ml-2" />
                                     </Button>
                                 </Link>
                             </div>
@@ -124,7 +138,7 @@ const ClientPortalPage: React.FC = () => {
 
         // Multiple Companies View
         return (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {companies.map((company, index) => (
                     <motion.div
                         key={company.id}
@@ -132,25 +146,45 @@ const ClientPortalPage: React.FC = () => {
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         transition={{ delay: index * 0.1, duration: 0.5, ease: "easeOut" }}
                     >
-                        <Link to={AppRoute.EventSelection.replace(':companyId', company.id)} className="block h-full group">
-                            <BackgroundGradient containerClassName="rounded-xl h-full">
-                                <div className="bg-slate-900/80 hover:bg-slate-800/90 transition-colors duration-300 backdrop-blur-sm rounded-[11px] p-5 sm:p-6 flex flex-col items-center justify-between text-center min-h-[14rem] sm:min-h-[16rem] h-auto">
-                                    <div className="flex-grow flex items-center justify-center">
-                                        {company.logo_url ? (
-                                            <img src={company.logo_url} alt={`${company.name} logo`} className="h-16 sm:h-24 w-auto max-w-[10rem] sm:max-w-[12rem] object-contain" />
-                                        ) : (
-                                            <BuildingStorefrontIcon className="w-16 sm:w-20 h-16 sm:h-20 text-slate-500" />
-                                        )}
-                                    </div>
-                                    <div className="w-full pt-3 sm:pt-4 border-t border-slate-700/50">
-                                        <h3 className="text-lg sm:text-xl font-bold text-slate-100 font-montserrat truncate w-full">{company.name}</h3>
-                                        <div className="flex items-center justify-center mt-2 text-xs sm:text-sm font-semibold text-primary-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                            View Events <ArrowRightIcon className="w-3.5 sm:w-4 h-3.5 sm:h-4 ml-1.5 transform group-hover:translate-x-1 transition-transform" />
+                        <div className="group relative bg-gradient-to-br from-slate-900/95 to-slate-800/95 backdrop-blur-lg rounded-2xl border border-slate-700/50 hover:border-primary-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-primary-500/10 overflow-hidden">
+                            {/* Subtle gradient overlay */}
+                            <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                            {/* Card Content */}
+                            <div className="relative p-8 flex flex-col items-center text-center space-y-6">
+                                {/* Logo */}
+                                <div className="w-full flex items-center justify-center">
+                                    {company.logo_url ? (
+                                        <div className="bg-white rounded-xl p-4 shadow-lg">
+                                            <img
+                                                src={company.logo_url}
+                                                alt={`${company.name} logo`}
+                                                className="h-16 w-auto max-w-full object-contain"
+                                            />
                                         </div>
-                                    </div>
+                                    ) : (
+                                        <div className="bg-slate-800 rounded-xl p-4">
+                                            <BuildingStorefrontIcon className="w-16 h-16 text-slate-400" />
+                                        </div>
+                                    )}
                                 </div>
-                            </BackgroundGradient>
-                        </Link>
+
+                                {/* Company Name */}
+                                <h3 className="text-2xl font-bold text-white font-montserrat">
+                                    {company.name}
+                                </h3>
+
+                                {/* CTA Button */}
+                                <div className="w-full flex justify-center">
+                                    <Link to={AppRoute.EventSelection.replace(':companyId', company.id)}>
+                                        <button className="group/btn relative px-8 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl hover:shadow-primary-500/30 flex items-center justify-center gap-2 text-sm">
+                                            <span>View Events</span>
+                                            <ArrowRightIcon className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                                        </button>
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
                     </motion.div>
                 ))}
             </div>

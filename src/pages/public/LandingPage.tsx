@@ -12,7 +12,8 @@ import {
   ArrowRightIcon,
   CheckCircleIcon,
   XCircleIcon,
-  StarIcon
+  StarIcon,
+  CursorArrowRaysIcon
 } from '../../components/Icons';
 
 // Lucide React for feature/step icons (modern, minimalist)
@@ -31,6 +32,7 @@ import {
 } from 'lucide-react';
 
 import { getHomePathForRole } from '../../components/Layout';
+import { LandingHeader } from '../../components/landing/LandingHeader';
 import LyVentumLogo from '../../components/Logo';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { ContactFormModal } from '../../components/landing/ContactFormModal';
@@ -58,10 +60,10 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer, index }) => {
     >
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full p-4 sm:p-5 md:p-6 lg:p-8 rounded-2xl bg-slate-900/50 backdrop-blur-md border border-white/10 hover:border-primary-500/50 transition-all duration-300 text-left group"
+        className="w-full p-3 sm:p-4 md:p-5 rounded-2xl bg-slate-900/50 backdrop-blur-md border border-white/10 hover:border-primary-500/50 transition-all duration-300 text-left group"
       >
-        <div className="flex justify-between items-start gap-4">
-          <h3 className="text-base md:text-lg font-semibold text-white group-hover:text-primary-100 transition-colors tracking-tight flex-1">
+        <div className="flex justify-start items-start gap-2">
+          <h3 className="text-base md:text-lg font-semibold text-white group-hover:text-primary-100 transition-colors tracking-tight">
             {question}
           </h3>
           <ChevronDown
@@ -114,19 +116,16 @@ const LandingPage: React.FC = () => {
   const { currentUser, loadingAuth } = useAuth();
   const { t } = useLanguage();
   const { scrollY } = useScroll();
-  const [isScrolled, setIsScrolled] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
 
-  // Show mobile header on scroll - Optimized threshold
+  // Scroll detection for progress bar and back-to-top
   useEffect(() => {
     let ticking = false;
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          setIsScrolled(window.scrollY > 20);
           setShowBackToTop(window.scrollY > 300);
 
           // Calculate scroll progress
@@ -346,39 +345,8 @@ const LandingPage: React.FC = () => {
     <div className="min-h-screen bg-slate-950 text-white relative overflow-hidden"
       style={{ backgroundImage: `radial-gradient(circle at 1px 1px, rgba(100, 116, 139, 0.15) 1px, transparent 0)`, backgroundSize: '40px 40px' }}>
 
-      {/* DESKTOP STICKY HEADER */}
-      <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="hidden lg:flex fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/50 h-20 items-center justify-between px-8"
-      >
-        <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-          <LyVentumLogo variant="gradient" className="h-8 w-auto" />
-          <span className="text-xl font-bold font-montserrat tracking-tight text-white">{APP_NAME}</span>
-        </div>
-
-        <div className="flex items-center gap-8">
-          <a href="#features" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">{t(localeKeys.footerLinkFeatures)}</a>
-          <a href="#how-it-works" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">{t(localeKeys.howItWorksTitle)}</a>
-          <a href="#pricing" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">{t(localeKeys.footerLinkPricing)}</a>
-          <a href="#faq" className="text-sm font-medium text-slate-300 hover:text-white transition-colors">FAQ</a>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <Link to={AppRoute.Login} className="text-sm font-medium text-slate-300 hover:text-white transition-colors">
-            {t(localeKeys.footerLinkOrganizerLogin)}
-          </Link>
-          <Button
-            onClick={() => navigate(AppRoute.Login)}
-            variant="primary"
-            size="sm"
-            className="px-6 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/40"
-          >
-            {t(localeKeys.eventAccess)}
-          </Button>
-        </div>
-      </motion.nav>
+      {/* UNIFIED HEADER COMPONENT */}
+      <LandingHeader />
 
       {/* SCROLL PROGRESS BAR */}
       <div
@@ -393,135 +361,6 @@ const LandingPage: React.FC = () => {
       >
         Skip to main content
       </a>
-
-      {/* STICKY MOBILE HEADER - Always visible on mobile/tablet (Variant based on scroll) */}
-      <motion.header
-        role="banner"
-        aria-label="Navegación principal móvil"
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className={`lg:hidden fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-          ? 'bg-slate-900/95 backdrop-blur-xl border-b border-slate-800/50 shadow-xl'
-          : 'bg-transparent border-b border-transparent'
-          } safe-area-top`}
-      >
-        <div className="px-6 md:px-8 max-w-5xl mx-auto w-full flex items-center gap-6 py-4">
-          <div className="flex items-center gap-3 md:gap-4 flex-shrink-0">
-            {/* Hamburger Menu Trigger */}
-            <button
-              onClick={() => setIsMobileMenuOpen(true)}
-              className="p-2 text-white focus:outline-none hover:text-primary-400 transition-colors"
-              aria-label="Open menu"
-            >
-              <Menu className="w-5 h-5 md:w-6 md:h-6" />
-            </button>
-            <div className="flex items-center cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-              <LyVentumLogo variant="gradient" className="h-8 md:h-10 w-auto" />
-            </div>
-          </div>
-          <div className="flex-1"></div>
-          <Button
-            onClick={() => navigate(AppRoute.ClientPortal)}
-            variant="primary"
-            size="sm"
-            className="text-[11px] sm:text-xs font-semibold tracking-normal sm:tracking-wide px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/30 transition-all rounded-full whitespace-nowrap flex-shrink-0"
-          >
-            {t(localeKeys.eventAccess)}
-          </Button>
-        </div>
-
-        {/* Mobile Menu Overlay */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, x: '-100%' }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: '-100%' }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed inset-0 z-[60] bg-slate-950/95 backdrop-blur-xl flex flex-col"
-            >
-              <div className="flex items-center justify-between p-4 border-b border-slate-800/50">
-                <div className="flex items-center gap-2">
-                  <LyVentumLogo variant="gradient" className="h-8 w-auto" />
-                  <span className="text-lg font-bold uppercase tracking-wider text-white font-montserrat">
-                    {APP_NAME}
-                  </span>
-                </div>
-                <button
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-2 text-slate-400 hover:text-white transition-colors"
-                >
-                  <X className="w-8 h-8" />
-                </button>
-              </div>
-
-              <div className="flex-1 overflow-y-auto py-8 px-6 flex flex-col gap-6">
-                <a
-                  href="#features"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-2xl font-bold text-white hover:text-primary-400 transition-colors"
-                >
-                  {t(localeKeys.footerLinkFeatures)}
-                </a>
-                <a
-                  href="#how-it-works"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-2xl font-bold text-white hover:text-primary-400 transition-colors"
-                >
-                  {t(localeKeys.howItWorksTitle)}
-                </a>
-                <a
-                  href="#pricing"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-2xl font-bold text-white hover:text-primary-400 transition-colors"
-                >
-                  {t(localeKeys.footerLinkPricing)}
-                </a>
-                <a
-                  href="#faq"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-2xl font-bold text-white hover:text-primary-400 transition-colors"
-                >
-                  FAQ
-                </a>
-
-                <div className="h-px bg-slate-800/50 my-2" />
-
-                <Link
-                  to={AppRoute.Login}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-xl font-medium text-slate-300 hover:text-white transition-colors"
-                >
-                  {t(localeKeys.footerLinkOrganizerLogin)}
-                </Link>
-                <Link
-                  to={AppRoute.ClientPortal}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-xl font-medium text-slate-300 hover:text-white transition-colors"
-                >
-                  {t(localeKeys.footerLinkEventPortal)}
-                </Link>
-              </div>
-
-              <div className="p-6 border-t border-slate-800/50">
-                <Button
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    navigate(AppRoute.Login);
-                  }}
-                  variant="primary"
-                  size="lg"
-                  className="w-full text-lg shadow-lg shadow-primary-500/20"
-                >
-                  {t(localeKeys.eventAccess)}
-                </Button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.header>
-
       {/* HERO SECTION */}
       <section
         id="hero"
@@ -534,11 +373,11 @@ const LandingPage: React.FC = () => {
         {/* Animated background blobs - Optimized */}
         <motion.div
           animate={BLOB_ANIMATION_PRIMARY}
-          className="absolute -top-[20%] -left-[10%] w-[70vw] h-[70vw] bg-primary-900/10 rounded-full blur-[100px] -z-10"
+          className="absolute -top-[10%] -left-[10%] w-[80vw] h-[80vw] md:w-[70vw] md:h-[70vw] bg-primary-900/10 rounded-full blur-[60px] md:blur-[100px] -z-10"
         />
         <motion.div
           animate={BLOB_ANIMATION_SECONDARY}
-          className="absolute top-[20%] -right-[10%] w-[60vw] h-[60vw] bg-blue-900/10 rounded-full blur-[100px] -z-10"
+          className="absolute top-[15%] -right-[15%] w-[70vw] h-[70vw] md:w-[60vw] md:h-[60vw] bg-blue-900/10 rounded-full blur-[60px] md:blur-[100px] -z-10"
         />
 
         <div className="max-w-7xl mx-auto w-full flex flex-col items-center gap-12 lg:gap-16 pt-8">
@@ -608,7 +447,7 @@ const LandingPage: React.FC = () => {
           </motion.div>
 
         </div>
-      </section>
+      </section >
 
       {/* FEATURES SECTION */}
       <section id="features" className="relative pt-16 md:pt-24 pb-24 md:pb-32 px-5 sm:px-6 md:px-8 overflow-hidden" >
@@ -675,7 +514,7 @@ const LandingPage: React.FC = () => {
             ))}
           </div>
         </div>
-      </section>
+      </section >
 
       {/* PRODUCT SHOWCASE SECTION */}
       <section
@@ -687,7 +526,7 @@ const LandingPage: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-purple-600/10 via-transparent to-green-600/10" />
         <motion.div
           animate={GRADIENT_PULSE}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50rem] h-[50rem] bg-[radial-gradient(circle_farthest-side,rgba(59,130,246,0.1),rgba(255,255,255,0))] pointer-events-none"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] h-[90vw] md:w-[50rem] md:h-[50rem] bg-[radial-gradient(circle_farthest-side,rgba(59,130,246,0.1),rgba(255,255,255,0))] pointer-events-none"
         />
 
         <div className="max-w-7xl mx-auto relative z-10">
@@ -875,7 +714,7 @@ const LandingPage: React.FC = () => {
             </motion.div>
           </div>
         </div>
-      </section>
+      </section >
 
       {/* HOW IT WORKS SECTION */}
       <section
@@ -946,7 +785,7 @@ const LandingPage: React.FC = () => {
             ))}
           </div>
         </div>
-      </section>
+      </section >
 
       {/* PRICING SECTION */}
       <section id="pricing" className="relative py-24 md:py-32 px-5 sm:px-6 md:px-8 overflow-hidden" >
@@ -1065,14 +904,14 @@ const LandingPage: React.FC = () => {
             ))}
           </div>
         </div>
-      </section>
+      </section >
 
       {/* FAQ SECTION */}
-      <section id="faq" className="relative py-24 md:py-32 px-4 overflow-hidden" >
+      <section id="faq" className="relative py-24 md:py-32 overflow-hidden" >
         {/* Subtle gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary-900/10 via-transparent to-green-900/10 pointer-events-none" />
 
-        <div className="max-w-4xl mx-auto relative z-10">
+        <div className="w-[90%] md:max-w-2xl mx-auto relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -1088,7 +927,7 @@ const LandingPage: React.FC = () => {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 max-w-4xl mx-auto px-4 sm:px-6">
+          <div className="space-y-3 sm:space-y-4">
             {[
               {
                 question: "How does QR code scanning work?",
@@ -1135,8 +974,8 @@ const LandingPage: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="mt-12 text-center p-8 rounded-2xl bg-gradient-to-br from-slate-800/40 to-slate-900/40 border border-slate-700/50"
           >
-            <h3 className="text-xl font-semibold mb-2">Still have questions?</h3>
-            <p className="text-slate-400 mb-4">
+            <h3 className="text-xl font-semibold mb-2 text-slate-100">Still have questions?</h3>
+            <p className="text-slate-300 mb-4">
               Our team is here to help you get started
             </p>
             <a
@@ -1150,7 +989,7 @@ const LandingPage: React.FC = () => {
             </a>
           </motion.div>
         </div>
-      </section>
+      </section >
 
       {/* STRONG CTA SECTION */}
       <section className="relative py-32 px-4 overflow-hidden" >
@@ -1163,7 +1002,7 @@ const LandingPage: React.FC = () => {
             loading="lazy"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-slate-950/20" />
-        </div>
+        </div >
 
         {/* Subtle gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-primary-600/10 via-purple-600/10 to-green-600/10 mix-blend-color-dodge" />
@@ -1225,10 +1064,10 @@ const LandingPage: React.FC = () => {
             </div>
           </motion.div>
         </div>
-      </section>
+      </section >
 
       {/* FOOTER */}
-      <footer className="relative border-t border-slate-800 bg-slate-900/50 backdrop-blur-xl px-4 py-16" >
+      < footer className="relative border-t border-slate-800 bg-slate-900/50 backdrop-blur-xl px-4 py-16" >
 
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
@@ -1341,7 +1180,7 @@ const LandingPage: React.FC = () => {
             </p>
           </div>
         </div>
-      </footer>
+      </footer >
       {/* Back to Top Button */}
       <AnimatePresence>
         {
@@ -1358,10 +1197,10 @@ const LandingPage: React.FC = () => {
             </motion.button>
           )
         }
-      </AnimatePresence>
+      </AnimatePresence >
 
       {/* Structured Data for SEO */}
-      <script
+      < script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
@@ -1410,7 +1249,7 @@ const LandingPage: React.FC = () => {
         isOpen={isContactModalOpen}
         onClose={() => setIsContactModalOpen(false)}
       />
-    </div>
+    </div >
   );
 };
 

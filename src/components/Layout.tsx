@@ -126,6 +126,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const showAppShell = !isPublicRoute && currentUser;
 
   if (!showAppShell) {
+    // For Landing Page, we want to control the header/layout manually (specifically to avoid the fixed LanguageSwitcher)
+    if (location.pathname === AppRoute.Landing) {
+      return (
+        <>
+          <Toaster position="top-center" reverseOrder={false} />
+          {children}
+        </>
+      );
+    }
     return <PublicLayout>{children}</PublicLayout>;
   }
 
@@ -190,7 +199,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {/* Main App Header - Hidden for Attendee Portal */}
         {!isAttendeePortal && (
           <header className={`bg-white dark:bg-slate-800 shadow-sm sticky z-40 border-b border-slate-200 dark:border-slate-700`} style={{ top: `${headerTopOffset}px` }}>
-            <div className="px-4 py-2 flex justify-between items-center h-auto min-h-16 flex-wrap">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex justify-between items-center h-auto min-h-16 flex-wrap">
               <div className="flex items-center">
                 {!isAttendeePortal && (
                   <button
