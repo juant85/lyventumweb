@@ -60,7 +60,7 @@ const LoginPage: React.FC = () => {
       className="min-h-screen bg-slate-950 flex flex-col items-center justify-center py-6 sm:py-12 px-4 sm:px-6 lg:px-8 overflow-x-hidden"
       style={{ backgroundImage: `radial-gradient(circle at 1px 1px, rgba(100, 116, 139, 0.2) 1px, transparent 0)`, backgroundSize: '20px 20px' }}
     >
-      <div className="max-w-md w-[90%] sm:w-full mx-auto space-y-6 sm:space-y-8">
+      <div className="w-full max-w-md mx-auto space-y-6 sm:space-y-8 px-4 sm:px-0 box-border">
         <div className="text-center mb-10">
           <Link to={AppRoute.Landing} className="inline-block group">
             <LyVentumLogo className="h-12 sm:h-16 md:h-20 w-auto filter drop-shadow-[0_4px_10px_rgba(59,130,246,0.25)] dark:drop-shadow-[0_5px_15px_rgba(96,165,250,0.25)] transition-transform duration-300 group-hover:scale-105" />
