@@ -63,22 +63,24 @@
     box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
 }
 
-/* Premium shimmer animation for hero branding */
-@keyframes shimmer-slow {
+/* Premium shimmer animation for hero branding - Desktop only */
+@media (min-width: 768px) {
+    @keyframes shimmer-slow {
 
-    0%,
-    100% {
-        background-position: 0% 50%;
+        0%,
+        100% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
     }
 
-    50% {
-        background-position: 100% 50%;
+    .animate-shimmer-slow {
+        background-size: 200% 200%;
+        animation: shimmer-slow 8s ease-in-out infinite;
     }
-}
-
-.animate-shimmer-slow {
-    background-size: 200% 200%;
-    animation: shimmer-slow 8s ease-in-out infinite;
 }
 
 /* Touch optimization for mobile devices */
