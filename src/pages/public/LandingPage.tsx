@@ -366,7 +366,7 @@ const LandingPage: React.FC = () => {
       <section
         id="hero"
         aria-label="Sección principal con descripción del producto LyVenTum"
-        className="relative min-h-[100vh] md:min-h-[90vh] flex items-center pt-20 md:pt-24 pb-12 px-5 sm:px-6 md:px-8 overflow-hidden safe-area-top safe-area-bottom"
+        className="relative min-h-[100vh] md:min-h-[90vh] flex items-center pt-32 md:pt-40 pb-12 px-5 sm:px-6 md:px-8 overflow-hidden safe-area-top safe-area-bottom"
       >
         {/* Anchor for Skip Link */}
         <div id="main-content" className="sr-only"></div>
