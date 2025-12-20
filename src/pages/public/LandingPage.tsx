@@ -398,9 +398,12 @@ const LandingPage: React.FC = () => {
                 transition={{ duration: 0.6, delay: 0.1 }}
                 className="mb-6 md:mb-8"
               >
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-widest brand-gradient-text">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase tracking-widest brand-gradient-text animate-shimmer-slow">
                   {APP_NAME}
                 </h2>
+                <p className="text-xs md:text-sm text-primary-400/80 font-semibold tracking-[0.2em] uppercase mt-1">
+                  Event Management Platform
+                </p>
               </motion.div>
 
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-montserrat mb-6 md:mb-8 tracking-tight leading-[1.1] text-white">
