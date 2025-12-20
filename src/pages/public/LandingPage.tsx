@@ -381,7 +381,7 @@ const LandingPage: React.FC = () => {
           className="absolute top-[15%] -right-[15%] w-[70vw] h-[70vw] md:w-[60vw] md:h-[60vw] bg-blue-900/10 rounded-full blur-[60px] md:blur-[100px] -z-10"
         />
 
-        <div className="max-w-7xl mx-auto w-full flex flex-col items-center gap-12 lg:gap-16 pt-8">
+        <div className="max-w-7xl mx-auto w-full flex flex-col items-center gap-12 lg:gap-16">
 
           {/* Text Content - Centered */}
           <div className="flex flex-col items-center text-center z-10 order-1 max-w-4xl mx-auto">
