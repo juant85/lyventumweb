@@ -309,21 +309,22 @@ const LandingPage: React.FC = () => {
             return {
               ...match,
               name: dbPlan.name,
-              description: dbPlan.description || match.description,
+              // Prioritize translated description if available (from fallback/match), otherwise use DB description
+              description: match.description || dbPlan.description,
             };
           }
 
           // If no match found (new plan in DB), use a generic structure
           return {
             name: dbPlan.name,
-            price: 'Custom',
-            priceSubtitle: 'Contact us',
-            description: dbPlan.description || 'Contact for details',
+            price: t(localeKeys.plans.fallback.price),
+            priceSubtitle: t(localeKeys.plans.fallback.subtitle),
+            description: dbPlan.description || t(localeKeys.plans.fallback.description),
             features: [
-              { text: 'Event Management', included: true },
-              { text: 'Real-time Analytics', included: true },
+              { text: t(localeKeys.plans.fallback.feature1), included: true },
+              { text: t(localeKeys.plans.fallback.feature2), included: true },
             ],
-            cta: 'Contact Sales',
+            cta: t(localeKeys.plans.fallback.cta),
             isPopular: false
           };
         });
@@ -563,13 +564,13 @@ const LandingPage: React.FC = () => {
             <div className="relative mx-auto max-w-6xl">
               {/* Browser chrome */}
               <div className="bg-slate-800 rounded-t-xl p-3 flex items-center gap-2 border-b border-slate-700">
-                <div className="flex gap-1.5">
+                <div className="flex gap-1.5 flex-shrink-0">
                   <div className="w-3 h-3 rounded-full bg-red-500"></div>
                   <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
                   <div className="w-3 h-3 rounded-full bg-green-500"></div>
                 </div>
-                <div className="flex-1 mx-4">
-                  <div className="bg-slate-700 rounded px-3 py-1 text-xs text-slate-400 text-center font-mono">
+                <div className="flex-1 mx-2 sm:mx-4 overflow-hidden">
+                  <div className="bg-slate-700 rounded px-2 sm:px-3 py-1 text-[10px] sm:text-xs text-slate-400 text-center font-mono truncate">
                     app.lyventum.com/dashboard/event-monitor
                   </div>
                 </div>

@@ -126,7 +126,7 @@ const ClientPortalPage: React.FC = () => {
                                         variant="primary"
                                         className="w-full sm:w-auto text-base sm:text-lg px-8 sm:px-10 py-3 sm:py-4 font-bold shadow-2xl shadow-primary-500/40 hover:shadow-primary-500/60 hover:scale-[1.03] transition-all duration-300"
                                     >
-                                        View Events <ArrowRightIcon className="w-5 h-5 ml-2" />
+                                        {t(localeKeys.viewEvents)} <ArrowRightIcon className="w-5 h-5 ml-2" />
                                     </Button>
                                 </Link>
                             </div>
@@ -178,7 +178,7 @@ const ClientPortalPage: React.FC = () => {
                                 <div className="w-full flex justify-center">
                                     <Link to={AppRoute.EventSelection.replace(':companyId', company.id)}>
                                         <button className="group/btn relative px-8 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-xl transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl hover:shadow-primary-500/30 flex items-center justify-center gap-2 text-sm">
-                                            <span>View Events</span>
+                                            <span>{t(localeKeys.viewEvents)}</span>
                                             <ArrowRightIcon className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                                         </button>
                                     </Link>

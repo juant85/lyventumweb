@@ -92,6 +92,7 @@ export const localeKeys = {
   backToCompanyList: 'backToCompanyList',
   scannerSetupTitle: 'scannerSetupTitle',
   scannerSetupSubtitle: 'scannerSetupSubtitle',
+  viewEvents: 'viewEvents',
 
   // Landing Page - Features Section
   featuresTitle: 'featuresTitle',
@@ -519,7 +520,15 @@ export const localeKeys = {
     enterprise: { name: 'plans.enterprise.name', price: 'plans.enterprise.price', subtitle: 'plans.enterprise.subtitle', description: 'plans.enterprise.description', cta: 'plans.enterprise.cta' },
     features: [
       'plans.features.0', 'plans.features.1', 'plans.features.2', 'plans.features.3', 'plans.features.4', 'plans.features.5', 'plans.features.6', 'plans.features.7', 'plans.features.8', 'plans.features.9', 'plans.features.10'
-    ]
+    ],
+    fallback: {
+      price: 'plans.fallback.price',
+      subtitle: 'plans.fallback.subtitle',
+      description: 'plans.fallback.description',
+      cta: 'plans.fallback.cta',
+      feature1: 'plans.fallback.feature1',
+      feature2: 'plans.fallback.feature2'
+    }
   },
 } as const;
 
@@ -636,6 +645,12 @@ export const en = {
   'plans.features.8': 'Attendee Alerts & Chat',
   'plans.features.9': 'Real-Time Analytics',
   'plans.features.10': 'Attendee Locator',
+  'plans.fallback.price': 'Custom',
+  'plans.fallback.subtitle': 'Contact us',
+  'plans.fallback.description': 'Contact for details',
+  'plans.fallback.cta': 'Contact Sales',
+  'plans.fallback.feature1': 'Event Management',
+  'plans.fallback.feature2': 'Real-time Analytics',
 
   // Login Pages
   [localeKeys.organizerLogin]: 'Organizer Login',
@@ -686,6 +701,7 @@ export const en = {
   [localeKeys.backToCompanyList]: '← Back to company list',
   [localeKeys.scannerSetupTitle]: 'Scanner Setup',
   [localeKeys.scannerSetupSubtitle]: 'Please select the event you will be scanning for. This will lock the device to that event until changed.',
+  [localeKeys.viewEvents]: 'View Events',
 
   // Landing Page - Features Section
   [localeKeys.featuresTitle]: 'Features That Matter',
@@ -1173,6 +1189,12 @@ export const es = {
   'plans.features.8': 'Alertas y Chat con asistentes',
   'plans.features.9': 'Analíticas en Tiempo Real',
   'plans.features.10': 'Localizador de Asistentes',
+  'plans.fallback.price': 'Personalizado',
+  'plans.fallback.subtitle': 'Contáctanos',
+  'plans.fallback.description': 'Contactar para detalles',
+  'plans.fallback.cta': 'Contactar Ventas',
+  'plans.fallback.feature1': 'Gestión de Eventos',
+  'plans.fallback.feature2': 'Analíticas en Tiempo Real',
 
   // Login Pages
   [localeKeys.organizerLogin]: 'Acceso Organizador',
@@ -1223,6 +1245,7 @@ export const es = {
   [localeKeys.backToCompanyList]: '← Volver a la lista de empresas',
   [localeKeys.scannerSetupTitle]: 'Configuración del Escáner',
   [localeKeys.scannerSetupSubtitle]: 'Por favor, selecciona el evento para el que vas a escanear. Esto bloqueará el dispositivo a ese evento hasta que se cambie.',
+  [localeKeys.viewEvents]: 'Ver Eventos',
 
   // Landing Page - Features Section
   [localeKeys.featuresTitle]: 'Características Importantes',

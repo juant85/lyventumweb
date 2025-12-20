@@ -70,7 +70,7 @@ const MissingAttendeeList: React.FC<{ attendees: (SessionRegistration & { boothN
           {attendees.map(reg => (
             <li key={reg.id} className="p-3 flex justify-between items-center hover:bg-slate-50 dark:hover:bg-slate-700/50">
               <div>
-                <p className="font-semibold text-slate-800 dark:text-slate-200">{reg.attendeeName}</p>
+                <p className="font-semibold text-slate-800 dark:text-slate-200 truncate pr-2">{reg.attendeeName}</p>
                 <p className="text-sm text-slate-500 dark:text-slate-400">Expected at: {reg.boothName}</p>
               </div>
               <Button size="sm" variant="neutral" onClick={() => onNavigate(reg.attendeeId)}>View</Button>
@@ -88,7 +88,7 @@ const BoothPerformanceList: React.FC<{ booths: { name: string, id: string, scans
       <ul className="divide-y divide-slate-100 dark:divide-slate-700">
         {booths.map(booth => (
           <li key={booth.id} className="p-3 flex justify-between items-center">
-            <p className="font-semibold text-slate-800 dark:text-slate-200">{booth.name}</p>
+            <p className="font-semibold text-slate-800 dark:text-slate-200 truncate pr-2">{booth.name}</p>
             <p className="text-lg font-bold text-primary-600 dark:text-primary-400">{booth.scans}<span className="text-sm text-slate-400">/{booth.capacity}</span></p>
           </li>
         ))}
@@ -100,7 +100,7 @@ const BoothPerformanceList: React.FC<{ booths: { name: string, id: string, scans
 const DashboardPage: React.FC = () => {
   const { scans, sessions, getOperationalSessionDetails, loadingData, dataError, fetchData, getSessionRegistrationsForSession, getBoothById } = useEventData();
   const { currentEvent, isInitializing } = useSelectedEvent();
-  const { config, eventType, isVendorMeeting, isConference, isTradeShow } = useEventTypeConfig(); // NEW
+  const { config, eventType, isVendorMeeting, isConference, isTradeShow } = useEventTypeConfig();
   const navigate = useNavigate();
   const { t } = useLanguage();
 
@@ -108,18 +108,24 @@ const DashboardPage: React.FC = () => {
   const [loadingRegistrations, setLoadingRegistrations] = useState(false);
   const [showFeatures, setShowFeatures] = useState(false);
 
+  // removed realLiveSession def since it's now liveSession above
+  // ... kept clean
+
+
   const operationalDetails = useMemo(() => getOperationalSessionDetails(), [getOperationalSessionDetails]);
   const liveSession = useMemo(() => operationalDetails.session, [operationalDetails]);
 
+  // Hook for registrations
   useEffect(() => {
     if (liveSession?.id) {
+      // ... existing logic
       setLoadingRegistrations(true);
       getSessionRegistrationsForSession(liveSession.id)
         .then(result => {
           if (result.success) {
             setSessionRegistrations(result.data);
           } else {
-            toast.error(`Could not load registrations for live session: ${result.message} `);
+            // 
           }
         })
         .finally(() => setLoadingRegistrations(false));
@@ -311,7 +317,7 @@ const DashboardPage: React.FC = () => {
   return (
     <div className="space-y-8">
       {/* Header with Event Type Indicator */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
         <div>
           <h1 className="text-3xl sm:text-4xl font-bold text-slate-800 dark:text-slate-100 tracking-tight font-montserrat flex items-center gap-3">
             <Icon name="dashboard" className="w-8 h-8 text-secondary-500" />
