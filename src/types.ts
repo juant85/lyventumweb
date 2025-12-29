@@ -369,6 +369,23 @@ export interface JourneyEvent {
     duration?: number; // in seconds
     rating?: number; // 1-5 stars
     notes?: string;
-    [key: string]: any; // Allow additional metadata
   };
+}
+
+// === ANALYTICS & DASHBOARD ===
+
+export interface BoothActivity {
+  boothId: string;
+  boothName: string;
+  ownerName?: string; // Optional if not always available
+  scanCount: number;
+}
+
+export interface BoothMetrics {
+  boothId: string;
+  boothName: string;
+  ownerName?: string;
+  totalScans: number;
+  uniqueScans: number;
+  avgDwellTime?: number; // Optional
 }

@@ -56,6 +56,11 @@ const EventSelectionPage: React.FC = () => {
         return `${startDate.toLocaleDateString(undefined, options)} - ${endDate.toLocaleDateString(undefined, options)}`;
     };
 
+    const [viewMode, setViewMode] = useState<'card' | 'list'>('card');
+
+    // Toggle view mode automatically based on screen size (optional default)
+    // useEffect(() => { if (window.innerWidth < 640) setViewMode('list'); }, []);
+
     const renderContent = () => {
         if (loadingEvents) {
             return (
@@ -77,63 +82,122 @@ const EventSelectionPage: React.FC = () => {
             );
         }
 
-        return (
-            <div className="space-y-8">
-                {companyEvents.map((event, index) => (
-                    <motion.div
-                        key={event.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.1, duration: 0.5 }}
-                        className="bg-slate-900/50 backdrop-blur-md rounded-2xl overflow-hidden border border-white/10 transition-all duration-300 hover:border-primary-500/50 group"
+        // --- View Mode Toggle Control ---
+        const ToggleControl = () => (
+            <div className="flex justify-end mb-4 px-2">
+                <div className="bg-slate-800/50 p-1 rounded-lg flex items-center gap-1 border border-white/10">
+                    <button
+                        onClick={() => setViewMode('card')}
+                        className={`p-2 rounded-md transition-all ${viewMode === 'card' ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'}`}
+                        aria-label="Card View"
                     >
-                        <div className="p-5 sm:p-8 flex flex-col items-center text-center">
-                            {/* Album Art / Logo - Responsive Size */}
-                            <div className="w-20 h-20 sm:w-32 sm:h-32 bg-slate-800/50 rounded-xl flex items-center justify-center mb-4 sm:mb-6 border border-white/5">
-                                {event.eventLogoUrl ? (
-                                    <img src={event.eventLogoUrl} alt={`${event.name} Logo`} className="w-full h-full object-cover rounded-xl" />
-                                ) : (
-                                    <BuildingStorefrontIcon className="w-12 h-12 text-slate-600" />
-                                )}
-                            </div>
+                        <BuildingStorefrontIcon className="w-5 h-5" />
+                    </button>
+                    <button
+                        onClick={() => setViewMode('list')}
+                        className={`p-2 rounded-md transition-all ${viewMode === 'list' ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'}`}
+                        aria-label="List View"
+                    >
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        );
 
-                            {/* Details */}
-                            <h3 className="text-2xl font-bold text-slate-100 font-montserrat tracking-tight mb-2">{event.name}</h3>
-                            <p className="font-medium text-slate-300 mb-1">{event.location || 'Location TBD'}</p>
-                            <p className="text-sm text-slate-500 mb-8">{formatDateRange(event.startDate, event.endDate)}</p>
+        return (
+            <div className="w-full">
+                <ToggleControl />
 
-                            {/* Action Buttons - Brand-aligned color hierarchy */}
-                            <div className="w-full flex flex-col gap-3 items-center">
-                                {/* Organizer - Blue gradient (authority/admin) */}
-                                <button
-                                    onClick={() => handleLoginClick(event.id, AppRoute.Login)}
-                                    className="min-w-[260px] px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-blue-500/30 flex items-center justify-center gap-2"
-                                >
-                                    <LoginIcon className="w-5 h-5" />
-                                    <span>{t(localeKeys.organizerLogin)}</span>
-                                </button>
+                <div className={viewMode === 'card' ? "space-y-8" : "bg-slate-900/50 rounded-2xl border border-white/5 overflow-hidden"}>
+                    {companyEvents.map((event, index) => (
+                        viewMode === 'card' ? (
+                            <motion.div
+                                key={event.id}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: index * 0.1, duration: 0.5 }}
+                                className="bg-slate-900/50 backdrop-blur-md rounded-2xl overflow-hidden border border-white/10 transition-all duration-300 hover:border-primary-500/50 group mb-8 last:mb-0"
+                            >
+                                <div className="p-5 sm:p-8 flex flex-col items-center text-center">
+                                    {/* Album Art / Logo */}
+                                    <div className="w-20 h-20 sm:w-32 sm:h-32 bg-slate-800/50 rounded-xl flex items-center justify-center mb-4 sm:mb-6 border border-white/5">
+                                        {event.eventLogoUrl ? (
+                                            <img src={event.eventLogoUrl} alt={`${event.name} Logo`} className="w-full h-full object-cover rounded-xl" />
+                                        ) : (
+                                            <BuildingStorefrontIcon className="w-12 h-12 text-slate-600" />
+                                        )}
+                                    </div>
 
-                                {/* Attendee - Cyan gradient (accessible/users) */}
-                                <button
-                                    onClick={() => handleLoginClick(event.id, AppRoute.AttendeePortalLogin)}
-                                    className="min-w-[260px] px-8 py-3 bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-cyan-500/30 flex items-center justify-center gap-2"
-                                >
-                                    <UserIcon className="w-5 h-5" />
-                                    <span>{t(localeKeys.attendeePortalAccess)}</span>
-                                </button>
+                                    {/* Details */}
+                                    <h3 className="text-2xl font-bold text-slate-100 font-montserrat tracking-tight mb-2">{event.name}</h3>
+                                    <p className="font-medium text-slate-300 mb-1">{event.location || 'Location TBD'}</p>
+                                    <p className="text-sm text-slate-500 mb-8">{formatDateRange(event.startDate, event.endDate)}</p>
 
-                                {/* Vendor - Sky-Cyan gradient (commercial/distinctive) */}
-                                <button
-                                    onClick={() => handleLoginClick(event.id, AppRoute.BoothLogin)}
-                                    className="min-w-[260px] px-8 py-3 bg-gradient-to-r from-sky-600 to-cyan-600 hover:from-sky-700 hover:to-cyan-700 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-sky-500/30 flex items-center justify-center gap-2"
-                                >
-                                    <QrCodeIcon className="w-5 h-5" />
-                                    <span>{t(localeKeys.vendorBoothAccess)}</span>
-                                </button>
-                            </div>
-                        </div>
-                    </motion.div>
-                ))}
+                                    {/* Action Buttons - Card Mode */}
+                                    <div className="w-full flex flex-col gap-3 items-center">
+                                        <button onClick={() => handleLoginClick(event.id, AppRoute.Login)} className="w-full max-w-[280px] px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl transition-all shadow-lg flex items-center justify-center gap-2">
+                                            <LoginIcon className="w-5 h-5" /> <span>{t(localeKeys.organizerLogin)}</span>
+                                        </button>
+                                        <button onClick={() => handleLoginClick(event.id, AppRoute.AttendeePortalLogin)} className="w-full max-w-[280px] px-6 py-3 bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white font-semibold rounded-xl transition-all shadow-lg flex items-center justify-center gap-2">
+                                            <UserIcon className="w-5 h-5" /> <span>{t(localeKeys.attendeePortalAccess)}</span>
+                                        </button>
+                                        <button onClick={() => handleLoginClick(event.id, AppRoute.BoothLogin)} className="w-full max-w-[280px] px-6 py-3 bg-gradient-to-r from-sky-600 to-cyan-600 hover:from-sky-700 hover:to-cyan-700 text-white font-semibold rounded-xl transition-all shadow-lg flex items-center justify-center gap-2">
+                                            <QrCodeIcon className="w-5 h-5" /> <span>{t(localeKeys.vendorBoothAccess)}</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ) : (
+                            // --- LIST VIEW MODE (Compact) ---
+                            <motion.div
+                                key={event.id}
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: index * 0.05 }}
+                                className="p-4 border-b border-white/5 hover:bg-white/5 transition-colors flex flex-col sm:flex-row sm:items-center gap-4 group last:border-0"
+                            >
+                                {/* Left: Logo & Core Info */}
+                                <div className="flex items-center gap-4 flex-grow">
+                                    <div className="w-12 h-12 bg-slate-800 rounded-lg flex-shrink-0 flex items-center justify-center border border-white/10">
+                                        {event.eventLogoUrl ? (
+                                            <img src={event.eventLogoUrl} alt={event.name} className="w-full h-full object-cover rounded-lg" />
+                                        ) : (
+                                            <BuildingStorefrontIcon className="w-6 h-6 text-slate-600" />
+                                        )}
+                                    </div>
+                                    <div className="min-w-0">
+                                        <h3 className="text-base font-bold text-slate-100 truncate pr-2">{event.name}</h3>
+                                        <p className="text-xs text-slate-400">{formatDateRange(event.startDate, event.endDate)}</p>
+                                    </div>
+                                </div>
+
+                                {/* Right: Compact Actions */}
+                                <div className="flex gap-2 w-full sm:w-auto mt-2 sm:mt-0 overflow-x-auto pb-1 sm:pb-0 scrollbar-hide">
+                                    <button
+                                        onClick={() => handleLoginClick(event.id, AppRoute.Login)}
+                                        className="flex-1 sm:flex-none px-3 py-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 text-xs font-bold rounded-lg border border-blue-500/20 whitespace-nowrap"
+                                    >
+                                        Organizer
+                                    </button>
+                                    <button
+                                        onClick={() => handleLoginClick(event.id, AppRoute.AttendeePortalLogin)}
+                                        className="flex-1 sm:flex-none px-3 py-2 bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-400 text-xs font-bold rounded-lg border border-cyan-500/20 whitespace-nowrap"
+                                    >
+                                        Attendee
+                                    </button>
+                                    <button
+                                        onClick={() => handleLoginClick(event.id, AppRoute.BoothLogin)}
+                                        className="flex-1 sm:flex-none px-3 py-2 bg-sky-600/20 hover:bg-sky-600/30 text-sky-400 text-xs font-bold rounded-lg border border-sky-500/20 whitespace-nowrap"
+                                    >
+                                        Vendor
+                                    </button>
+                                </div>
+                            </motion.div>
+                        )
+                    ))}
+                </div>
             </div>
         );
     };

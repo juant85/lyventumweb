@@ -61,6 +61,12 @@ const iconMap = {
   upload: Lucide.Upload,
   userPlus: Lucide.UserPlus,
   map: Lucide.Map,
+
+  // Mobile UI
+  home: Lucide.Home,
+  menu: Lucide.Menu,
+  user: Lucide.User,
+  close: Lucide.X,
 } as const;
 
 export type IconName = keyof typeof iconMap;
