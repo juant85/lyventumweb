@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X, Calendar, User } from 'lucide-react';
@@ -23,6 +23,22 @@ export const LandingHeader: React.FC = () => {
     const { t } = useLanguage();
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const headerRef = useRef<HTMLElement | null>(null);
+
+    // Dynamically measure and set header height as CSS variable
+    useLayoutEffect(() => {
+        const el = headerRef.current;
+        if (!el) return;
+
+        const setHeaderHeight = () => {
+            const h = el.offsetHeight || 64;
+            document.documentElement.style.setProperty('--landing-header-h', `${h}px`);
+        };
+
+        setHeaderHeight();
+        window.addEventListener('resize', setHeaderHeight);
+        return () => window.removeEventListener('resize', setHeaderHeight);
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -44,16 +60,17 @@ export const LandingHeader: React.FC = () => {
     return (
         <>
             <motion.header
+                ref={headerRef}
                 initial={{ y: -100 }}
                 animate={{ y: 0 }}
                 transition={{ duration: 0.5 }}
                 className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 w-full ${isScrolled
                     ? 'bg-slate-900/95 backdrop-blur-xl border-b border-slate-800/50 shadow-xl'
-                    : 'bg-transparent border-b border-transparent'
+                    : 'bg-slate-900/60 backdrop-blur-md border-b border-slate-800/20'
                     }`}
             >
                 <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex items-center justify-between h-16 md:h-20 relative">
+                    <div className="flex items-center justify-between relative" style={{ height: 'var(--header-height)' }}>
 
                         {/* MOBILE: Hamburger (Left) */}
                         <div className="flex items-center lg:hidden z-20">

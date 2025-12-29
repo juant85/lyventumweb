@@ -94,6 +94,35 @@ export const localeKeys = {
   scannerSetupSubtitle: 'scannerSetupSubtitle',
   viewEvents: 'viewEvents',
 
+  // Landing Page - Hero Segmentation (NEW)
+  heroTabCorporate: 'heroTabCorporate',
+  heroTabExpo: 'heroTabExpo',
+  heroTitleCorporate: 'heroTitleCorporate',
+  heroSubtitleCorporate: 'heroSubtitleCorporate',
+  heroCtaCorporate: 'heroCtaCorporate',
+  heroTitleExpo: 'heroTitleExpo',
+  heroSubtitleExpo: 'heroSubtitleExpo',
+  heroCtaExpo: 'heroCtaExpo',
+
+  // Landing Page - Use Cases Section (NEW)
+  useCasesTitle: 'useCasesTitle',
+  useCaseCorporateTitle: 'useCaseCorporateTitle',
+  useCaseCorporateSubtitle: 'useCaseCorporateSubtitle',
+  useCaseCorporateQuote: 'useCaseCorporateQuote',
+  useCaseCorporateFeature1: 'useCaseCorporateFeature1',
+  useCaseCorporateFeature2: 'useCaseCorporateFeature2',
+  useCaseCorporateFeature3: 'useCaseCorporateFeature3',
+  useCaseCorporateFeature4: 'useCaseCorporateFeature4',
+  useCaseCorporateCta: 'useCaseCorporateCta',
+  useCaseExpoTitle: 'useCaseExpoTitle',
+  useCaseExpoSubtitle: 'useCaseExpoSubtitle',
+  useCaseExpoQuote: 'useCaseExpoQuote',
+  useCaseExpoFeature1: 'useCaseExpoFeature1',
+  useCaseExpoFeature2: 'useCaseExpoFeature2',
+  useCaseExpoFeature3: 'useCaseExpoFeature3',
+  useCaseExpoFeature4: 'useCaseExpoFeature4',
+  useCaseExpoCta: 'useCaseExpoCta',
+
   // Landing Page - Features Section
   featuresTitle: 'featuresTitle',
   featuresSubtitle: 'featuresSubtitle',
@@ -132,6 +161,24 @@ export const localeKeys = {
   step3Desc: 'step3Desc',
   step4Title: 'step4Title',
   step4Desc: 'step4Desc',
+
+  // Landing Page - FAQ Section
+  faqTitle: 'faqTitle',
+  faqSubtitle: 'faqSubtitle',
+  faqQrScanQuestion: 'faqQrScanQuestion',
+  faqQrScanAnswer: 'faqQrScanAnswer',
+  faqOfflineQuestion: 'faqOfflineQuestion',
+  faqOfflineAnswer: 'faqOfflineAnswer',
+  faqBoothLayoutQuestion: 'faqBoothLayoutQuestion',
+  faqBoothLayoutAnswer: 'faqBoothLayoutAnswer',
+  faqDataSecurityQuestion: 'faqDataSecurityQuestion',
+  faqDataSecurityAnswer: 'faqDataSecurityAnswer',
+  faqPricingQuestion: 'faqPricingQuestion',
+  faqPricingAnswer: 'faqPricingAnswer',
+  faqMultipleEventsQuestion: 'faqMultipleEventsQuestion',
+  faqMultipleEventsAnswer: 'faqMultipleEventsAnswer',
+  faqContactTitle: 'faqContactTitle',
+  faqContactSubtitle: 'faqContactSubtitle',
 
   // Landing Page - Footer
   footerTagline: 'footerTagline',
@@ -600,6 +647,35 @@ export const en = {
   [localeKeys.landingTitle]: 'The Event Pulse, <br /> Visualized in Real-Time.',
   [localeKeys.landingSubtitle]: 'Ditch the spreadsheets. Track every attendee, optimize every booth, and prove sponsor ROI with our live mission control dashboard.',
 
+  // Hero Segmentation
+  [localeKeys.heroTabCorporate]: 'Corporate Events',
+  [localeKeys.heroTabExpo]: 'Expos & Fairs',
+  [localeKeys.heroTitleCorporate]: 'Manage Your Corporate Event <br /> in Real Time',
+  [localeKeys.heroSubtitleCorporate]: 'Control check-ins, monitor sessions, and ensure every attendee is exactly where they should be. Live mission control for events that can\'t afford mistakes.',
+  [localeKeys.heroCtaCorporate]: 'View Demo - Corporate Events',
+  [localeKeys.heroTitleExpo]: 'Capture Real Leads <br /> for Your Exhibitors',
+  [localeKeys.heroSubtitleExpo]: 'Every booth gets its unique QR. Every scan = captured lead with timestamp and complete data. Prove real ROI to your sponsors and ensure they renew next year.',
+  [localeKeys.heroCtaExpo]: 'View Demo - Lead Capture',
+
+  // Use Cases Section
+  [localeKeys.useCasesTitle]: 'What Type of Event Do You Manage?',
+  [localeKeys.useCaseCorporateTitle]: 'Conferences · Seminars · Internal Events',
+  [localeKeys.useCaseCorporateSubtitle]: 'Corporate Events',
+  [localeKeys.useCaseCorporateQuote]: '"I need total control of who arrived, which session they\'re in, and where every attendee is in real time"',
+  [localeKeys.useCaseCorporateFeature1]: 'Closed guest list',
+  [localeKeys.useCaseCorporateFeature2]: 'Scheduled sessions',
+  [localeKeys.useCaseCorporateFeature3]: 'Live mission control dashboard',
+  [localeKeys.useCaseCorporateFeature4]: 'Absence alerts',
+  [localeKeys.useCaseCorporateCta]: 'See how it works',
+  [localeKeys.useCaseExpoTitle]: 'Expos · B2B Fairs · Trade Shows',
+  [localeKeys.useCaseExpoSubtitle]: 'Trade Fairs',
+  [localeKeys.useCaseExpoQuote]: '"My exhibitors need to capture leads and I need to prove their investment was worth it"',
+  [localeKeys.useCaseExpoFeature1]: 'Unique QR per exhibitor',
+  [localeKeys.useCaseExpoFeature2]: 'Unlimited visitor capture',
+  [localeKeys.useCaseExpoFeature3]: 'Individual booth reports',
+  [localeKeys.useCaseExpoFeature4]: 'Tangible proof of ROI',
+  [localeKeys.useCaseExpoCta]: 'See how it works',
+
   // Product Showcase
   [localeKeys.productShowcaseTitle]: 'Powerful Dashboard, Simple Interface',
   [localeKeys.productShowcaseSubtitle]: 'Manage your entire event from one beautiful, intuitive dashboard',
@@ -741,6 +817,24 @@ export const en = {
   [localeKeys.step3Desc]: 'Track attendees in real-time with QR code scanning',
   [localeKeys.step4Title]: 'Analyze Results',
   [localeKeys.step4Desc]: 'Export data and view comprehensive analytics dashboards',
+
+  // FAQ Section
+  [localeKeys.faqTitle]: 'Frequently Asked Questions',
+  [localeKeys.faqSubtitle]: 'Everything you need to know about LyVenTum',
+  [localeKeys.faqQrScanQuestion]: 'How does QR code scanning work?',
+  [localeKeys.faqQrScanAnswer]: "LyVenTum uses your device's camera to scan QR codes on attendee badges. Each scan is instantly recorded with timestamp, booth location, and attendee information. The system provides real-time feedback and updates your dashboard automatically.",
+  [localeKeys.faqOfflineQuestion]: 'Does it work offline?',
+  [localeKeys.faqOfflineAnswer]: "Yes! Our mobile app stores scans locally when you're offline and automatically syncs them when you reconnect. This ensures you never lose data, even in venues with poor connectivity.",
+  [localeKeys.faqBoothLayoutQuestion]: 'Can I customize the booth layout?',
+  [localeKeys.faqBoothLayoutAnswer]: 'Absolutely. You can drag and drop booths to match your venue\'s layout, organize them by zones, and set custom capacities for each booth. The visual booth map updates in real-time as attendees check in.',
+  [localeKeys.faqDataSecurityQuestion]: 'Is my data secure?',
+  [localeKeys.faqDataSecurityAnswer]: 'All data is encrypted in transit and at rest using industry-standard encryption. We use Supabase for secure cloud storage with automatic backups. You maintain full ownership of your data and can export it anytime.',
+  [localeKeys.faqPricingQuestion]: 'How does pricing work?',
+  [localeKeys.faqPricingAnswer]: 'We offer three flexible pricing tiers (Essentials, Professional, Enterprise) with custom pricing based on your event size and specific needs. All plans include core features like real-time analytics and QR scanning. Contact us for a personalized quote tailored to your event.',
+  [localeKeys.faqMultipleEventsQuestion]: 'Can I manage multiple events?',
+  [localeKeys.faqMultipleEventsAnswer]: 'Yes, you can create and manage multiple events from a single account. Each event has its own dashboard, sessions, booths, and attendees. Switch between events instantly from the navigation menu.',
+  [localeKeys.faqContactTitle]: 'Still have questions?',
+  [localeKeys.faqContactSubtitle]: "Our team is here to help you get started",
 
   // Landing Page - Footer
   [localeKeys.footerTagline]: 'Transform events with real-time data and intelligent analytics',
@@ -1139,10 +1233,39 @@ export const es = {
   [localeKeys.navLinkManageCompanies]: 'Gestionar Empresas',
 
   // Public Pages
-  [localeKeys.landingTitle]: 'Eleva la Experiencia <br /> de tu Evento',
-  [localeKeys.landingSubtitle]: 'Optimiza los check-ins, monitorea el tráfico en los stands y obtén información en tiempo real. LyVenTum te permite gestionar eventos exitosos y atractivos con facilidad.',
-  [localeKeys.landingBadge]: 'La Plataforma de Eventos #1',
   [localeKeys.eventAccess]: 'Acceso al Evento',
+  [localeKeys.landingTitle]: 'El Pulso de tu Evento, <br /> en Tiempo Real',
+  [localeKeys.landingSubtitle]: 'Elimina las hojas de cálculo. Rastrea cada asistente, optimiza cada stand, y demuestra el ROI real a tus patrocinadores con datos en vivo.',
+
+  // Hero Segmentation
+  [localeKeys.heroTabCorporate]: 'Eventos Corporativos',
+  [localeKeys.heroTabExpo]: 'Ferias & Expos',
+  [localeKeys.heroTitleCorporate]: 'Gestiona tu Evento Corporativo <br /> en Tiempo Real',
+  [localeKeys.heroSubtitleCorporate]: 'Controla check-ins, monitorea sesiones, y asegura que cada asistente esté exactamente donde debe estar. Panel de control en vivo para eventos que no permiten errores.',
+  [localeKeys.heroCtaCorporate]: 'Ver Demo - Eventos Corporativos',
+  [localeKeys.heroTitleExpo]: 'Captura Leads Reales <br /> para tus Expositores',
+  [localeKeys.heroSubtitleExpo]: 'Cada stand obtiene su QR único. Cada escaneo = lead capturado con timestamp y datos completos. Demuestra ROI real a tus sponsors y asegura que renueven el próximo año.',
+  [localeKeys.heroCtaExpo]: 'Ver Demo - Captura de Leads',
+
+  // Use Cases Section
+  [localeKeys.useCasesTitle]: '¿Qué Tipo de Evento Gestionas?',
+  [localeKeys.useCaseCorporateTitle]: 'Conferencias · Seminarios · Eventos Internos',
+  [localeKeys.useCaseCorporateSubtitle]: 'Eventos Corporativos',
+  [localeKeys.useCaseCorporateQuote]: '"Necesito control total de quién llegó, a qué sesión, y dónde está cada asistente en tiempo real"',
+  [localeKeys.useCaseCorporateFeature1]: 'Lista cerrada de invitados',
+  [localeKeys.useCaseCorporateFeature2]: 'Sesiones programadas',
+  [localeKeys.useCaseCorporateFeature3]: 'Dashboard de misión en vivo',
+  [localeKeys.useCaseCorporateFeature4]: 'Alertas de ausencias',
+  [localeKeys.useCaseCorporateCta]: 'Ver cómo funciona',
+  [localeKeys.useCaseExpoTitle]: 'Expos · Ferias B2B · Pabellones Comerciales',
+  [localeKeys.useCaseExpoSubtitle]: 'Ferias Comerciales',
+  [localeKeys.useCaseExpoQuote]: '"Mis expositores necesitan capturar leads y yo necesito demostrarles que su inversión valió la pena"',
+  [localeKeys.useCaseExpoFeature1]: 'QR único por expositor',
+  [localeKeys.useCaseExpoFeature2]: 'Captura ilimitada de visitantes',
+  [localeKeys.useCaseExpoFeature3]: 'Reportes individuales por stand',
+  [localeKeys.useCaseExpoFeature4]: 'Proof tangible de ROI',
+  [localeKeys.useCaseExpoCta]: 'Ver cómo funciona',
+  [localeKeys.landingBadge]: 'La Plataforma de Eventos #1',
 
   // Product Showcase
   [localeKeys.productShowcaseTitle]: 'Panel Potente, Interfaz Simple',
@@ -1213,7 +1336,7 @@ export const es = {
   [localeKeys.verifying]: 'Verificando...',
 
   // Kiosk Mode
-  [localeKeys.booth]: 'Booth',
+  [localeKeys.booth]: 'Stand',
   [localeKeys.kioskWelcome]: '¡Bienvenido!',
   [localeKeys.kioskScanPrompt]: 'Escanea tu QR para registrarte',
   [localeKeys.kioskPointCamera]: 'Acerca tu código QR a la cámara',
@@ -1285,6 +1408,24 @@ export const es = {
   [localeKeys.step3Desc]: 'Rastrea asistentes en tiempo real con escaneo de código QR',
   [localeKeys.step4Title]: 'Analiza Resultados',
   [localeKeys.step4Desc]: 'Exporta datos y visualiza paneles de analítica comprensivos',
+
+  // FAQ Section
+  [localeKeys.faqTitle]: 'Preguntas Frecuentes',
+  [localeKeys.faqSubtitle]: 'Todo lo que necesitas saber sobre LyVenTum',
+  [localeKeys.faqQrScanQuestion]: '¿Cómo funciona el escaneo de códigos QR?',
+  [localeKeys.faqQrScanAnswer]: 'LyVenTum usa la cámara de tu dispositivo para escanear códigos QR en gafetes de asistentes. Cada escaneo se registra instantáneamente con timestamp, ubicación de stand e información del asistente. El sistema provee retroalimentación en tiempo real y actualiza tu panel automáticamente.',
+  [localeKeys.faqOfflineQuestion]: '¿Funciona sin conexión?',
+  [localeKeys.faqOfflineAnswer]: '¡Sí! Nuestra app móvil almacena escaneos localmente cuando estás offline y los sincroniza automáticamente cuando te reconectas. Esto asegura que nunca pierdas datos, incluso en venues con conectividad débil.',
+  [localeKeys.faqBoothLayoutQuestion]: '¿Puedo personalizar el diseño de stands?',
+  [localeKeys.faqBoothLayoutAnswer]: 'Absolutamente. Puedes arrastrar y soltar stands para que coincidan con el layout de tu venue, organizarlos por zonas, y establecer capacidades personalizadas para cada stand. El mapa visual de stands se actualiza en tiempo real conforme los asistentes se registran.',
+  [localeKeys.faqDataSecurityQuestion]: '¿Mis datos están seguros?',
+  [localeKeys.faqDataSecurityAnswer]: 'Todos los datos están encriptados en tránsito y en reposo usando encriptación estándar de la industria. Usamos Supabase para almacenamiento seguro en la nube con backups automáticos. Mantienes total propiedad de tus datos y puedes exportarlos en cualquier momento.',
+  [localeKeys.faqPricingQuestion]: '¿Cómo funciona el precio?',
+  [localeKeys.faqPricingAnswer]: 'Ofrecemos tres niveles de precios flexibles (Básico, Profesional, Empresarial) con precios personalizados basados en el tamaño de tu evento y necesidades específicas. Todos los planes incluyen funcionalidades core como analíticas en tiempo real y escaneo QR. Contáctanos para una cotización personalizada para tu evento.',
+  [localeKeys.faqMultipleEventsQuestion]: '¿Puedo gestionar múltiples eventos?',
+  [localeKeys.faqMultipleEventsAnswer]: 'Sí, puedes crear y gestionar múltiples eventos desde una sola cuenta. Cada evento tiene su propio dashboard, sesiones, stands y asistentes. Cambia entre eventos instantáneamente desde el menú de navegación.',
+  [localeKeys.faqContactTitle]: '¿Aún tienes preguntas?',
+  [localeKeys.faqContactSubtitle]: 'Nuestro equipo está aquí para ayudarte a comenzar',
 
   // Landing Page - Footer
   [localeKeys.footerTagline]: 'Transforma eventos con datos en tiempo real y analítica inteligente',

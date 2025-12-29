@@ -36,6 +36,7 @@ import { LandingHeader } from '../../components/landing/LandingHeader';
 import LyVentumLogo from '../../components/Logo';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { ContactFormModal } from '../../components/landing/ContactFormModal';
+import { SegmentTabs, EventSegment } from '../../components/landing/SegmentTabs';
 import Button from '../../components/ui/Button';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { localeKeys } from '../../i18n/locales';
@@ -119,6 +120,8 @@ const LandingPage: React.FC = () => {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [activeSegment, setActiveSegment] = useState<EventSegment>('corporate');
+
 
   // Scroll detection for progress bar and back-to-top
   useEffect(() => {
@@ -366,7 +369,8 @@ const LandingPage: React.FC = () => {
       <section
         id="hero"
         aria-label="Sección principal con descripción del producto LyVenTum"
-        className="relative min-h-[100vh] md:min-h-[90vh] pt-16 md:pt-28 pb-12 px-5 sm:px-6 md:px-8 overflow-hidden safe-area-bottom"
+        className="relative min-h-[100vh] md:min-h-[90vh] pb-12 px-5 sm:px-6 md:px-8 overflow-hidden safe-area-bottom"
+        style={{ paddingTop: 'calc(var(--landing-header-h, 64px) + 16px)' }}
       >
         {/* Anchor for Skip Link */}
         <div id="main-content" className="sr-only"></div>
@@ -406,24 +410,71 @@ const LandingPage: React.FC = () => {
                 </p>
               </motion.div>
 
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-montserrat mb-6 md:mb-8 tracking-tight leading-[1.1] text-white">
-                <span dangerouslySetInnerHTML={{ __html: t(localeKeys.landingTitle) }} />
-              </h1>
-              <p className="text-lg md:text-xl text-slate-400 mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed">
-                {t(localeKeys.landingSubtitle)}
-              </p>
-              <div className="flex justify-center w-full">
+              {/* Segment Tabs */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="mb-8 md:mb-10"
+              >
+                <SegmentTabs
+                  activeSegment={activeSegment}
+                  onSegmentChange={setActiveSegment}
+                  tabCorporateLabel={t(localeKeys.heroTabCorporate)}
+                  tabExpoLabel={t(localeKeys.heroTabExpo)}
+                />
+              </motion.div>
+
+              {/* Dynamic Hero Title based on active segment */}
+              <motion.h1
+                key={activeSegment} // Key triggers re-animation on segment change
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-montserrat mb-6 md:mb-8 tracking-tight leading-[1.1] text-white"
+              >
+                <span dangerouslySetInnerHTML={{
+                  __html: activeSegment === 'corporate'
+                    ? t(localeKeys.heroTitleCorporate)
+                    : t(localeKeys.heroTitleExpo)
+                }} />
+              </motion.h1>
+
+              {/* Dynamic Hero Subtitle */}
+              <motion.p
+                key={`subtitle-${activeSegment}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.1 }}
+                className="text-lg md:text-xl text-slate-400 mb-8 md:mb-10 max-w-2xl mx-auto leading-relaxed"
+              >
+                {activeSegment === 'corporate'
+                  ? t(localeKeys.heroSubtitleCorporate)
+                  : t(localeKeys.heroSubtitleExpo)
+                }
+              </motion.p>
+
+              {/* Dynamic CTA */}
+              <motion.div
+                key={`cta-${activeSegment}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.2 }}
+                className="flex justify-center w-full"
+              >
                 <Button
-                  onClick={() => navigate(AppRoute.ClientPortal)}
+                  onClick={() => setIsContactModalOpen(true)}
                   variant="primary"
                   size="lg"
                   className="text-sm md:text-base px-6 py-2.5 shadow-lg shadow-primary-500/20 hover:shadow-primary-500/40 transition-all flex items-center justify-center font-bold rounded-full w-auto"
                 >
-                  {/* Changed to 'Event Access' pointing to Client Portal (Company Events) */}
-                  {t(localeKeys.eventAccess)}
+                  {activeSegment === 'corporate'
+                    ? t(localeKeys.heroCtaCorporate)
+                    : t(localeKeys.heroCtaExpo)
+                  }
                   <ArrowRightIcon className="w-5 h-5 ml-2" />
                 </Button>
-              </div>
+              </motion.div>
             </motion.div>
           </div>
 
@@ -452,6 +503,145 @@ const LandingPage: React.FC = () => {
 
         </div>
       </section >
+
+      {/* USE CASES SECTION - NEW */}
+      <section id="use-cases" className="relative py-16 md:py-24 px-5 sm:px-6 md:px-8 overflow-hidden bg-gradient-to-b from-slate-950 to-slate-900">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-transparent to-purple-600/5" />
+
+        <div className="max-w-7xl mx-auto relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold font-montserrat brand-gradient-text mb-3">
+              {t(localeKeys.useCasesTitle)}
+            </h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+
+            {/* Card 1: Corporate Events */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="group relative p-8 md:p-10 rounded-3xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 backdrop-blur-xl border border-slate-700/50 hover:border-primary-500/50 transition-all duration-300 hover:scale-[1.02] shadow-xl"
+            >
+              {/* Badge */}
+              <div className="inline-block mb-6">
+                <span className="px-4 py-1.5 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-sm font-semibold">
+                  {t(localeKeys.useCaseCorporateSubtitle)}
+                </span>
+              </div>
+
+              {/* Title */}
+              <h3 className="text-xl md:text-2xl font-bold text-white mb-4 font-montserrat">
+                {t(localeKeys.useCaseCorporateTitle)}
+              </h3>
+
+              {/* Quote */}
+              <blockquote className="mb-6 p-4 border-l-4 border-primary-500 bg-slate-900/50 rounded-r-lg">
+                <p className="text-slate-300 italic text-sm md:text-base">
+                  {t(localeKeys.useCaseCorporateQuote)}
+                </p>
+              </blockquote>
+
+              {/* Features */}
+              <ul className="space-y-3 mb-6">
+                {[
+                  t(localeKeys.useCaseCorporateFeature1),
+                  t(localeKeys.useCaseCorporateFeature2),
+                  t(localeKeys.useCaseCorporateFeature3),
+                  t(localeKeys.useCaseCorporateFeature4)
+                ].map((feature, idx) => (
+                  <li key={idx} className="flex items-center gap-3">
+                    <CheckCircleIcon className="w-5 h-5 text-primary-400 flex-shrink-0" />
+                    <span className="text-slate-300">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              {/* CTA */}
+              <button
+                onClick={() => {
+                  setActiveSegment('corporate');
+                  document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="inline-flex items-center gap-2 text-primary-400 hover:text-primary-300 font-semibold transition-colors group-hover:gap-3"
+              >
+                {t(localeKeys.useCaseCorporateCta)}
+                <ArrowRightIcon className="w-5 h-5" />
+              </button>
+
+              {/* Decorative gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary-500/0 via-primary-500/0 to-primary-500/0 group-hover:from-primary-500/5 group-hover:via-transparent group-hover:to-blue-500/5 transition-all duration-500 rounded-3xl pointer-events-none" />
+            </motion.div>
+
+            {/* Card 2: Expos & Fairs */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="group relative p-8 md:p-10 rounded-3xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 backdrop-blur-xl border border-slate-700/50 hover:border-green-500/50 transition-all duration-300 hover:scale-[1.02] shadow-xl"
+            >
+              {/* Badge */}
+              <div className="inline-block mb-6">
+                <span className="px-4 py-1.5 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 text-sm font-semibold">
+                  {t(localeKeys.useCaseExpoSubtitle)}
+                </span>
+              </div>
+
+              {/* Title */}
+              <h3 className="text-xl md:text-2xl font-bold text-white mb-4 font-montserrat">
+                {t(localeKeys.useCaseExpoTitle)}
+              </h3>
+
+              {/* Quote */}
+              <blockquote className="mb-6 p-4 border-l-4 border-green-500 bg-slate-900/50 rounded-r-lg">
+                <p className="text-slate-300 italic text-sm md:text-base">
+                  {t(localeKeys.useCaseExpoQuote)}
+                </p>
+              </blockquote>
+
+              {/* Features */}
+              <ul className="space-y-3 mb-6">
+                {[
+                  t(localeKeys.useCaseExpoFeature1),
+                  t(localeKeys.useCaseExpoFeature2),
+                  t(localeKeys.useCaseExpoFeature3),
+                  t(localeKeys.useCaseExpoFeature4)
+                ].map((feature, idx) => (
+                  <li key={idx} className="flex items-center gap-3">
+                    <CheckCircleIcon className="w-5 h-5 text-green-400 flex-shrink-0" />
+                    <span className="text-slate-300">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              {/* CTA */}
+              <button
+                onClick={() => {
+                  setActiveSegment('expo');
+                  document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="inline-flex items-center gap-2 text-green-400 hover:text-green-300 font-semibold transition-colors group-hover:gap-3"
+              >
+                {t(localeKeys.useCaseExpoCta)}
+                <ArrowRightIcon className="w-5 h-5" />
+              </button>
+
+              {/* Decorative gradient */}
+              <div className="absolute inset-0 bg-gradient-to-br from-green-500/0 via-green-500/0 to-green-500/0 group-hover:from-green-500/5 group-hover:via-transparent group-hover:to-blue-500/5 transition-all duration-500 rounded-3xl pointer-events-none" />
+            </motion.div>
+
+          </div>
+        </div>
+      </section>
 
       {/* FEATURES SECTION */}
       <section id="features" className="relative pt-16 md:pt-24 pb-24 md:pb-32 px-5 sm:px-6 md:px-8 overflow-hidden" >
@@ -930,34 +1120,34 @@ const LandingPage: React.FC = () => {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold font-montserrat brand-gradient-text mb-4">
-              Frequently Asked Questions
+              {t(localeKeys.faqTitle)}
             </h2>
             <p className="text-lg text-slate-400">
-              Everything you need to know about LyVenTum
+              {t(localeKeys.faqSubtitle)}
             </p>
           </motion.div>
 
           <div className="space-y-3 sm:space-y-4">
             {[
               {
-                question: "How does QR code scanning work?",
-                answer: "LyVenTum uses your device's camera to scan QR codes on attendee badges. Each scan is instantly recorded with timestamp, booth location, and attendee information. The system provides real-time feedback and updates your dashboard automatically."
+                question: t(localeKeys.faqQrScanQuestion),
+                answer: t(localeKeys.faqQrScanAnswer)
               },
               {
-                question: "Does it work offline?",
-                answer: "Yes! Our mobile app stores scans locally when you're offline and automatically syncs them when you reconnect. This ensures you never lose data, even in venues with poor connectivity."
+                question: t(localeKeys.faqOfflineQuestion),
+                answer: t(localeKeys.faqOfflineAnswer)
               },
               {
-                question: "Can I customize the booth layout?",
-                answer: "Absolutely. You can drag and drop booths to match your venue's layout, organize them by zones, and set custom capacities for each booth. The visual booth map updates in real-time as attendees check in."
+                question: t(localeKeys.faqBoothLayoutQuestion),
+                answer: t(localeKeys.faqBoothLayoutAnswer)
               },
               {
-                question: "Is my data secure?",
-                answer: "All data is encrypted in transit and at rest using industry-standard encryption. We use Supabase for secure cloud storage with automatic backups. You maintain full ownership of your data and can export it anytime."
+                question: t(localeKeys.faqDataSecurityQuestion),
+                answer: t(localeKeys.faqDataSecurityAnswer)
               },
               {
-                question: "How does pricing work?",
-                answer: "We offer three flexible pricing tiers (Essentials, Professional, Enterprise) with custom pricing based on your event size and specific needs. All plans include core features like real-time analytics and QR scanning. Contact us for a personalized quote tailored to your event."
+                question: t(localeKeys.faqPricingQuestion),
+                answer: t(localeKeys.faqPricingAnswer)
               },
               {
                 question: t(localeKeys.walkinFaqQuestion),
@@ -968,8 +1158,8 @@ const LandingPage: React.FC = () => {
                 answer: t(localeKeys.walkinLimitFaqAnswer)
               },
               {
-                question: "Can I manage multiple events?",
-                answer: "Yes, you can create and manage multiple events from a single account. Each event has its own dashboard, sessions, booths, and attendees. Switch between events instantly from the navigation menu."
+                question: t(localeKeys.faqMultipleEventsQuestion),
+                answer: t(localeKeys.faqMultipleEventsAnswer)
               }
             ].map((faq, index) => (
               <FAQItem key={index} question={faq.question} answer={faq.answer} index={index} />
@@ -984,9 +1174,9 @@ const LandingPage: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="mt-12 text-center p-8 rounded-2xl bg-gradient-to-br from-slate-800/40 to-slate-900/40 border border-slate-700/50"
           >
-            <h3 className="text-xl font-semibold mb-2 text-slate-100">Still have questions?</h3>
+            <h3 className="text-xl font-semibold mb-2 text-slate-100">{t(localeKeys.faqContactTitle)}</h3>
             <p className="text-slate-300 mb-4">
-              Our team is here to help you get started
+              {t(localeKeys.faqContactSubtitle)}
             </p>
             <a
               href="mailto:lyventum@gmail.com"

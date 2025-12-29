@@ -2,6 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ========================================
+   DESIGN SYSTEM TOKENS
+   ======================================== */
+
+/* Header height - Single source of truth for header/hero spacing */
+:root {
+    --header-height: 4rem;
+    /* 16 = h-16 on mobile */
+}
+
+@media (min-width: 768px) {
+    :root {
+        --header-height: 5rem;
+        /* 20 = md:h-20 on desktop */
+    }
+}
+
 /* Critical: Ensure border-box for all elements */
 *,
 *::before,
