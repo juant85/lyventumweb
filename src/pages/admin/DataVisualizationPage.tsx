@@ -28,9 +28,19 @@ import { motion } from 'framer-motion';
 import { Users, Store, CheckCircle, Percent, Inbox, Calendar } from 'lucide-react';
 import { StatCardSkeleton, BoothCardSkeleton } from '../../components/ui/SkeletonCard';
 import EmptyState from '../../components/ui/EmptyState';
+import { useIsMobile } from '../../hooks/useIsMobile';
 import { useBoothCapacity } from '../../hooks/useBoothCapacity';
+import SessionBanner from '../../components/dashboard/SessionBanner';
+import MobileBoothCard from '../../components/dashboard/MobileBoothCard';
+import QuickStatCard from '../../components/dashboard/QuickStatCard';
+import BottomSheet from '../../components/ui/BottomSheet';
+import SwipeableCard from '../../components/ui/SwipeableCard';
+import SwipeableCarousel from '../../components/ui/SwipeableCarousel';
+import { Eye, Star, CheckCircle as LucideCheckCircle } from 'lucide-react';
 
-// Stats Card Component
+// ... (existing helper components like StatsCard, BoothDisplayCard)
+
+
 interface StatsCardProps {
   icon: React.ReactNode;
   label: string;
@@ -229,6 +239,9 @@ const AttendeeList = ({ title, attendees, icon, statusColor, type }: { title: st
 
 
 const DataVisualizationPage: React.FC = () => {
+  const isMobile = useIsMobile();
+  const [showBoothSheet, setShowBoothSheet] = useState(false);
+
   const { sessions, scans, getBoothById, getOperationalSessionDetails, getSessionRegistrationsForSession, fetchData } = useEventData();
   const { selectedEventId, currentEvent, fetchAvailableEvents, updateEvent } = useSelectedEvent();
 
@@ -639,6 +652,146 @@ const DataVisualizationPage: React.FC = () => {
 
   if (sessions.length === 0) {
     return <Card title={t(localeKeys.dataVisualizationTitle)}><p className="font-sans">No sessions configured. Please add sessions in Settings.</p></Card>;
+  }
+
+  // 📱 MOBILE-SPECIFIC RENDER LOGIC
+  if (isMobile) {
+    const activeBoothsCount = boothsData.filter((b: any) => b.attendeesCount > 0).length;
+
+    return (
+      <div className="space-y-6 pb-20">
+        {/* 1. Header & Live Status */}
+        <div className="flex justify-between items-center mb-2">
+          <h1 className="text-xl font-bold font-montserrat text-slate-900 dark:text-white">Dashboard</h1>
+          <div className="flex items-center gap-2">
+            {/* Auto-refresh small indicator */}
+            <div className={`w-2 h-2 rounded-full ${autoRefreshState.isRefreshing ? 'bg-primary-500 animate-ping' : 'bg-green-500'}`} />
+          </div>
+        </div>
+
+        {/* 2. Session Banner */}
+        <SessionBanner session={selectedSession} eventName={currentEvent?.name} />
+
+        {/* 3. Quick Stats Carousel (Swipeable) */}
+        <SwipeableCarousel>
+          <QuickStatCard
+            label="Total Checks"
+            value={dashboardStats.totalAttendees}
+            icon="users"
+            color="blue"
+          />
+          <QuickStatCard
+            label="Active Booths"
+            value={`${activeBoothsCount}/${boothsData.length}`}
+            icon="store"
+            color="green"
+          />
+          <QuickStatCard
+            label="Check-in Rate"
+            value={`${dashboardStats.checkInRate}%`}
+            icon="checkCircle"
+            color="amber"
+          />
+          <QuickStatCard
+            label="Avg Occupancy"
+            value={`${dashboardStats.avgOccupancy}%`}
+            icon="percent"
+            color="purple"
+          />
+        </SwipeableCarousel>
+
+        {/* 4. Booth List (Ranked) */}
+        <div>
+          <div className="flex justify-between items-center mb-3 px-1">
+            <h3 className="font-bold text-slate-800 dark:text-slate-200">Booth Rankings</h3>
+            <span className="text-xs text-slate-500">Live Updates</span>
+          </div>
+
+          <div className="space-y-3">
+            {boothsData.length > 0 ? (
+              boothsData.map((data: any, index: number) => (
+                <SwipeableCard
+                  key={data.booth.id}
+                  leftAction={{
+                    icon: <Eye className="w-5 h-5" />,
+                    color: 'blue',
+                    label: 'Details',
+                    onTrigger: () => {
+                      handleOpenBoothModal(data.booth);
+                      setShowBoothSheet(true);
+                    },
+                  }}
+                  rightAction={{
+                    icon: <LucideCheckCircle className="w-5 h-5" />,
+                    color: 'green',
+                    label: 'Mark',
+                    onTrigger: () => {
+                      // Future: Mark as important/favorite
+                      console.log('Marked booth:', data.booth.companyName);
+                    },
+                  }}
+                  threshold={80}
+                >
+                  <MobileBoothCard
+                    booth={{
+                      boothId: data.booth.id,
+                      boothName: data.booth.companyName,
+                      totalScans: data.attendeesCount,
+                      uniqueScans: data.attendeesCount,
+                      ownerName: data.booth.physicalId
+                    }}
+                    rank={index + 1}
+                    onClick={() => {
+                      handleOpenBoothModal(data.booth);
+                      setShowBoothSheet(true);
+                    }}
+                  />
+                </SwipeableCard>
+              ))
+            ) : (
+              <EmptyState
+                icon={Store}
+                title="No Active Booths"
+                description="No booth data available yet."
+              />
+            )}
+          </div>
+        </div>
+
+        {/* 5. Mobile Details Sheet */}
+        <BottomSheet
+          isOpen={showBoothSheet}
+          onClose={() => setShowBoothSheet(false)}
+          title={selectedBoothForModal?.companyName || 'Booth Details'}
+        >
+          {isModalLoading ? (
+            <div className="flex justify-center p-8"><ArrowPathIcon className="w-8 h-8 animate-spin text-primary-500" /></div>
+          ) : (
+            <div className="space-y-6">
+              {/* Summary Stats in Sheet */}
+              <div className="grid grid-cols-3 gap-2 mb-6">
+                <div className="bg-slate-50 dark:bg-slate-800 p-3 rounded-xl text-center">
+                  <p className="text-2xl font-bold text-slate-900 dark:text-white">{boothAttendeeDetails.presentAndExpected.length}</p>
+                  <p className="text-[10px] text-slate-500 uppercase">Expected</p>
+                </div>
+                <div className="bg-amber-50 dark:bg-amber-900/20 p-3 rounded-xl text-center">
+                  <p className="text-2xl font-bold text-amber-600">{boothAttendeeDetails.presentButUnexpected.length}</p>
+                  <p className="text-[10px] text-amber-600/70 uppercase">Walk-ins</p>
+                </div>
+                <div className="bg-red-50 dark:bg-red-900/20 p-3 rounded-xl text-center">
+                  <p className="text-2xl font-bold text-red-600">{boothAttendeeDetails.expectedButAbsent.length}</p>
+                  <p className="text-[10px] text-red-600/70 uppercase">Missing</p>
+                </div>
+              </div>
+
+              <AttendeeList title="Checked In (Expected)" attendees={boothAttendeeDetails.presentAndExpected} icon={<CheckCircleIcon className="w-5 h-5" />} statusColor="text-secondary-600" type="reg" />
+              <AttendeeList title="Walk-Ins (Unexpected)" attendees={boothAttendeeDetails.presentButUnexpected} icon={<UserPlusIcon className="w-5 h-5" />} statusColor="text-amber-600" type="scan" />
+              <AttendeeList title="Still Missing" attendees={boothAttendeeDetails.expectedButAbsent} icon={<XMarkIcon className="w-5 h-5" />} statusColor="text-red-600" type="reg" />
+            </div>
+          )}
+        </BottomSheet>
+      </div>
+    );
   }
 
   return (

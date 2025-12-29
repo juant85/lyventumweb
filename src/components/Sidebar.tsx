@@ -33,7 +33,14 @@ const SidebarSkeleton: React.FC<{ isOpen: boolean }> = ({ isOpen }) => (
   </aside>
 );
 
-const Sidebar: React.FC<{ isOpen: boolean; currentUser: User | null }> = ({ isOpen, currentUser }) => {
+interface SidebarProps {
+  isOpen: boolean;
+  currentUser: User | null;
+  isMobileDrawer?: boolean; // New prop for mobile usage
+  onClose?: () => void;     // New prop for closing drawer
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, currentUser, isMobileDrawer, onClose }) => {
   const location = useLocation();
   const { totalUnreadCount, openChatPanel } = useChat();
   const { isFeatureEnabled, isLoading } = useFeatureFlags();
