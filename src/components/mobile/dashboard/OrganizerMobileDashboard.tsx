@@ -8,7 +8,7 @@ import QuickStatCard from '../../dashboard/QuickStatCard';
 import { Calendar } from 'lucide-react';
 
 const OrganizerMobileDashboard: React.FC = () => {
-    const { scans, sessions } = useEventData();
+    const { scans, sessions, booths, attendees } = useEventData();
     const navigate = useNavigate();
 
     const allSessions = sessions.sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
@@ -23,8 +23,20 @@ const OrganizerMobileDashboard: React.FC = () => {
         activeSessions: sessions.filter(s => {
             const now = new Date();
             return now >= new Date(s.startTime) && now <= new Date(s.endTime);
-        }).length
+        }).length,
+        checkedIn: attendees.filter(a => !!a.checkInTime).length,
+        expected: attendees.filter(a => !a.checkInTime).length,
+        activeBooths: booths.length
     };
+
+    // Top booths by visitor count
+    const topBooths = booths
+        .map(booth => ({
+            ...booth,
+            visitors: new Set(scans.filter(s => s.boothId === booth.id).map(s => s.attendeeId)).size
+        }))
+        .sort((a, b) => b.visitors - a.visitors)
+        .slice(0, 3);
 
     const isSessionLive = (session: typeof sessions[0]) => {
         const now = new Date();
@@ -61,16 +73,69 @@ const OrganizerMobileDashboard: React.FC = () => {
                     <QuickStatCard
                         label="Total Sessions"
                         value={overallStats.totalSessions}
-                        icon="checkCircle"
+                        icon="calendar"
                         color="purple"
                     />
                     <QuickStatCard
-                        label="Active Now"
-                        value={overallStats.activeSessions}
-                        icon="store"
+                        label="Checked In"
+                        value={overallStats.checkedIn}
+                        icon="checkCircle"
+                        color="green"
+                    />
+                    <QuickStatCard
+                        label="Expected"
+                        value={overallStats.expected}
+                        icon="clock"
                         color="amber"
                     />
+                    <QuickStatCard
+                        label="Active Booths"
+                        value={overallStats.activeBooths}
+                        icon="store"
+                        color="pink"
+                    />
                 </SwipeableCarousel>
+            </div>
+
+            {/* Top Booths */}
+            <div className="px-4">
+                <div className="flex justify-between items-center mb-3">
+                    <h2 className="text-lg font-bold text-slate-900 dark:text-white">Top Booths</h2>
+                    <button
+                        onClick={() => navigate('/booth-setup')}
+                        className="text-sm text-primary-600 dark:text-primary-400 font-semibold"
+                    >
+                        View All →
+                    </button>
+                </div>
+                <div className="space-y-3">
+                    {topBooths.length > 0 ? (
+                        topBooths.map(booth => (
+                            <MobileCard
+                                key={booth.id}
+                                title={booth.companyName}
+                                subtitle={`Physical ID: ${booth.physicalId}`}
+                                icon={<div className="w-5 h-5 text-pink-500">🏢</div>}
+                                badge={
+                                    <span className="bg-primary-100 text-primary-700 text-xs px-2 py-1 rounded-full font-bold">
+                                        {booth.visitors} visitors
+                                    </span>
+                                }
+                                onClick={() => navigate('/booth-setup')}
+                            />
+                        ))
+                    ) : (
+                        <MobileEmptyState
+                            icon={<div className="text-4xl">🏢</div>}
+                            title="No Booths Yet"
+                            description="Add booths to track engagement"
+                            action={{
+                                label: "Add Booth",
+                                onClick: () => navigate('/booth-setup')
+                            }}
+                        />
+                    )}
+                </div>
             </div>
 
             {/* Upcoming Sessions */}
@@ -105,33 +170,43 @@ const OrganizerMobileDashboard: React.FC = () => {
                             }}
                         />
                     )}
+                    {/* Speed Dial for Quick Actions */}
+                    <SpeedDialFAB
+                        actions={[
+                            {
+                                icon: 'qrCode',
+                                label: 'Scan QR',
+                                onClick: () => navigate('/admin/scan'),
+                                color: 'bg-primary-600'
+                            },
+                            {
+                                icon: 'checkCircle',
+                                label: 'Check-In Desk',
+                                onClick: () => navigate('/check-in-desk'),
+                                color: 'bg-green-600'
+                            },
+                            {
+                                icon: 'userPlus',
+                                label: 'Add Walk-In',
+                                onClick: () => navigate('/attendees/add'),
+                                color: 'bg-blue-600'
+                            },
+                            {
+                                icon: 'calendar',
+                                label: 'New Session',
+                                onClick: () => navigate('/sessions/new'),
+                                color: 'bg-purple-600'
+                            },
+                            {
+                                icon: 'store',
+                                label: 'Booth Stats',
+                                onClick: () => navigate('/booth-setup'),
+                                color: 'bg-pink-600'
+                            }
+                        ]}
+                    />
                 </div>
-            </div>
-
-            <SpeedDialFAB
-                actions={[
-                    {
-                        icon: 'qrCode',
-                        label: 'Quick Scan',
-                        onClick: () => navigate('/admin/scan'),
-                        color: 'primary'
-                    },
-                    {
-                        icon: 'userPlus',
-                        label: 'Add Attendee',
-                        onClick: () => navigate('/attendees/add'), // Updated to native mobile route
-                        color: 'success'
-                    },
-                    {
-                        icon: 'plus',
-                        label: 'New Session',
-                        onClick: () => navigate('/sessions/new'),
-                        color: 'secondary'
-                    }
-                ]}
-            />
-        </div>
-    );
+                );
 };
 
-export default OrganizerMobileDashboard;
+                export default OrganizerMobileDashboard;

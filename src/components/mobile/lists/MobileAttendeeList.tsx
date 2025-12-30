@@ -18,15 +18,28 @@ const MobileAttendeeList: React.FC<MobileAttendeeListProps> = ({ onAddClick, onE
     const { attendees, loadingData } = useEventData();
     const { t } = useLanguage();
     const [searchTerm, setSearchTerm] = useState('');
+    const [filterTab, setFilterTab] = useState<'all' | 'checkedIn' | 'expected'>('all');
 
-    const filteredAttendees = attendees.filter(attendee => {
-        const searchLower = searchTerm.toLowerCase();
-        return (
-            attendee.name.toLowerCase().includes(searchLower) ||
-            attendee.organization.toLowerCase().includes(searchLower) ||
-            (attendee.email && attendee.email.toLowerCase().includes(searchLower))
-        );
-    });
+    const filteredAttendees = attendees
+        .filter(attendee => {
+            // Filter by tab
+            if (filterTab === 'checkedIn' && !attendee.checkInTime) return false;
+            if (filterTab === 'expected' && attendee.checkInTime) return false;
+
+            // Filter by search
+            const searchLower = searchTerm.toLowerCase();
+            return (
+                attendee.name.toLowerCase().includes(searchLower) ||
+                attendee.organization.toLowerCase().includes(searchLower) ||
+                (attendee.email && attendee.email.toLowerCase().includes(searchLower))
+            );
+        });
+
+    const stats = {
+        all: attendees.length,
+        checkedIn: attendees.filter(a => !!a.checkInTime).length,
+        expected: attendees.filter(a => !a.checkInTime).length
+    };
 
     return (
         <div className="space-y-4 pb-20">
@@ -51,6 +64,37 @@ const MobileAttendeeList: React.FC<MobileAttendeeListProps> = ({ onAddClick, onE
                     >
                         Add
                     </Button>
+                </div>
+
+                {/* Filter Tabs */}
+                <div className="flex gap-2 mb-3">
+                    <button
+                        onClick={() => setFilterTab('all')}
+                        className={`flex-1 py-2 px-3 text-sm font-semibold rounded-lg transition-colors ${filterTab === 'all'
+                                ? 'bg-primary-600 text-white'
+                                : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
+                            }`}
+                    >
+                        All ({stats.all})
+                    </button>
+                    <button
+                        onClick={() => setFilterTab('checkedIn')}
+                        className={`flex-1 py-2 px-3 text-sm font-semibold rounded-lg transition-colors ${filterTab === 'checkedIn'
+                                ? 'bg-green-600 text-white'
+                                : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
+                            }`}
+                    >
+                        ✓ In ({stats.checkedIn})
+                    </button>
+                    <button
+                        onClick={() => setFilterTab('expected')}
+                        className={`flex-1 py-2 px-3 text-sm font-semibold rounded-lg transition-colors ${filterTab === 'expected'
+                                ? 'bg-amber-600 text-white'
+                                : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
+                            }`}
+                    >
+                        ⏳ Wait ({stats.expected})
+                    </button>
                 </div>
 
                 <div className="relative">
