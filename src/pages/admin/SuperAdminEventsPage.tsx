@@ -681,14 +681,27 @@ const SuperAdminEventsPage: React.FC = () => {
                     }
                     onClick={() => handleManageEvent(event.id)}
                     actions={
-                      <div className="flex gap-2 text-xs text-slate-500 dark:text-slate-400">
-                        <span>📊 {event.booth_count || 0} booths</span>
-                        <span>•</span>
-                        <span>👥 {event.attendee_count || 0} attendees</span>
+                      <div className="flex gap-2 items-center flex-wrap">
+                        {/* Organizers Button */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setManagingOrganizersFor(event);
+                          }}
+                          className="flex items-center gap-1 px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-lg text-xs font-semibold hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors"
+                        >
+                          <UsersGroupIcon className="w-3 h-3" />
+                          <span>Organizers</span>
+                        </button>
+
+                        {/* Stats */}
+                        <span className="text-xs text-slate-500 dark:text-slate-400">📊 {event.booth_count || 0} booths</span>
+                        <span className="text-xs text-slate-400">•</span>
+                        <span className="text-xs text-slate-500 dark:text-slate-400">👥 {event.attendee_count || 0} attendees</span>
                         {event.plan_name && (
                           <>
-                            <span>•</span>
-                            <span className="text-primary-600 dark:text-primary-400 font-semibold">
+                            <span className="text-xs text-slate-400">•</span>
+                            <span className="text-xs text-primary-600 dark:text-primary-400 font-semibold">
                               {event.plan_name}
                             </span>
                           </>
