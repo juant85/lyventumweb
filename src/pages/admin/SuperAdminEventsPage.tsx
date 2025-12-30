@@ -419,6 +419,16 @@ const SuperAdminEventsPage: React.FC = () => {
     </th>
   );
 
+  // Render create modal separately to work in both mobile and desktop
+  const createEventModal = isCreateModalOpen && (
+    <Modal isOpen={true} onClose={resetCreateForm} title={t(localeKeys.modalCreateTitle)} size="xl">
+      <div className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+        {isMobile ? "Creating a new event from mobile view" : "Creating a new event from desktop view"}
+      </div>
+      <Button variant="primary" onClick={resetCreateForm}>Close Modal Test</Button>
+    </Modal>
+  );
+
   // ✨ MOBILE VIEW
   if (isMobile) {
     return (
@@ -528,6 +538,9 @@ const SuperAdminEventsPage: React.FC = () => {
             }
           ]}
         />
+
+        {/* Modals */}
+        {createEventModal}
       </div>
     );
   }
