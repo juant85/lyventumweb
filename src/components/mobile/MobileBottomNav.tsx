@@ -40,6 +40,8 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
         <button
             onClick={onClick}
             className="flex flex-col items-center justify-center w-16 h-full relative group"
+            aria-label={label}
+            aria-current={active ? 'page' : undefined}
         >
             {/* Active Indicator */}
             {active && (
@@ -105,6 +107,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
             <button
                 onClick={onScanClick}
                 className="relative -top-6 bg-gradient-to-r from-primary-600 to-primary-500 dark:from-primary-500 dark:to-primary-600 text-white rounded-full p-4 shadow-xl hover:shadow-2xl transition-all duration-200 active:scale-95 border-4 border-white dark:border-slate-900"
+                aria-label="Scan QR code"
             >
                 <Icon name="qrCode" className="w-7 h-7" />
 

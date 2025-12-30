@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AppRoute } from '../../types';
 import MobileMenu from './MobileMenu';
+import MobileErrorBoundary from './MobileErrorBoundary';
 
 interface MobileLayoutProps {
     children: ReactNode;
@@ -131,7 +132,9 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
                     className="transition-all duration-300"
                     style={{ paddingTop: `${headerHeight + 16}px` }}
                 >
-                    {children}
+                    <MobileErrorBoundary>
+                        {children}
+                    </MobileErrorBoundary>
                 </motion.main>
             </AnimatePresence>
 

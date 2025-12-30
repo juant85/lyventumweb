@@ -5,6 +5,7 @@ import Input from '../../ui/Input';
 import MobileCard from '../MobileCard';
 import { UserIcon, UserPlusIcon, MagnifyingGlassIcon } from '../../Icons';
 import MobileEmptyState from '../MobileEmptyState';
+import SkeletonCard from '../SkeletonCard';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import Button from '../../ui/Button';
 
@@ -46,6 +47,7 @@ const MobileAttendeeList: React.FC<MobileAttendeeListProps> = ({ onAddClick, onE
                         onClick={onAddClick}
                         className="shadow-md shadow-primary-500/20"
                         leftIcon={<UserPlusIcon className="w-4 h-4" />}
+                        aria-label="Add new attendee"
                     >
                         Add
                     </Button>
@@ -58,6 +60,7 @@ const MobileAttendeeList: React.FC<MobileAttendeeListProps> = ({ onAddClick, onE
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="pl-10 text-base shadow-sm"
                         wrapperClassName="!mb-0"
+                        aria-label="Search attendees"
                     />
                     <MagnifyingGlassIcon className="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 </div>
@@ -66,7 +69,7 @@ const MobileAttendeeList: React.FC<MobileAttendeeListProps> = ({ onAddClick, onE
             {/* List */}
             <div className="space-y-3 px-1">
                 {loadingData ? (
-                    <div className="text-center py-10 text-slate-500 animate-pulse">Loading attendees...</div>
+                    <SkeletonCard count={5} />
                 ) : filteredAttendees.length > 0 ? (
                     filteredAttendees.map(attendee => (
                         <MobileCard
