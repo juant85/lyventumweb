@@ -1,15 +1,17 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useEventData } from '../../../contexts/EventDataContext';
 import { useSelectedEvent } from '../../../contexts/SelectedEventContext';
-import { MobileCard, SpeedDialFAB } from '../index';
+import { motion } from 'framer-motion';
+import { Calendar, Users, Store, CheckCircle, Activity, FileText, UserMinus, TrendingUp, TrendingDown, RefreshCw } from 'lucide-react';
+import { AppRoute, SessionRegistration } from '../../../types';
+import SpeedDialFAB from '../SpeedDialFAB';
 import SwipeableCarousel from '../../ui/SwipeableCarousel';
 import QuickStatCard from '../../dashboard/QuickStatCard';
-import { Calendar, Users, Store, BarChart3, CheckCircle, RefreshCw, Activity, FileText } from 'lucide-react';
-import { AppRoute } from '../../../types';
+import MobileCard from '../MobileCard';
+import Button from '../../ui/Button';
 import { useBoothCapacity } from '../../../hooks/useBoothCapacity';
 import { useAutoRefresh } from '../../../hooks/useAutoRefresh';
-import { motion } from 'framer-motion';
 
 /**
  * Universal Event Management Dashboard for Mobile
@@ -17,11 +19,33 @@ import { motion } from 'framer-motion';
  * Provides access to all core event management features
  */
 const EventManagementDashboard: React.FC = () => {
-    const { currentEvent } = useSelectedEvent();
-    const { sessions, booths, attendees, scans, getOperationalSessionDetails } = useEventData();
     const navigate = useNavigate();
+    const { currentEvent } = useSelectedEvent();
+    const { sessions, booths, attendees, scans, getOperationalSessionDetails, getSessionRegistrationsForSession, getBoothById } = useEventData();
 
-    const liveSession = getOperationalSessionDetails().session;
+    const liveSession = useMemo(() => {
+        const details = getOperationalSessionDetails();
+        return details.session;
+    }, [getOperationalSessionDetails]);
+
+    const [sessionRegistrations, setSessionRegistrations] = useState<(SessionRegistration & { boothName?: string })[]>([]);
+    const [loadingRegistrations, setLoadingRegistrations] = useState(false);
+
+    // Load registrations for live session
+    useEffect(() => {
+        if (liveSession?.id) {
+            setLoadingRegistrations(true);
+            getSessionRegistrationsForSession(liveSession.id)
+                .then(result => {
+                    if (result.success) {
+                        setSessionRegistrations(result.data);
+                    }
+                })
+                .finally(() => setLoadingRegistrations(false));
+        } else {
+            setSessionRegistrations([]);
+        }
+    }, [liveSession, getSessionRegistrationsForSession]);
     const { getCapacity } = useBoothCapacity(liveSession?.id || '');
 
     // Auto-refresh for live data (only when session is active)
@@ -182,7 +206,7 @@ const EventManagementDashboard: React.FC = () => {
                                             animate={{ opacity: 1, scale: 1 }}
                                             transition={{ delay: 0.1 * index }}
                                             whileTap={{ scale: 0.98 }}
-                                            className={`p-2.5 rounded-xl border backdrop-blur-sm ${getBoothColor(booth.percentage, booth.attendeesCount)} shadow-lg`}
+                                            className={`p - 2.5 rounded - xl border backdrop - blur - sm ${getBoothColor(booth.percentage, booth.attendeesCount)} shadow - lg`}
                                         >
                                             <div className="flex items-center justify-between mb-1.5">
                                                 <p className="text-xs font-bold truncate pr-1">{booth.physicalId}</p>
@@ -204,7 +228,7 @@ const EventManagementDashboard: React.FC = () => {
                                             <div className="mt-2 h-1 bg-black/20 rounded-full overflow-hidden">
                                                 <motion.div
                                                     initial={{ width: 0 }}
-                                                    animate={{ width: `${Math.min(booth.percentage, 100)}%` }}
+                                                    animate={{ width: `${Math.min(booth.percentage, 100)}% ` }}
                                                     transition={{ delay: 0.4 + (0.1 * index), duration: 0.8, ease: "easeOut" }}
                                                     className="h-full bg-white/80 rounded-full"
                                                 />
@@ -239,6 +263,121 @@ const EventManagementDashboard: React.FC = () => {
                     <QuickStatCard label="Checked In" value={eventStats.checkedIn} icon="checkCircle" color="pink" />
                 </SwipeableCarousel>
             </div>
+
+            {/* Desktop Parity Features - Only show when live session active */}
+            {liveSession && sessionRegistrations.length > 0 && (
+                <div className="px-4 space-y-4">
+                    {/* Meeting Completion Gauge */}
+                    <div className="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm border border-slate-200 dark:border-slate-700">
+                        <div className="flex items-center gap-3 mb-4">
+                            <CheckCircle className="w-5 h-5 text-green-500" />
+                            <h3 className="font-bold text-slate-900 dark:text-white">Meeting Completion</h3>
+                        </div>
+                        <div className="flex items-center justify-center py-4">
+                            <div className="relative w-32 h-32">
+                                <svg className="transform -rotate-90 w-32 h-32">
+                                    <circle
+                                        cx="64"
+                                        cy="64"
+                                        r="56"
+                                        stroke="currentColor"
+                                        strokeWidth="8"
+                                        fill="none"
+                                        className="text-slate-200 dark:text-slate-700"
+                                    />
+                                    <circle
+                                        cx="64"
+                                        cy="64"
+                                        r="56"
+                                        stroke="currentColor"
+                                        strokeWidth="8"
+                                        fill="none"
+                                        strokeDasharray={2 * Math.PI * 56}
+                                        strokeDashoffset={2 * Math.PI * 56 * (1 - (sessionRegistrations.filter(r => r.status === 'Attended').length / sessionRegistrations.length))}
+                                        className="text-primary-500 transition-all duration-1000"
+                                        strokeLinecap="round"
+                                    />
+                                </svg>
+                                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                    <span className="text-3xl font-bold text-slate-900 dark:text-white">
+                                        {Math.round((sessionRegistrations.filter(r => r.status === 'Attended').length / sessionRegistrations.length) * 100)}%
+                                    </span>
+                                    <span className="text-xs text-slate-500 dark:text-slate-400">Complete</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p className="text-center text-sm text-slate-600 dark:text-slate-400">
+                            {sessionRegistrations.filter(r => r.status === 'Attended').length} of {sessionRegistrations.length} attendees checked in
+                        </p>
+                    </div>
+
+                    {/* MIA (Missing In Action) Attendees */}
+                    {(() => {
+                        const miaAttendees = sessionRegistrations.filter(r => r.status === 'Registered' && r.expectedBoothId);
+                        return miaAttendees.length > 0 && (
+                            <div className="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm border border-slate-200 dark:border-slate-700">
+                                <div className="flex items-center gap-3 mb-3">
+                                    <UserMinus className="w-5 h-5 text-amber-500" />
+                                    <h3 className="font-bold text-slate-900 dark:text-white">Missing Attendees ({miaAttendees.length})</h3>
+                                </div>
+                                <div className="space-y-2">
+                                    {miaAttendees.slice(0, 5).map(reg => (
+                                        <motion.div
+                                            key={reg.id}
+                                            whileTap={{ scale: 0.98 }}
+                                            onClick={() => navigate(`/attendee-profiles/${reg.attendeeId}`)}
+                                            className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700 cursor-pointer"
+                                        >
+                                            <div className="flex-1 min-w-0">
+                                                <p className="font-semibold text-slate-900 dark:text-white truncate">{reg.attendeeName}</p>
+                                                <p className="text-xs text-slate-500 dark:text-slate-400">
+                                                    Expected at: {getBoothById(reg.expectedBoothId!)?.companyName || 'Unknown'}
+                                                </p>
+                                            </div>
+                                            <div className="text-xs text-primary-600 dark:text-primary-400 font-medium ml-2">View</div>
+                                        </motion.div>
+                                    ))}
+                                    {miaAttendees.length > 5 && (
+                                        <p className="text-center text-sm text-slate-500 pt-2">
+                                            +{miaAttendees.length - 5} more missing
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                        );
+                    })()}
+
+                    {/* Booth Leaderboard */}
+                    {liveBoothStats.length > 0 && (
+                        <div className="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm border border-slate-200 dark:border-slate-700">
+                            <div className="flex items-center gap-3 mb-3">
+                                <TrendingUp className="w-5 h-5 text-green-500" />
+                                <h3 className="font-bold text-slate-900 dark:text-white">Top Booths</h3>
+                            </div>
+                            <div className="space-y-2">
+                                {liveBoothStats.map((booth, index) => (
+                                    <div
+                                        key={booth.id}
+                                        className="flex items-center gap-3 p-2"
+                                    >
+                                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                                            {index + 1}
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="font-semibold text-slate-900 dark:text-white truncate text-sm">{booth.name}</p>
+                                            <p className="text-xs text-slate-500 dark:text-slate-400">Booth {booth.physicalId}</p>
+                                        </div>
+                                        <div className="text-right flex-shrink-0">
+                                            <p className="font-bold text-primary-600 dark:text-primary-400">{booth.attendeesCount}</p>
+                                            <p className="text-xs text-slate-500">/{booth.capacity}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            )}
 
             {/* Quick Actions - Modern Premium Design */}
             <div className="px-4">
