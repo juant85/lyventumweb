@@ -10,7 +10,7 @@ import { Building2, Calendar } from 'lucide-react';
 import { AppRoute } from '../../../types';
 
 const SuperAdminMobileDashboard: React.FC = () => {
-    const { availableEvents } = useSelectedEvent();
+    const { availableEvents, setSelectedEventId } = useSelectedEvent();
     const { scans, sessions } = useEventData();
     const navigate = useNavigate();
 
@@ -48,6 +48,11 @@ const SuperAdminMobileDashboard: React.FC = () => {
                 Active
             </span>
         );
+    };
+
+    const handleEventClick = (eventId: string) => {
+        setSelectedEventId(eventId); // SELECT event first
+        navigate(AppRoute.Dashboard); // Then navigate
     };
 
     return (
