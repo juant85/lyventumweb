@@ -1,0 +1,153 @@
+/* Global Touch Target & Mobile UX Improvements */
+
+/* Minimum touch target sizes for mobile (iOS: 44px, Material: 48px) */
+.touch-target {
+  min-width: 48px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-center: center;
+}
+
+.touch-target-sm {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* Ensure all buttons meet minimum size */
+button:not(.btn-icon-only) {
+  min-height: 44px;
+  padding: 0.75rem 1rem;
+}
+
+/* Icon-only buttons */
+button.btn-icon-only {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0.5rem;
+}
+
+/* Improve tap feedback for all interactive elements */
+button,
+a,
+[role="button"],
+.clickable {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+/* Active state feedback */
+button:active,
+a:active,
+[role="button"]:active {
+  transform: scale(0.98);
+  transition: transform 0.1s ease-out;
+}
+
+/* Improve form input touch targets */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+input[type="password"],
+input[type="search"],
+input[type="url"],
+textarea,
+select {
+  min-height: 48px;
+  padding: 0.75rem;
+  font-size: 16px; /* Prevents zoom on iOS */
+}
+
+/* Checkbox and radio minimum size */
+input[type="checkbox"],
+input[type="radio"] {
+  min-width: 24px;
+  min-height: 24px;
+  cursor: pointer;
+}
+
+/* Safe area support for mobile notches */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-area-left {
+  padding-left: env(safe-area-inset-left);
+}
+
+.safe-area-right {
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Improve mobile scrolling */
+.mobile-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Loading skeleton improvements */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    theme('colors.slate.200') 25%,
+    theme('colors.slate.300') 50%,
+    theme('colors.slate.200') 75%
+  );
+  background-size: 200% 100%;
+  animation: loading 1.5s ease-in-out infinite;
+}
+
+.dark .skeleton {
+  background: linear-gradient(
+    90deg,
+    theme('colors.slate.800') 25%,
+    theme('colors.slate.700') 50%,
+    theme('colors.slate.800') 75%
+  );
+  background-size: 200% 100%;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Focus visible improvements for accessibility */
+*:focus-visible {
+  outline: 2px solid theme('colors.primary.500');
+  outline-offset: 2px;
+}
+
+/* Remove focus outline for mouse users */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  button,
+  a {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
