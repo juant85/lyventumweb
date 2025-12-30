@@ -274,10 +274,11 @@ const SessionSettingsPage: React.FC = () => {
                 // navigate(AppRoute.SessionSettings); // navigate is not defined in this scope yet? It is from hook
             }
         } else {
-            setMobileViewMode('list');
-            setSelectedSessionId('');
         }
     }, [routeLocation.pathname, id, isMobile, sessions, loadingData]);
+
+    // Derive selectedSession from selectedSessionId
+    const selectedSession = sessions.find(s => s.id === selectedSessionId) || null;
 
     const resetFormToDefaults = () => {
         setSessionName('');
