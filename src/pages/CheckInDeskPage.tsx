@@ -18,6 +18,9 @@ import CameraModal from '../components/CameraModal';
 import { supabase } from '../supabaseClient';
 import { useFeatureFlags } from '../contexts/FeatureFlagContext';
 import { Feature } from '../features';
+import { QrCode, CheckCircle as CheckCircleIcon } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { MobileCard } from '../components/mobile';
 
 const AttendeeRow: React.FC<{
   attendee: Attendee;
@@ -312,7 +315,235 @@ const CheckInDeskPage: React.FC = () => {
   };
 
   const checkedInCount = useMemo(() => attendees.filter(a => !!a.checkInTime).length, [attendees]);
+  const recentCheckins = useMemo(() =>
+    attendees
+      .filter(a => a.checkInTime)
+      .sort((a, b) => new Date(b.checkInTime!).getTime() - new Date(a.checkInTime!).getTime())
+      .slice(0, 5),
+    [attendees]
+  );
 
+  // Mobile-optimized view
+  if (isMobile) {
+    return (
+      <>
+        {/* Modals */}
+        <Modal isOpen={!!selectedProfile} onClose={handleCloseModals} title="Profile" size="sm">
+          {selectedProfile && (
+            <div className="space-y-4">
+              <AttendeeBadge attendee={selectedProfile} />
+              <Button
+                variant="primary"
+                className="w-full"
+                onClick={() => {
+                  navigate(AppRoute.AttendeeProfileDetail.replace(':attendeeId', selectedProfile.id));
+                  handleCloseModals();
+                }}
+              >
+                View Full Profile
+              </Button>
+            </div>
+          )}
+        </Modal>
+
+        <Modal isOpen={!!selectedAttendeeForEdit} onClose={handleCloseModals} title="Edit Details" size="lg">
+          {selectedAttendeeForEdit && (
+            <div className="space-y-4">
+              <textarea
+                value={currentNotes}
+                onChange={(e) => setCurrentNotes(e.target.value)}
+                rows={4}
+                className="w-full px-3 py-2 border rounded-lg"
+                placeholder="Add notes..."
+              />
+              <div className="space-y-2">
+                <Checkbox label="Last Day Lunch" checked={currentPreferences.last_day_lunch} onChange={(e) => setCurrentPreferences(p => ({ ...p, last_day_lunch: e.target.checked }))} />
+                <Checkbox label="Vegetarian" checked={currentPreferences.is_veggie} onChange={(e) => setCurrentPreferences(p => ({ ...p, is_veggie: e.target.checked }))} />
+                <Checkbox label="City Tour" checked={currentPreferences.has_tour} onChange={(e) => setCurrentPreferences(p => ({ ...p, has_tour: e.target.checked }))} />
+              </div>
+              <div className="flex gap-3 pt-4">
+                <Button variant="neutral" onClick={handleCloseModals} className="flex-1">Cancel</Button>
+                <Button variant="primary" onClick={handleSaveDetails} disabled={isSavingDetails} className="flex-1">
+                  {isSavingDetails ? 'Saving...' : 'Save'}
+                </Button>
+              </div>
+            </div>
+          )}
+        </Modal>
+
+        <Modal isOpen={isAddModalOpen} onClose={handleCloseModals} title="Add Walk-in" size="md">
+          <form onSubmit={handleAddNewAttendee} className="space-y-4">
+            <Input label="Name" value={newAttendeeData.name} onChange={(e) => setNewAttendeeData(p => ({ ...p, name: e.target.value }))} required autoFocus />
+            <Input label="Organization" value={newAttendeeData.organization} onChange={(e) => setNewAttendeeData(p => ({ ...p, organization: e.target.value }))} required />
+            <Input label="Email" type="email" value={newAttendeeData.email} onChange={(e) => setNewAttendeeData(p => ({ ...p, email: e.target.value }))} required />
+            <Input label="Phone" value={newAttendeeData.phone} onChange={(e) => setNewAttendeeData(p => ({ ...p, phone: e.target.value }))} />
+            <div className="flex gap-3 pt-4">
+              <Button type="button" variant="neutral" onClick={handleCloseModals} className="flex-1">Cancel</Button>
+              <Button type="submit" variant="primary" disabled={isAdding} className="flex-1">
+                {isAdding ? 'Adding...' : 'Add & Check In'}
+              </Button>
+            </div>
+          </form>
+        </Modal>
+
+        <CameraModal
+          isOpen={!!photographingAttendee}
+          onClose={handleCloseModals}
+          onCapture={handleSavePhoto}
+          isSaving={isSavingPhoto}
+        />
+
+        {/* Mobile Check-in View */}
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-24">
+          {/* Sticky Header */}
+          <div className="sticky top-0 z-10 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-4 safe-area-top shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <h1 className="text-xl font-bold text-slate-900 dark:text-white">Check-In Desk</h1>
+                <p className="text-sm text-slate-500 dark:text-slate-400">
+                  {currentEvent?.name}
+                </p>
+              </div>
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 px-4 py-2 rounded-xl border border-green-200 dark:border-green-800">
+                <p className="text-xs font-semibold text-green-700 dark:text-green-400 uppercase tracking-wide">Checked In</p>
+                <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+                  {checkedInCount} / {attendees.length}
+                </p>
+              </div>
+            </div>
+
+            {/* Search Bar */}
+            <Input
+              placeholder="Search attendees..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              wrapperClassName="!mb-0"
+              className="text-base"
+            />
+          </div>
+
+          {/* Main Content */}
+          <div className="p-4 space-y-4">
+            {/* Quick Actions */}
+            <div className="grid grid-cols-2 gap-3">
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                onClick={() => navigate(AppRoute.QRScanner)}
+                className="min-h-[88px] bg-gradient-to-br from-green-600 via-emerald-600 to-teal-600 text-white rounded-2xl font-bold text-lg shadow-xl flex flex-col items-center justify-center gap-2 active:shadow-lg"
+              >
+                <QrCode className="w-8 h-8" />
+                <span>Scan QR</span>
+              </motion.button>
+
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                onClick={handleOpenAddModal}
+                className="min-h-[88px] bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 text-white rounded-2xl font-bold text-lg shadow-xl flex flex-col items-center justify-center gap-2 active:shadow-lg"
+              >
+                <PlusCircleIcon className="w-8 h-8" />
+                <span>Walk-In</span>
+              </motion.button>
+            </div>
+
+            {/* Recent Check-ins */}
+            {recentCheckins.length > 0 && (
+              <div>
+                <h2 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-3">Recent Check-ins</h2>
+                <div className="space-y-2">
+                  {recentCheckins.map(attendee => (
+                    <MobileCard
+                      key={attendee.id}
+                      title={attendee.name}
+                      subtitle={`Checked in ${new Date(attendee.checkInTime!).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}
+                      icon={<CheckCircleIcon className="w-5 h-5 text-green-600 dark:text-green-400" />}
+                      onClick={() => handleOpenProfileModal(attendee)}
+                      badge={
+                        <span className="px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-semibold rounded-full">
+                          ✓
+                        </span>
+                      }
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* All Attendees List */}
+            <div>
+              <h2 className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-3">
+                {searchTerm ? 'Search Results' : 'All Attendees'} ({filteredAttendees.length})
+              </h2>
+
+              {loading ? (
+                <div className="text-center py-10">
+                  <ArrowPathIcon className="w-8 h-8 mx-auto text-primary-500 animate-spin" />
+                  <p className="mt-2 text-slate-500">Loading...</p>
+                </div>
+              ) : filteredAttendees.length === 0 ? (
+                <Alert type="info" message="No attendees found." />
+              ) : (
+                <div className="space-y-2">
+                  {filteredAttendees.map(attendee => (
+                    <MobileCard
+                      key={attendee.id}
+                      title={attendee.name}
+                      subtitle={attendee.organization || 'No organization'}
+                      icon={
+                        attendee.avatar_url ? (
+                          <img src={attendee.avatar_url} alt={attendee.name} className="w-10 h-10 rounded-full object-cover" />
+                        ) : (
+                          <UserIcon className="w-5 h-5 text-slate-400" />
+                        )
+                      }
+                      onClick={() => handleOpenProfileModal(attendee)}
+                      badge={
+                        attendee.checkInTime ? (
+                          <span className="px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-semibold rounded-full">
+                            ✓ In
+                          </span>
+                        ) : null
+                      }
+                      actions={
+                        !attendee.checkInTime ? (
+                          <Button
+                            size="sm"
+                            variant="primary"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleCheckIn(attendee.id, attendee.name);
+                            }}
+                            disabled={processingId === attendee.id}
+                            className="w-full min-h-[44px]"
+                          >
+                            {processingId === attendee.id ? 'Checking in...' : 'Check In'}
+                          </Button>
+                        ) : (
+                          <Button
+                            size="sm"
+                            variant="link"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleUndoCheckIn(attendee.id, attendee.name);
+                            }}
+                            disabled={processingId === attendee.id}
+                            className="w-full text-red-600 dark:text-red-400"
+                          >
+                            Undo
+                          </Button>
+                        )
+                      }
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  // Desktop view
   return (
     <>
       {/* Profile Quick View Modal */}
