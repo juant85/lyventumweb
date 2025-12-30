@@ -10,8 +10,10 @@ const SkeletonCard: React.FC<SkeletonCardProps> = ({ count = 3 }) => {
             {Array.from({ length: count }).map((_, index) => (
                 <div
                     key={index}
-                    className="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm border border-slate-100 dark:border-slate-700 animate-pulse"
+                    className="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm border border-slate-100 dark:border-slate-700 relative overflow-hidden"
                 >
+                    {/* Shimmer animation overlay */}
+                    <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/10 dark:via-white/5 to-transparent" />
                     <div className="flex items-center gap-3">
                         {/* Icon skeleton */}
                         <div className="w-10 h-10 bg-slate-200 dark:bg-slate-700 rounded-lg flex-shrink-0" />
