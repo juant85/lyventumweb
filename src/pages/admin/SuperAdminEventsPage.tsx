@@ -25,7 +25,7 @@ import { InboxIcon } from 'lucide-react';
 import EventOrganizersModal from '../../components/EventOrganizersModal';
 import { UsersGroupIcon } from '../../components/Icons';
 import { useIsMobile } from '../../hooks/useIsMobile';
-import { MobileCard, MobileFAB, MobileSearchBar, MobileEmptyState } from '../../components/mobile';
+import { MobileCard, MobileFAB, MobileSearchBar, MobileEmptyState, SpeedDialFAB } from '../../components/mobile';
 import SwipeableCard from '../../components/ui/SwipeableCard';
 import { Building2, Calendar, Edit2, Trash2 } from 'lucide-react';
 
@@ -505,11 +505,28 @@ const SuperAdminEventsPage: React.FC = () => {
           )}
         </div>
 
-        {/* FAB */}
-        <MobileFAB
-          icon="plus"
-          onClick={() => setIsCreateModalOpen(true)}
-          label="New Event"
+        {/* Speed Dial FAB */}
+        <SpeedDialFAB
+          actions={[
+            {
+              icon: 'calendar',
+              label: 'New Event',
+              onClick: () => setIsCreateModalOpen(true),
+              color: 'primary'
+            },
+            {
+              icon: 'users',
+              label: 'Add Attendee',
+              onClick: () => navigate(AppRoute.AttendeeProfiles),
+              color: 'secondary'
+            },
+            {
+              icon: 'scan',
+              label: 'Quick Scan',
+              onClick: () => navigate(AppRoute.QRScanner),
+              color: 'success'
+            }
+          ]}
         />
       </div>
     );
