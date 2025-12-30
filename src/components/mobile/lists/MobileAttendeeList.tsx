@@ -120,7 +120,7 @@ const MobileAttendeeList: React.FC<MobileAttendeeListProps> = ({ onAddClick, onE
                             key={attendee.id}
                             title={attendee.name}
                             subtitle={attendee.organization}
-                            icon={<Users className="w-5 h-5 text-slate-500" />}
+                            icon={<UserIcon className="w-5 h-5 text-slate-500" />}
                             badge={attendee.checkInTime ? (
                                 <span className="bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wide">
                                     Checked In

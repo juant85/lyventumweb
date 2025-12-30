@@ -409,13 +409,11 @@ const AttendeeProfilesPage: React.FC = () => {
                         })
                     ) : (
                         <MobileEmptyState
-                            icon={<User className="w-8 h-8" />}
+                            icon={<UserIcon className="w-8 h-8" />}
                             title={searchTerm ? "No attendees found" : "No attendees yet"}
                             description={searchTerm ? `No results for "${searchTerm}"` : "Add your first attendee to get started"}
-                            action={!searchTerm ? {
-                                label: "Add Attendee",
-                                onClick: () => navigate(AppRoute.AttendeeRegistration)
-                            } : undefined}
+                            actionLabel={searchTerm ? undefined : "Add Attendee"}
+                            onAction={searchTerm ? undefined : () => navigate(AppRoute.AttendeeRegistration)}
                         />
                     )}
                 </div>
