@@ -304,14 +304,12 @@ const DashboardPage: React.FC = () => {
 
   // ✨ MOBILE VIEW - Role-Based Dashboards
   if (isMobile) {
-    const { currentUser } = useAuth();
-
-    // Superadmin gets global event overview
+    const { currentUser } = useAuth(); // Mobile View
+    // Route based on user role
     if (currentUser?.role === 'superadmin') {
       return <SuperAdminMobileDashboard />;
     }
-
-    // Organizers get event execution dashboard
+    // Organizers and other roles get OrganizerMobileDashboard
     return <OrganizerMobileDashboard />;
   }
 
