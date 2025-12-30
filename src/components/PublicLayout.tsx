@@ -19,8 +19,8 @@ const PublicLayout: React.FC<PublicLayoutProps> = ({ children }) => {
         <div className="bg-slate-900">
             <Toaster position="top-center" reverseOrder={false} />
 
-            {/* Fixed Language Switcher - Top Right Corner */}
-            <div className="fixed top-4 right-4 z-50">
+            {/* Fixed Language Switcher - Top Right Corner (hidden on very small screens) */}
+            <div className="fixed top-4 right-4 z-50 hidden sm:block">
                 <LanguageSwitcher />
             </div>
 
