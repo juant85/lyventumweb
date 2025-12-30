@@ -1,5 +1,6 @@
 // src/pages/CheckInDeskPage.tsx
 import React, { useState, useMemo } from 'react';
+import { useIsMobile } from '../hooks/useIsMobile';
 import { useNavigate } from 'react-router-dom';
 import { useEventData } from '../contexts/EventDataContext';
 import { useSelectedEvent } from '../contexts/SelectedEventContext';
@@ -33,8 +34,8 @@ const AttendeeRow: React.FC<{
 
   return (
     <div className={`p-4 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all duration-200 mb-3 border shadow-sm hover:shadow-md hover:scale-[1.005] ${isCheckedIn
-        ? 'bg-green-50/50 border-green-200 dark:bg-green-900/20 dark:border-green-800/50'
-        : 'bg-white border-slate-200 hover:border-brandBlue/50 hover:bg-blue-50/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-brandBlue/50 dark:hover:bg-blue-900/10'
+      ? 'bg-green-50/50 border-green-200 dark:bg-green-900/20 dark:border-green-800/50'
+      : 'bg-white border-slate-200 hover:border-brandBlue/50 hover:bg-blue-50/50 dark:bg-slate-800 dark:border-slate-700 dark:hover:border-brandBlue/50 dark:hover:bg-blue-900/10'
       }`}>
       <div className="flex items-center min-w-0 flex-grow w-full">
         {attendee.avatar_url ? (
@@ -58,8 +59,8 @@ const AttendeeRow: React.FC<{
         <button
           onClick={() => onOpenDetails(attendee)}
           className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-colors border ${attendee.notes
-              ? 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100'
-              : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-300'
+            ? 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100'
+            : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-300'
             }`}
           disabled={isProcessing}
         >
@@ -70,8 +71,8 @@ const AttendeeRow: React.FC<{
           <button
             onClick={() => onTakePhoto(attendee)}
             className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-colors border ${attendee.avatar_url
-                ? 'bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100'
-                : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-300'
+              ? 'bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100'
+              : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-300'
               }`}
             disabled={isProcessing}
           >
@@ -102,6 +103,7 @@ const CheckInDeskPage: React.FC = () => {
   const { attendees, checkInAttendee, undoCheckIn, updateAttendee, addWalkInAttendee, loadingData: loading, dataError: error } = useEventData();
   const { selectedEventId, currentEvent } = useSelectedEvent();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [processingId, setProcessingId] = useState<string | null>(null);
@@ -445,30 +447,53 @@ const CheckInDeskPage: React.FC = () => {
           <div className="md:flex justify-between items-center gap-4 mb-4 border-b border-slate-200 dark:border-slate-700 pb-4">
             <Input
               id="attendee-search"
-              placeholder="Search by name, organization, or ID..."
+              placeholder={isMobile ? "Search attendees..." : "Search by name, organization, or ID..."}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               disabled={loading || !!error || !selectedEventId || attendees.length === 0}
-              wrapperClassName="!mb-0 flex-grow"
+              wrapperClassName={`!mb-0 flex-grow ${isMobile ? 'mb-3' : ''}`}
             />
-            <div className="flex items-center gap-4 mt-4 md:mt-0">
-              <Button
-                onClick={handleOpenAddModal}
-                variant="neutral"
-                size="md"
-                leftIcon={<PlusCircleIcon className="w-5 h-5" />}
-                disabled={!selectedEventId}
-                className="bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600"
-              >
-                Add New Attendee
-              </Button>
-              <div className="text-center md:text-right bg-slate-100 dark:bg-slate-700 p-3 rounded-lg">
-                <p className="text-sm font-semibold text-slate-500 dark:text-slate-300">ATTENDANCE</p>
-                <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">
-                  {checkedInCount} / {attendees.length}
-                </p>
+            {isMobile ? (
+              // Mobile Actions Row
+              <div className="flex items-center gap-2 mt-3 justify-between">
+                <Button
+                  onClick={handleOpenAddModal}
+                  variant="neutral"
+                  size="sm"
+                  leftIcon={<PlusCircleIcon className="w-5 h-5" />}
+                  disabled={!selectedEventId}
+                  className="bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 flex-1"
+                >
+                  Add
+                </Button>
+                <div className="text-center bg-slate-100 dark:bg-slate-700 px-3 py-1.5 rounded-lg flex items-center gap-2">
+                  <span className="text-xs font-semibold text-slate-500 dark:text-slate-300 uppercase">In:</span>
+                  <span className="text-lg font-bold text-slate-800 dark:text-slate-100">
+                    {checkedInCount}/{attendees.length}
+                  </span>
+                </div>
               </div>
-            </div>
+            ) : (
+              // Desktop Actions Row
+              <div className="flex items-center gap-4 mt-4 md:mt-0">
+                <Button
+                  onClick={handleOpenAddModal}
+                  variant="neutral"
+                  size="md"
+                  leftIcon={<PlusCircleIcon className="w-5 h-5" />}
+                  disabled={!selectedEventId}
+                  className="bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600"
+                >
+                  Add New Attendee
+                </Button>
+                <div className="text-center md:text-right bg-slate-100 dark:bg-slate-700 p-3 rounded-lg">
+                  <p className="text-sm font-semibold text-slate-500 dark:text-slate-300">ATTENDANCE</p>
+                  <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">
+                    {checkedInCount} / {attendees.length}
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
           <div className="max-h-[60vh] overflow-y-auto pr-2">
             {renderContent()}

@@ -93,12 +93,12 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
                 active={isActive([AppRoute.Dashboard, AppRoute.DataVisualization])}
             />
 
-            {/* Events */}
+            {/* Live / Analytics - Replaces Events to emphasize Real-Time */}
             <NavButton
-                icon="calendar"
-                label="Events"
-                onClick={() => navigate('/admin/events')}
-                active={isActive('/admin/events')}
+                icon="activity"
+                label="Live"
+                onClick={() => navigate(AppRoute.RealTimeAnalytics)}
+                active={isActive(AppRoute.RealTimeAnalytics)}
             />
 
             {/* Scan Action - Center FAB */}

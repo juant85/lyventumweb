@@ -1,5 +1,5 @@
 // src/pages/admin/RealTimeAnalyticsPage.tsx
-
+import { useIsMobile } from '../../hooks/useIsMobile';
 import React, { useMemo } from 'react';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 import { useEventData } from '../../contexts/EventDataContext';
@@ -92,6 +92,8 @@ const RealTimeAnalyticsPage: React.FC = () => {
   const { currentEvent } = useSelectedEvent();
   const { theme } = useTheme();
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
+
 
   const tickColor = theme === 'dark' ? '#94a3b8' : '#64748b';
   const gridColor = theme === 'dark' ? '#334155' : '#e2e8f0';
@@ -187,7 +189,7 @@ const RealTimeAnalyticsPage: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className={`space-y-6 ${isMobile ? 'pb-24' : ''}`}>
       <div>
         <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100 font-montserrat">
           Analytics & Insights

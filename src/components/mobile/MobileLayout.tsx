@@ -17,7 +17,7 @@ interface MobileLayoutProps {
 
 type HeaderMode = 'expanded' | 'compact' | 'hidden';
 
-const ExpandedHeader: React.FC<{ currentEvent: any; currentUser: any; onMenuClick: () => void }> = ({ currentEvent, currentUser, onMenuClick }) => (
+const ExpandedHeader: React.FC<{ currentEvent: any; currentUser: any; onMenuClick: () => void }> = ({ currentEvent, currentUser }) => (
     <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -35,7 +35,7 @@ const ExpandedHeader: React.FC<{ currentEvent: any; currentUser: any; onMenuClic
             )}
 
             <div className="flex flex-col">
-                <h1 className="text-sm font-bold text-slate-800 dark:text-slate-100 leading-tight truncate max-w-[200px]">
+                <h1 className="text-sm font-bold text-slate-800 dark:text-slate-100 leading-tight truncate max-w-[250px]">
                     {currentEvent?.name || 'Lyventum'}
                 </h1>
                 <span className="text-[10px] uppercase tracking-wide font-semibold text-primary-600 dark:text-primary-400">
@@ -43,23 +43,17 @@ const ExpandedHeader: React.FC<{ currentEvent: any; currentUser: any; onMenuClic
                 </span>
             </div>
         </div>
-
-        <button
-            onClick={onMenuClick}
-            className="h-8 w-8 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 active:scale-95 transition-transform"
-        >
-            <Icon name="user" className="w-4 h-4" />
-        </button>
+        {/* User button removed to avoid redundancy with Bottom Nav "More" */}
     </motion.div>
 );
 
-const CompactHeader: React.FC<{ currentEvent: any; onMenuClick: () => void }> = ({ currentEvent, onMenuClick }) => (
+const CompactHeader: React.FC<{ currentEvent: any; onMenuClick: () => void }> = ({ currentEvent }) => (
     <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className="flex items-center justify-between w-full"
+        className="flex items-center justify-center w-full"
     >
         <div className="flex items-center gap-2">
             {currentEvent?.eventLogoUrl ? (
@@ -73,13 +67,7 @@ const CompactHeader: React.FC<{ currentEvent: any; onMenuClick: () => void }> = 
                 {currentEvent?.name || 'Lyventum'}
             </span>
         </div>
-
-        <button
-            onClick={onMenuClick}
-            className="h-8 w-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 active:scale-95 transition-transform"
-        >
-            <Icon name="menu" className="w-4 h-4" />
-        </button>
+        {/* Menu button removed to avoid redundancy with Bottom Nav "More" */}
     </motion.div>
 );
 

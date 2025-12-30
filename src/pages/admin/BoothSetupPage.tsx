@@ -16,6 +16,7 @@ import { toast } from 'react-hot-toast';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { localeKeys } from '../../i18n/locales';
 import { supabase } from '../../supabaseClient';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 const BoothProfileModal: React.FC<{
   booth: Booth | null;
@@ -290,24 +291,24 @@ const BoothProfileModal: React.FC<{
   );
 };
 
+
+
 const BoothSetupPage: React.FC = () => {
-  // New modular contexts
+  const isMobile = useIsMobile();
   const { booths, addBooth, updateBooth, deleteBooth, loading, regenerateAllBoothAccessCodes } = useBooths();
-
-  // Keep useEventData for attendee functions (getVendorsForBooth, addWalkInAttendee) until AttendeeContext is ready
-  // const { } = useEventData(); // Removed, only used in BoothProfileModal
-
   const { selectedEventId } = useSelectedEvent();
   const { t } = useLanguage();
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingBooth, setEditingBooth] = useState<Booth | null>(null);
-
   const [newPhysicalId, setNewPhysicalId] = useState('');
   const [newCompanyName, setNewCompanyName] = useState('');
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+
+  // ... handlers (handleAddBooth, handleUpdateBooth, handleDeleteBooth, handleCopyCode, handleRegenerateCodes)
+  // ... Need to include them in replacement or target carefully.
+  // Since I need to change the render significantly, I'll probably replace the whole component body.
 
   const handleAddBooth = async (e: FormEvent) => {
     e.preventDefault();
@@ -391,49 +392,99 @@ const BoothSetupPage: React.FC = () => {
       <BoothProfileModal booth={editingBooth} onClose={() => setEditingBooth(null)} onSave={handleUpdateBooth} />
 
       <div className="space-y-6">
-        <h1 className="text-3xl font-bold flex items-center"><CogIcon className="w-8 h-8 mr-3 text-primary-600" /> {t(localeKeys.boothSetupTitle)}</h1>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <h1 className="text-3xl font-bold flex items-center"><CogIcon className="w-8 h-8 mr-3 text-primary-600" /> {t(localeKeys.boothSetupTitle)}</h1>
+          {isMobile && (
+            <Button onClick={() => setIsAddModalOpen(true)} leftIcon={<PlusCircleIcon className="w-5 h-5" />}>{t(localeKeys.addNewBooth)}</Button>
+          )}
+        </div>
 
         <Card>
-          <div className="flex flex-wrap gap-4 justify-between items-center mb-4">
-            <Input wrapperClassName="!mb-0 flex-grow" placeholder={t(localeKeys.searchByIdOrCompany)} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
-            <div className="flex gap-2">
-              <Button onClick={() => setIsAddModalOpen(true)} leftIcon={<PlusCircleIcon className="w-5 h-5" />}>{t(localeKeys.addNewBooth)}</Button>
-              <Button onClick={handleRegenerateCodes} variant="secondary" leftIcon={<ArrowPathIcon className="w-5 h-5" />} title="Regenerate all access codes">{t(localeKeys.regenerateCode)}</Button>
-            </div>
+          <div className="flex flex-col sm:flex-row gap-4 justify-between items-center mb-4">
+            <Input wrapperClassName="!mb-0 w-full sm:flex-grow" placeholder={t(localeKeys.searchByIdOrCompany)} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+            {!isMobile && (
+              <div className="flex gap-2">
+                <Button onClick={() => setIsAddModalOpen(true)} leftIcon={<PlusCircleIcon className="w-5 h-5" />}>{t(localeKeys.addNewBooth)}</Button>
+                <Button onClick={handleRegenerateCodes} variant="secondary" leftIcon={<ArrowPathIcon className="w-5 h-5" />} title="Regenerate all access codes">{t(localeKeys.regenerateCode)}</Button>
+              </div>
+            )}
+            {isMobile && (
+              <Button onClick={handleRegenerateCodes} variant="secondary" className="w-full" leftIcon={<ArrowPathIcon className="w-5 h-5" />}>{t(localeKeys.regenerateCode)}</Button>
+            )}
           </div>
 
           {loading ? <p>{t(localeKeys.loadingBooths)}</p> : (
             filteredBooths.length === 0 ? <Alert type="info" message={searchTerm ? 'No booths match your search.' : 'No booths configured yet. Click "Add New Booth" to start.'} /> : (
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
-                  <thead className="bg-slate-50 dark:bg-slate-700/50">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">{t(localeKeys.physicalId)}</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">{t(localeKeys.companyName)}</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">{t(localeKeys.accessCode)}</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">{t(localeKeys.actions)}</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
-                    {filteredBooths.map(booth => (
-                      <tr key={booth.id}>
-                        <td className="px-4 py-3 text-sm font-semibold text-slate-900 dark:text-slate-100">{booth.physicalId}</td>
-                        <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300">{booth.companyName}</td>
-                        <td className="px-4 py-3 text-sm">
-                          <div className="flex items-center gap-2">
-                            <span className="font-mono bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-2 py-1 rounded-md">{booth.accessCode}</span>
-                            <Button size="sm" variant="link" onClick={() => handleCopyCode(booth.accessCode)} title={t(localeKeys.copyCode)}><DocumentDuplicateIcon className="w-4 h-4" /></Button>
-                          </div>
-                        </td>
-                        <td className="px-4 py-3 text-sm space-x-2">
-                          <Button size="sm" variant="neutral" onClick={() => setEditingBooth(booth)} leftIcon={<PencilSquareIcon className="w-4 h-4" />}>{t(localeKeys.edit)}</Button>
-                          <Button size="sm" variant="accent" onClick={() => handleDeleteBooth(booth)} leftIcon={<TrashIcon className="w-4 h-4" />}>{t(localeKeys.delete)}</Button>
-                        </td>
+              isMobile ? (
+                /* Mobile List View */
+                <div className="space-y-4">
+                  {filteredBooths.map(booth => (
+                    <div key={booth.id} className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm relative">
+                      <div className="flex justify-between items-start mb-2">
+                        <div>
+                          <h3 className="font-bold text-lg text-slate-800 dark:text-slate-100">{booth.companyName}</h3>
+                          <span className="text-xs font-mono text-slate-500 bg-slate-100 dark:bg-slate-900 px-2 py-0.5 rounded">ID: {booth.physicalId}</span>
+                        </div>
+                        <div className="flex gap-2">
+                          <button onClick={() => setEditingBooth(booth)} className="p-2 text-primary-600 bg-primary-50 dark:bg-primary-900/30 rounded-full">
+                            <PencilSquareIcon className="w-5 h-5" />
+                          </button>
+                          <button onClick={() => handleDeleteBooth(booth)} className="p-2 text-red-600 bg-red-50 dark:bg-red-900/30 rounded-full">
+                            <TrashIcon className="w-5 h-5" />
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="mt-3 flex items-center justify-between bg-slate-50 dark:bg-slate-900/50 p-2 rounded-lg">
+                        <span className="text-sm text-slate-500">Code:</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono font-bold text-slate-700 dark:text-slate-300">{booth.accessCode}</span>
+                          <button onClick={() => handleCopyCode(booth.accessCode)} className="text-slate-400 hover:text-slate-600">
+                            <DocumentDuplicateIcon className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                      {booth.isSponsor && (
+                        <div className="mt-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                          Using Sponsor
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                /* Desktop Table View */
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
+                    <thead className="bg-slate-50 dark:bg-slate-700/50">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">{t(localeKeys.physicalId)}</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">{t(localeKeys.companyName)}</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">{t(localeKeys.accessCode)}</th>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">{t(localeKeys.actions)}</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody className="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
+                      {filteredBooths.map(booth => (
+                        <tr key={booth.id}>
+                          <td className="px-4 py-3 text-sm font-semibold text-slate-900 dark:text-slate-100">{booth.physicalId}</td>
+                          <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-300">{booth.companyName}</td>
+                          <td className="px-4 py-3 text-sm">
+                            <div className="flex items-center gap-2">
+                              <span className="font-mono bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-2 py-1 rounded-md">{booth.accessCode}</span>
+                              <Button size="sm" variant="link" onClick={() => handleCopyCode(booth.accessCode)} title={t(localeKeys.copyCode)}><DocumentDuplicateIcon className="w-4 h-4" /></Button>
+                            </div>
+                          </td>
+                          <td className="px-4 py-3 text-sm space-x-2">
+                            <Button size="sm" variant="neutral" onClick={() => setEditingBooth(booth)} leftIcon={<PencilSquareIcon className="w-4 h-4" />}>{t(localeKeys.edit)}</Button>
+                            <Button size="sm" variant="accent" onClick={() => handleDeleteBooth(booth)} leftIcon={<TrashIcon className="w-4 h-4" />}>{t(localeKeys.delete)}</Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )
             )
           )}
         </Card>

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useSelectedEvent } from '../../contexts/SelectedEventContext'; // NEW
 import { Icon } from '../ui/Icon';
 import ThemeSwitcher from '../ThemeSwitcher';
 import LanguageSwitcher from '../LanguageSwitcher';
@@ -17,6 +18,7 @@ interface MobileMenuProps {
 const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
     const { currentUser, logout } = useAuth();
     const { t } = useLanguage();
+    const { currentEvent } = useSelectedEvent(); // NEW
     const navigate = useNavigate();
 
     const handleLogout = async () => {
@@ -24,7 +26,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
         navigate(AppRoute.Login);
     };
 
-    const menuItems = [
+    const commonItems = [
         {
             label: 'Analytics',
             icon: 'chart',
@@ -44,6 +46,28 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
             color: 'text-purple-500'
         }
     ];
+
+    // NEW: Event specific items
+    const eventItems = currentEvent ? [
+        {
+            label: 'Sessions',
+            icon: 'calendar', // reusable icon, need to check if 'calendar' exists in Icon map or use 'clock'
+            path: AppRoute.SessionSettings,
+            color: 'text-orange-500'
+        },
+        {
+            label: 'Booths / Sponsors',
+            icon: 'store', // Need to check if 'store' exists in Icon map
+            path: AppRoute.BoothSetup,
+            color: 'text-pink-500'
+        },
+        {
+            label: 'Attendees',
+            icon: 'users',
+            path: AppRoute.AttendeeProfiles,
+            color: 'text-indigo-500'
+        }
+    ] : [];
 
     return (
         <AnimatePresence>
@@ -88,6 +112,16 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
                                 </button>
                             </div>
 
+                            {/* Current Event Context Indicator */}
+                            {currentEvent && (
+                                <div className="mb-4 bg-primary-50 dark:bg-primary-900/20 border border-primary-100 dark:border-primary-800 rounded-lg p-2.5 flex items-center gap-2">
+                                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                                    <span className="text-xs font-bold text-primary-700 dark:text-primary-300 truncate sticky top-0">
+                                        {currentEvent.name}
+                                    </span>
+                                </div>
+                            )}
+
                             <div className="flex gap-2">
                                 <div className="flex-1 bg-white dark:bg-slate-950 rounded-lg p-2 border border-slate-200 dark:border-slate-700 flex justify-center">
                                     <ThemeSwitcher />
@@ -100,24 +134,56 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
 
                         {/* Menu Items */}
                         <div className="flex-1 overflow-y-auto p-4 space-y-2">
-                            {menuItems.map((item) => (
-                                <button
-                                    key={item.path}
-                                    onClick={() => {
-                                        navigate(item.path);
-                                        onClose();
-                                    }}
-                                    className="w-full flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group"
-                                >
-                                    <div className={`p-2 rounded-lg bg-slate-100 dark:bg-slate-800 group-hover:bg-white dark:group-hover:bg-slate-700 transition-colors ${item.color}`}>
-                                        <Icon name={item.icon as any} className="w-5 h-5" />
+                            {/* Event Section */}
+                            {currentEvent && (
+                                <div className="mb-6">
+                                    <p className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Event Management</p>
+                                    <div className="space-y-1">
+                                        {eventItems.map((item) => (
+                                            <button
+                                                key={item.path}
+                                                onClick={() => {
+                                                    navigate(item.path);
+                                                    onClose();
+                                                }}
+                                                className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group"
+                                            >
+                                                <div className={`p-2 rounded-lg bg-slate-100 dark:bg-slate-800 group-hover:bg-white dark:group-hover:bg-slate-700 transition-colors ${item.color}`}>
+                                                    {/* Use fallback icons if strict mapping fails, but generic Icon component usually handles matches */}
+                                                    <Icon name={item.icon as any} className="w-5 h-5" />
+                                                </div>
+                                                <span className="font-medium text-slate-700 dark:text-slate-200 text-sm">
+                                                    {item.label}
+                                                </span>
+                                            </button>
+                                        ))}
                                     </div>
-                                    <span className="font-medium text-slate-700 dark:text-slate-200">
-                                        {item.label}
-                                    </span>
-                                    <Icon name="chevronRight" className="w-4 h-4 text-slate-400 ml-auto" />
-                                </button>
-                            ))}
+                                </div>
+                            )}
+
+                            {/* Common Section */}
+                            <div>
+                                <p className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">System</p>
+                                <div className="space-y-1">
+                                    {commonItems.map((item) => (
+                                        <button
+                                            key={item.path}
+                                            onClick={() => {
+                                                navigate(item.path);
+                                                onClose();
+                                            }}
+                                            className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group"
+                                        >
+                                            <div className={`p-2 rounded-lg bg-slate-100 dark:bg-slate-800 group-hover:bg-white dark:group-hover:bg-slate-700 transition-colors ${item.color}`}>
+                                                <Icon name={item.icon as any} className="w-5 h-5" />
+                                            </div>
+                                            <span className="font-medium text-slate-700 dark:text-slate-200 text-sm">
+                                                {item.label}
+                                            </span>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
 
                         {/* Footer / Logout */}

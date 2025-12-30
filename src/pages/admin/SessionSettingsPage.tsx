@@ -8,7 +8,8 @@ import Select from '../../components/ui/Select';
 import Alert from '../../components/ui/Alert';
 import { DateTimeInput } from '../../components/ui/DateTimeInput';
 import DateTimePicker from '../../components/ui/DateTimePicker'; // NEW
-import { CogIcon, PlusCircleIcon, PencilSquareIcon, UsersGroupIcon } from '../../components/Icons';
+import { CogIcon, PlusCircleIcon, PencilSquareIcon, UsersGroupIcon, ArrowLeftIcon } from '../../components/Icons';
+import { Icon } from '../../components/ui/Icon'; // Ensure Icon is imported
 import { Link } from 'react-router-dom';
 import { AppRoute } from '../../types';
 import { useSelectedEvent } from '../../contexts/SelectedEventContext';
@@ -188,10 +189,18 @@ const ShiftDatesModal: React.FC<{
     );
 };
 
+// ... imports
+import { useIsMobile } from '../../hooks/useIsMobile';
+// The following import is already present above, no need to duplicate.
+// import { ArrowLeftIcon } from '../../components/Icons'; // Ensure this is imported
+
 const SessionSettingsPage: React.FC = () => {
+    const isMobile = useIsMobile();
+    const [mobileViewMode, setMobileViewMode] = useState<'list' | 'form'>('list');
+
     const { sessions, allConfiguredBooths, addSession, updateSession, attendees, getSessionRegistrationsForSession, getSessionRegistrationsForAttendee, updateSessionBoothAssignments, loadingData, addSessionRegistration, deleteSessionRegistration } = useEventData();
     const { selectedEventId, currentEvent } = useSelectedEvent();
-    const { config, eventType } = useEventTypeConfig(); // NEW: Event type configuration
+    const { config, eventType } = useEventTypeConfig();
 
     const [selectedSessionId, setSelectedSessionId] = useState<string>('');
     const [sessionName, setSessionName] = useState('');
@@ -215,11 +224,16 @@ const SessionSettingsPage: React.FC = () => {
     const [isAvailableAttendeesModalOpen, setIsAvailableAttendeesModalOpen] = useState(false);
     const [isBulkRegModalOpen, setIsBulkRegModalOpen] = useState(false);
 
-
-    // FIXED: Use useBoothCapacity hook to exclude vendors from count (same as DataVisualizationPage)
     const { getCapacity, loading: loadingCapacities } = useBoothCapacity(selectedSessionId);
 
     const selectedSession = useMemo(() => sessions.find(s => s.id === selectedSessionId), [sessions, selectedSessionId]);
+
+    // Mobile specific effect
+    useEffect(() => {
+        if (isMobile && selectedSessionId && !isCreatingNew) {
+            setMobileViewMode('form');
+        }
+    }, [isMobile, selectedSessionId, isCreatingNew]);
 
     useEffect(() => {
         if (selectedSessionId) {
@@ -232,7 +246,7 @@ const SessionSettingsPage: React.FC = () => {
         }
     }, [selectedSessionId, getSessionRegistrationsForSession, sessions]);
 
-
+    /*
     const eventDays = useMemo(() => {
         if (!currentEvent?.startDate) return [];
         const days = [];
@@ -250,7 +264,9 @@ const SessionSettingsPage: React.FC = () => {
         }
         return days;
     }, [currentEvent]);
+    */
 
+    /*
     const applyDateToSession = (dateToApply: Date) => {
         const apply = (timeString: string) => {
             const d = new Date(timeString);
@@ -264,6 +280,7 @@ const SessionSettingsPage: React.FC = () => {
         setEndTime(apply(endTime));
         toast.success(`Date applied: ${dateToApply.toLocaleDateString()}`);
     };
+    */
 
     const resetFormToDefaults = () => {
         setSessionName('');
@@ -276,6 +293,28 @@ const SessionSettingsPage: React.FC = () => {
         setDescription('');
         setSpeaker('');
         setMaxCapacity('');
+    };
+
+    const handleMobileBack = () => {
+        setMobileViewMode('list');
+        setSelectedSessionId('');
+        resetFormToDefaults();
+        setIsCreatingNew(true);
+    };
+
+    const handleMobileCreate = () => {
+        setIsCreatingNew(true);
+        resetFormToDefaults();
+        setMobileViewMode('form');
+    };
+
+    const handleMobileEdit = (sessionId: string) => {
+        const s = sessions.find(session => session.id === sessionId);
+        if (s) {
+            setSelectedSessionId(sessionId);
+            setIsCreatingNew(false);
+            setMobileViewMode('form');
+        }
     };
 
     useEffect(() => {
@@ -330,6 +369,7 @@ const SessionSettingsPage: React.FC = () => {
                 );
                 resetFormToDefaults();
                 setFeedback({ type: 'success', message: 'Session created successfully.' });
+                if (isMobile) setMobileViewMode('list');
             } else {
                 const sessionToUpdate = sessions.find(s => s.id === selectedSessionId);
                 if (!sessionToUpdate) {
@@ -346,6 +386,7 @@ const SessionSettingsPage: React.FC = () => {
                 };
                 await updateSession(updatedSessionData);
                 setFeedback({ type: 'success', message: 'Session updated successfully.' });
+                if (isMobile) setMobileViewMode('list');
             }
         } catch (err) {
             console.error(err);
@@ -368,16 +409,13 @@ const SessionSettingsPage: React.FC = () => {
         const conflicts: { attendeeId: string; attendeeName: string; conflictingSessionName: string }[] = [];
 
         for (const attendeeId of toAdd) {
-            // Get all registrations for this attendee across all sessions
             const attendeeRegsResult = await getSessionRegistrationsForAttendee(attendeeId);
             if (!attendeeRegsResult.success) continue;
 
-            // Check each existing registration for time overlap
             for (const reg of attendeeRegsResult.data) {
                 const otherSession = sessions.find(s => s.id === reg.sessionId);
                 if (!otherSession || otherSession.id === selectedSessionId) continue;
 
-                // Check if sessions overlap
                 const currentStart = new Date(currentSession.startTime);
                 const currentEnd = new Date(currentSession.endTime);
                 const otherStart = new Date(otherSession.startTime);
@@ -392,12 +430,11 @@ const SessionSettingsPage: React.FC = () => {
                         attendeeName: attendee?.name || 'Unknown',
                         conflictingSessionName: otherSession.name
                     });
-                    break; // Only report first conflict per attendee
+                    break;
                 }
             }
         }
 
-        // If conflicts found, show warning and ask for confirmation
         if (conflicts.length > 0) {
             const conflictList = conflicts
                 .map(c => `• ${c.attendeeName} (ya registrado en "${c.conflictingSessionName}")`)
@@ -419,23 +456,18 @@ const SessionSettingsPage: React.FC = () => {
         let successCount = 0;
         let failCount = 0;
 
-        // 1. Handle Additions
         for (const attendeeId of toAdd) {
-            // Check if already in 'registrations' to avoid dupes (double safety)
             if (registrations.some(r => r.attendeeId === attendeeId)) continue;
-
             const res = await addSessionRegistration({
                 sessionId: selectedSessionId,
                 attendeeId: attendeeId,
-                expectedBoothId: null, // No specific booth for presentation
+                expectedBoothId: null,
                 status: 'Registered'
             });
-
             if (res.success) successCount++;
             else failCount++;
         }
 
-        // 2. Handle Removals
         for (const attendeeId of toRemove) {
             const reg = registrations.find(r => r.attendeeId === attendeeId);
             if (reg) {
@@ -445,13 +477,8 @@ const SessionSettingsPage: React.FC = () => {
             }
         }
 
-        const message = conflicts.length > 0
-            ? `Procesado: ${successCount} exitosos, ${failCount} fallidos (${conflicts.length} con conflictos de horario)`
-            : `Procesado: ${successCount} exitosos, ${failCount} fallidos`;
+        toast.success(`Processed: ${successCount} success, ${failCount} failed`, { id: toastId });
 
-        toast.success(message, { id: toastId });
-
-        // Refresh registrations
         setLoadingRegs(true);
         getSessionRegistrationsForSession(selectedSessionId)
             .then(res => { if (res.success) setRegistrations(res.data) })
@@ -474,7 +501,6 @@ const SessionSettingsPage: React.FC = () => {
         const result = await updateSessionBoothAssignments(selectedSessionId, boothId, attendeeIds);
         if (result.success) {
             toast.success(result.message, { id: toastId });
-            // Refetch registrations to update the UI state
             if (selectedSessionId) {
                 setLoadingRegs(true);
                 getSessionRegistrationsForSession(selectedSessionId)
@@ -492,56 +518,242 @@ const SessionSettingsPage: React.FC = () => {
         const sortedSessions = [...sessions].sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
         const earliestSession = sortedSessions[0];
         const oldStart = new Date(earliestSession.startTime);
-
-        // Create new start date object (using noon to avoid timezone edge cases for date diff)
         const targetDate = new Date(newStartDateStr);
-
-        // Calculate difference in milliseconds
-        // We compare dates by setting them to midnight UTC to get pure day difference if needed, 
-        // but here we want to shift by exact time difference from the *start* of the first session 
-        // to the *start* of the target day (preserving time? or just shifting days?)
-
-        // User expectation: "Move Oct 27 to Nov 28". 
-        // If Oct 27 session starts at 9am, Nov 28 session should start at 9am.
-        // So we calculate the difference in DAYS.
 
         const oldStartMidnight = new Date(oldStart);
         oldStartMidnight.setHours(0, 0, 0, 0);
 
         const newStartMidnight = new Date(targetDate);
         newStartMidnight.setHours(0, 0, 0, 0);
-        // Adjust for timezone offset to ensure we are comparing local dates correctly
         newStartMidnight.setMinutes(newStartMidnight.getMinutes() + newStartMidnight.getTimezoneOffset());
 
         const diffTime = newStartMidnight.getTime() - oldStartMidnight.getTime();
-
         const toastId = toast.loading(`Shifting ${sessions.length} sessions...`);
-
         let successCount = 0;
         let failCount = 0;
 
         for (const session of sessions) {
             const sStart = new Date(session.startTime);
             const sEnd = new Date(session.endTime);
-
             const newStart = new Date(sStart.getTime() + diffTime);
             const newEnd = new Date(sEnd.getTime() + diffTime);
-
             const result = await updateSession({
                 ...session,
                 startTime: newStart.toISOString(),
                 endTime: newEnd.toISOString()
             });
-
             if (result.success) successCount++;
             else failCount++;
         }
-
-        toast.success(`Shifted ${successCount} sessions. ${failCount > 0 ? `${failCount} failed.` : ''}`, { id: toastId });
+        toast.success(`Shifted ${successCount} sessions.`, { id: toastId });
     };
 
     if (!selectedEventId && !loadingData) {
         return <Alert type="warning" message="No event selected. Please select an event from the header dropdown to manage sessions." />
+    }
+
+    if (isMobile) {
+        return (
+            <div className="pb-20">
+                <ShiftDatesModal
+                    isOpen={isShiftModalOpen}
+                    onClose={() => setIsShiftModalOpen(false)}
+                    sessions={sessions}
+                    onConfirm={handleShiftDates}
+                />
+                {managingBooth && selectedSession && (
+                    <AssignmentsModal
+                        isOpen={!!managingBooth}
+                        onClose={() => setManagingBooth(null)}
+                        session={selectedSession}
+                        booth={managingBooth}
+                        allAttendees={attendees}
+                        sessionRegistrations={registrations}
+                        onSave={handleSaveAssignments}
+                    />
+                )}
+                {selectedSession && (
+                    <AvailableAttendeesModal
+                        isOpen={isAvailableAttendeesModalOpen}
+                        onClose={() => {
+                            setIsAvailableAttendeesModalOpen(false);
+                            if (selectedSessionId) {
+                                setLoadingRegs(true);
+                                getSessionRegistrationsForSession(selectedSessionId)
+                                    .then(res => { if (res.success) setRegistrations(res.data); })
+                                    .finally(() => setLoadingRegs(false));
+                            }
+                        }}
+                        session={selectedSession}
+                        allBooths={allConfiguredBooths}
+                    />
+                )}
+                {selectedSession && (
+                    <BulkRegistrationModal
+                        isOpen={isBulkRegModalOpen}
+                        onClose={() => setIsBulkRegModalOpen(false)}
+                        sessionName={selectedSession.name}
+                        eventId={selectedEventId || ''}
+                        allAttendees={attendees}
+                        currentlyRegisteredIds={new Set(registrations.map(r => r.attendeeId))}
+                        onSave={handleBulkRegistration}
+                    />
+                )}
+
+                <div className="sticky top-0 z-10 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-3 shadow-sm flex items-center justify-between">
+                    {mobileViewMode === 'form' ? (
+                        <div className="flex items-center w-full">
+                            <button onClick={handleMobileBack} className="p-2 mr-2 -ml-2 text-slate-600 dark:text-slate-300">
+                                <ArrowLeftIcon className="w-6 h-6" />
+                            </button>
+                            <h1 className="text-lg font-bold truncate">{isCreatingNew ? 'New Session' : 'Edit Session'}</h1>
+                        </div>
+                    ) : (
+                        <div className="flex items-center justify-between w-full">
+                            <h1 className="text-xl font-bold flex items-center"><CogIcon className="w-6 h-6 mr-2 text-primary-600" /> Sessions</h1>
+                            {sessions.length > 0 && (
+                                <button onClick={() => setIsShiftModalOpen(true)} className="text-primary-600 font-medium text-sm">
+                                    Shift Dates
+                                </button>
+                            )}
+                        </div>
+                    )}
+                </div>
+
+                <div className="p-4">
+                    {feedback && <Alert type={feedback.type} message={feedback.message} className="mb-4" />}
+
+                    {mobileViewMode === 'list' && (
+                        <div className="space-y-4">
+                            <Button
+                                variant="primary"
+                                className="w-full py-3 shadow-lg"
+                                onClick={handleMobileCreate}
+                                leftIcon={<PlusCircleIcon className="w-5 h-5" />}
+                            >
+                                Create New Session
+                            </Button>
+
+                            {loadingData ? (<p className="text-center py-4 text-slate-500">Loading sessions...</p>) : sessions.length === 0 ? (
+                                <div className="text-center py-10 bg-slate-50 dark:bg-slate-800 rounded-xl border border-dashed border-slate-300 dark:border-slate-700">
+                                    <p className="text-slate-500">No sessions yet.</p>
+                                    <p className="text-sm text-slate-400 mt-1">Tap above to create one.</p>
+                                </div>
+                            ) : (
+                                <div className="space-y-3">
+                                    {sessions.sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime()).map(s => (
+                                        <div
+                                            key={s.id}
+                                            className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 flex justify-between items-center"
+                                            onClick={() => handleMobileEdit(s.id)}
+                                        >
+                                            <div>
+                                                <h3 className="font-bold text-slate-800 dark:text-slate-200">{s.name}</h3>
+                                                <div className="text-sm text-slate-500 mt-1 flex flex-col gap-0.5">
+                                                    <span className="flex items-center gap-1.5"><Icon name="clock" className="w-3 h-3" /> {new Date(s.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                                    {s.location && <span className="flex items-center gap-1.5"><MapIcon className="w-3 h-3" /> {s.location}</span>}
+                                                </div>
+                                            </div>
+                                            <div className="text-slate-400">
+                                                <Icon name="chevronRight" className="w-5 h-5" />
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {mobileViewMode === 'form' && (
+                        <form onSubmit={(e) => {
+                            handleSubmit(e).then(() => {
+                                window.scrollTo(0, 0);
+                            });
+                        }} className="space-y-6 pb-10">
+                            <Input
+                                label="Session Name"
+                                value={sessionName}
+                                onChange={(e) => setSessionName(e.target.value)}
+                                placeholder="e.g., Keynote"
+                                disabled={isSubmitting || loadingData}
+                            />
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <DateTimeInput
+                                    label="Start"
+                                    value={startTime ? new Date(startTime) : null}
+                                    onChange={(date) => {
+                                        const newStartTime = date ? date.toISOString().slice(0, 16) : '';
+                                        setStartTime(newStartTime);
+                                        if (date) {
+                                            const currentEndDate = endTime ? new Date(endTime) : null;
+                                            const recommendedEndDate = new Date(date.getTime() + 30 * 60 * 1000);
+                                            if (!currentEndDate || currentEndDate < date) {
+                                                setEndTime(recommendedEndDate.toISOString().slice(0, 16));
+                                            }
+                                        }
+                                    }}
+                                    disabled={isSubmitting || loadingData}
+                                />
+                                <DateTimeInput
+                                    label="End"
+                                    value={endTime ? new Date(endTime) : null}
+                                    onChange={(date) => setEndTime(date ? date.toISOString().slice(0, 16) : '')}
+                                    minDate={startTime ? new Date(startTime) : undefined}
+                                    disabled={isSubmitting || loadingData}
+                                />
+                            </div>
+
+                            <Select
+                                label="Type"
+                                value={sessionType}
+                                onChange={(e) => setSessionType(e.target.value as any)}
+                                options={[
+                                    { value: 'meeting', label: '🤝 Vendor Meeting' },
+                                    { value: 'presentation', label: '🎤 Presentation' },
+                                    { value: 'networking', label: '🥂 Networking' },
+                                    { value: 'break', label: '☕ Break' },
+                                ]}
+                            />
+
+                            {sessionType !== 'break' && (
+                                <>
+                                    <Input
+                                        label="Location"
+                                        value={location}
+                                        onChange={(e) => setLocation(e.target.value)}
+                                        icon={<MapIcon className="w-4 h-4 text-slate-400" />}
+                                    />
+                                    <Input
+                                        label="Speaker"
+                                        value={speaker}
+                                        onChange={(e) => setSpeaker(e.target.value)}
+                                        icon={<UsersGroupIcon className="w-4 h-4 text-slate-400" />}
+                                    />
+                                    <Textarea
+                                        label="Description"
+                                        value={description}
+                                        onChange={(e) => setDescription(e.target.value)}
+                                        rows={3}
+                                    />
+                                </>
+                            )}
+
+                            <div className="fixed bottom-0 left-0 right-0 p-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+                                <Button
+                                    type="submit"
+                                    variant="primary"
+                                    className="w-full py-4 text-lg shadow-xl"
+                                    disabled={isSubmitting || loadingData}
+                                >
+                                    {isSubmitting ? 'Saving...' : (isCreatingNew ? 'Create Session' : 'Save Changes')}
+                                </Button>
+                            </div>
+                        </form>
+                    )}
+                </div>
+            </div>
+        );
     }
 
     return (
@@ -552,6 +764,7 @@ const SessionSettingsPage: React.FC = () => {
                 sessions={sessions}
                 onConfirm={handleShiftDates}
             />
+            {/* ... rest of desktop render */}
             {managingBooth && selectedSession && (
                 <AssignmentsModal
                     isOpen={!!managingBooth}
