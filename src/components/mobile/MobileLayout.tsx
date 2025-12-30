@@ -19,7 +19,7 @@ interface MobileLayoutProps {
 
 type HeaderMode = 'expanded' | 'compact' | 'hidden';
 
-const ExpandedHeader: React.FC<{ currentEvent: any; currentUser: any; onMenuClick: () => void }> = ({ currentEvent, currentUser }) => (
+const ExpandedHeader: React.FC<{ currentEvent: any; currentUser: any }> = ({ currentEvent, currentUser }) => (
     <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -49,7 +49,7 @@ const ExpandedHeader: React.FC<{ currentEvent: any; currentUser: any; onMenuClic
     </motion.div>
 );
 
-const CompactHeader: React.FC<{ currentEvent: any; onMenuClick: () => void }> = ({ currentEvent }) => (
+const CompactHeader: React.FC<{ currentEvent: any }> = ({ currentEvent }) => (
     <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

@@ -231,4 +231,3 @@ const OrganizerMobileDashboard: React.FC = () => {
 };
 
 export default OrganizerMobileDashboard;
-```
