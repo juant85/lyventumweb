@@ -10,8 +10,11 @@ import { useAutoRefresh } from '../../../hooks/useAutoRefresh';
 import LiveIndicator from '../LiveIndicator';
 
 const OrganizerMobileDashboard: React.FC = () => {
-    const { scans, sessions, booths, attendees } = useEventData();
+    const { scans, sessions, booths, attendees, operationalDetails } = useEventData();
     const navigate = useNavigate();
+
+    // Get live session from operationalDetails
+    const liveSession = operationalDetails.session;
 
     // Auto-refresh every 10 seconds
     const { lastUpdated, isRefreshing, manualRefresh } = useAutoRefresh({

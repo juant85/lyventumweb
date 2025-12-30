@@ -44,7 +44,7 @@ interface SelectedEventContextType {
 const SelectedEventContext = createContext<SelectedEventContextType | undefined>(undefined);
 
 export const SelectedEventProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { supabaseUser, loadingAuth } = useAuth();
+  const { supabaseUser, loadingAuth, currentUser } = useAuth();
   const [loadingEvents, setLoadingEvents] = useState(true);
   const [isInitializing, setIsInitializing] = useState(true);
   const [errorEvents, setErrorEvents] = useState<string | null>(null);
@@ -88,8 +88,12 @@ export const SelectedEventProvider: React.FC<{ children: ReactNode }> = ({ child
       if (storedSelectedId && fetchedEvents.some(e => e.id === storedSelectedId)) {
         setSelectedEventIdState(storedSelectedId);
       } else if (fetchedEvents.length > 0) {
-        setSelectedEventIdState(fetchedEvents[0].id);
-        localStorage.setItem(LOCAL_STORAGE_SELECTED_EVENT_ID_KEY, fetchedEvents[0].id);
+        // Only auto-select for organizers/admins, NOT for superadmins
+        if (currentUser?.role === 'organizer' || currentUser?.role === 'admin') {
+          setSelectedEventIdState(fetchedEvents[0].id);
+          localStorage.setItem(LOCAL_STORAGE_SELECTED_EVENT_ID_KEY, fetchedEvents[0].id);
+        }
+        // SuperAdmins start with NO event selected
       } else {
         setSelectedEventIdState(null);
         localStorage.removeItem(LOCAL_STORAGE_SELECTED_EVENT_ID_KEY);
@@ -106,7 +110,7 @@ export const SelectedEventProvider: React.FC<{ children: ReactNode }> = ({ child
     } finally {
       setLoadingEvents(false);
     }
-  }, []);
+  }, [currentUser]);
 
   useEffect(() => {
     if (!loadingAuth) {

@@ -20,7 +20,7 @@ interface MobileLayoutProps {
 
 type HeaderMode = 'expanded' | 'compact' | 'hidden';
 
-const ExpandedHeader: React.FC<{ currentEvent: any; currentUser: any; onEventSwitcherClick: () => void }> = ({ currentEvent, currentUser, onEventSwitcherClick }) => (
+const ExpandedHeader: React.FC<{ currentEvent: any; currentUser: any; onEventSwitcherClick: () => void; isOnEventsPage?: boolean; eventsCount?: number }> = ({ currentEvent, currentUser, onEventSwitcherClick, isOnEventsPage, eventsCount }) => (
     <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -28,30 +28,46 @@ const ExpandedHeader: React.FC<{ currentEvent: any; currentUser: any; onEventSwi
         transition={{ duration: 0.2 }}
         className="flex items-center justify-between w-full"
     >
-        <button
-            onClick={onEventSwitcherClick}
-            className="flex items-center gap-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg px-2 py-1 -ml-2 transition-colors"
-        >
-            {currentEvent?.eventLogoUrl ? (
-                <img src={currentEvent.eventLogoUrl} alt="Event" className="h-8 w-8 rounded-lg object-contain bg-slate-100 dark:bg-slate-800" />
-            ) : (
-                <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center text-white font-bold text-sm">
-                    {currentEvent?.name?.[0] || 'L'}
+        {isOnEventsPage && currentUser?.role === 'superadmin' ? (
+            <div className="flex items-center gap-3 px-2 py-1">
+                <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center">
+                    <Icon name="grid" className="w-5 h-5 text-white" />
                 </div>
-            )}
-
-            <div className="flex flex-col">
-                <div className="flex items-center gap-1">
-                    <h1 className="text-sm font-bold text-slate-800 dark:text-slate-100 leading-tight truncate max-w-[200px]">
-                        {currentEvent?.name || 'Lyventum'}
+                <div className="flex flex-col">
+                    <h1 className="text-sm font-bold text-slate-800 dark:text-slate-100 leading-tight">
+                        All Events
                     </h1>
-                    <Icon name="chevronDown" className="w-4 h-4 text-slate-400" />
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400">
+                        {eventsCount || 0} events
+                    </span>
                 </div>
-                <span className="text-[10px] uppercase tracking-wide font-semibold text-primary-600 dark:text-primary-400">
-                    {currentUser?.role || 'Guest'}
-                </span>
             </div>
-        </button>
+        ) : (
+            <button
+                onClick={onEventSwitcherClick}
+                className="flex items-center gap-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg px-2 py-1 -ml-2 transition-colors"
+            >
+                {currentEvent?.eventLogoUrl ? (
+                    <img src={currentEvent.eventLogoUrl} alt="Event" className="h-8 w-8 rounded-lg object-contain bg-slate-100 dark:bg-slate-800" />
+                ) : (
+                    <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center text-white font-bold text-sm">
+                        {currentEvent?.name?.[0] || 'L'}
+                    </div>
+                )}
+
+                <div className="flex flex-col">
+                    <div className="flex items-center gap-1">
+                        <h1 className="text-sm font-bold text-slate-800 dark:text-slate-100 leading-tight truncate max-w-[200px]">
+                            {currentEvent?.name || 'Lyventum'}
+                        </h1>
+                        <Icon name="chevronDown" className="w-4 h-4 text-slate-400" />
+                    </div>
+                    <span className="text-[10px] uppercase tracking-wide font-semibold text-primary-600 dark:text-primary-400">
+                        {currentUser?.role || 'Guest'}
+                    </span>
+                </div>
+            </button>
+        )}
     </motion.div>
 );
 
@@ -84,7 +100,7 @@ const CompactHeader: React.FC<{ currentEvent: any; onEventSwitcherClick: () => v
 
 const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
     const { currentUser } = useAuth();
-    const { currentEvent, setSelectedEventId } = useSelectedEvent();
+    const { currentEvent, setSelectedEventId, availableEvents } = useSelectedEvent();
     const scrollDirection = useScrollDirection();
     const scrollY = useScrollY();
     const navigate = useNavigate();
@@ -92,6 +108,10 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isEventSwitcherOpen, setIsEventSwitcherOpen] = useState(false);
+
+    // Check if we're on the events list page
+    const isOnEventsPage = location.pathname === AppRoute.SuperAdminEvents;
+    const isSuperAdmin = currentUser?.role === 'superadmin';
 
     const getHeaderMode = (): HeaderMode => {
         if (scrollY < 50) return 'expanded';
