@@ -21,6 +21,8 @@ import { supabase } from '../supabaseClient';
 import { Database } from '../database.types';
 import { Icon } from './ui';
 import TestModeBanner from './TestModeBanner';
+import { useIsMobile } from '../hooks/useIsMobile';
+import MobileLayout from './mobile/MobileLayout';
 
 type PlanRow = Database['public']['Tables']['plans']['Row'];
 
@@ -140,6 +142,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const isAttendeePortal = currentUser?.role === 'attendee';
   const isManagingEventAsSuperAdmin = currentUser?.role === 'superadmin' && location.pathname !== AppRoute.SuperAdminEvents;
+  const isMobile = useIsMobile(); // Mobile detection
 
   const handleSimulatePlan = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const planId = e.target.value;
@@ -155,7 +158,19 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   if (isSimulating) headerTopOffset += 40;
   if (profileWarning) headerTopOffset += 36;
 
+  // ✨ MOBILE LAYOUT - Render mobile-optimized layout for authenticated users on mobile devices
+  if (isMobile && currentUser && !isAttendeePortal) {
+    return (
+      <MobileLayout>
+        <Toaster position="top-center" reverseOrder={false} />
+        <TestModeBanner />
+        <OfflineIndicator />
+        {children}
+      </MobileLayout>
+    );
+  }
 
+  // DESKTOP LAYOUT - Original layout for desktop and attendee portal
   return (
     <div className="min-h-screen bg-slate-100 dark:bg-slate-900">
       <Toaster position="top-center" reverseOrder={false} />
