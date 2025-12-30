@@ -76,4 +76,3 @@ const MobileEmptyState: React.FC<MobileEmptyStateProps> = ({
 };
 
 export default MobileEmptyState;
-```
