@@ -19,6 +19,10 @@ import Select from '../../components/ui/Select';
 import EmailAnalyticsSummary from '../../components/admin/EmailAnalyticsSummary';
 import AvailableAttendeesModal from '../../components/admin/AvailableAttendeesModal';
 import { emailTrackingService, EmailTrackingStatus } from '../../services/emailTrackingService';
+import { useIsMobile } from '../../hooks/useIsMobile';
+import { MobileCard, MobileFAB, MobileSearchBar, MobileEmptyState } from '../../components/mobile';
+import SwipeableCard from '../../components/ui/SwipeableCard';
+import { User, Eye } from 'lucide-react';
 
 const DuplicateReviewModal: React.FC<{
     isOpen: boolean;
@@ -84,6 +88,9 @@ const AttendeeProfilesPage: React.FC = () => {
     // Bulk Assign States
     const [isSessionSelectOpen, setIsSessionSelectOpen] = useState(false);
     const [selectedSessionForAssign, setSelectedSessionForAssign] = useState<string>('');
+
+    // Mobile detection
+    const isMobile = useIsMobile();
 
     // Fetch email tracking data
     useEffect(() => {
@@ -330,6 +337,100 @@ const AttendeeProfilesPage: React.FC = () => {
         );
     };
 
+    // ✨ MOBILE VIEW
+    if (isMobile) {
+        return (
+            <div className="space-y-6 pb-24">
+                {/* Header */}
+                <div className="px-4">
+                    <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">Attendees</h1>
+                    <MobileSearchBar
+                        value={searchTerm}
+                        onChange={setSearchTerm}
+                        placeholder="Search attendees..."
+                    />
+                </div>
+
+                {/* Attendees List */}
+                <div className="px-4 space-y-3">
+                    {eventDataLoading ? (
+                        <div className="space-y-3">
+                            {[1, 2, 3].map(i => (
+                                <div key={i} className="h-20 bg-slate-200 dark:bg-slate-700 rounded-2xl animate-pulse" />
+                            ))}
+                        </div>
+                    ) : filteredAttendees.length > 0 ? (
+                        filteredAttendees.map(attendee => {
+                            const hasCheckedIn = (attendee.metadata as any)?.check_in_time;
+                            return (
+                                <SwipeableCard
+                                    key={attendee.id}
+                                    leftAction={{
+                                        icon: <Eye className="w-5 h-5" />,
+                                        label: "View",
+                                        color: "blue",
+                                        onTrigger: () => navigate(`${AppRoute.AttendeeProfileDetail.replace(':attendeeId', attendee.id)}`)
+                                    }}
+                                >
+                                    <MobileCard
+                                        title={attendee.name}
+                                        subtitle={attendee.email || 'No email'}
+                                        icon={
+                                            <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 dark:text-primary-400 font-bold">
+                                                {attendee.name.charAt(0)}
+                                            </div>
+                                        }
+                                        badge={
+                                            hasCheckedIn ? (
+                                                <span className="px-2 py-1 text-xs font-bold bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400 rounded-full">
+                                                    ✓ Checked In
+                                                </span>
+                                            ) : (
+                                                <span className="px-2 py-1 text-xs font-bold bg-slate-100 text-slate-600 dark:bg-slate-700/50 dark:text-slate-400 rounded-full">
+                                                    Pending
+                                                </span>
+                                            )
+                                        }
+                                        onClick={() => navigate(`${AppRoute.AttendeeProfileDetail.replace(':attendeeId', attendee.id)}`)}
+                                        actions={
+                                            <div className="flex gap-2 text-xs text-slate-500 dark:text-slate-400">
+                                                {attendee.organization && (
+                                                    <>
+                                                        <span>🏢 {attendee.organization}</span>
+                                                        <span>•</span>
+                                                    </>
+                                                )}
+                                                {attendee.position && <span>{attendee.position}</span>}
+                                            </div>
+                                        }
+                                    />
+                                </SwipeableCard>
+                            );
+                        })
+                    ) : (
+                        <MobileEmptyState
+                            icon={<User className="w-8 h-8" />}
+                            title={searchTerm ? "No attendees found" : "No attendees yet"}
+                            description={searchTerm ? `No results for "${searchTerm}"` : "Add your first attendee to get started"}
+                            action={!searchTerm ? {
+                                label: "Add Attendee",
+                                onClick: () => navigate(AppRoute.AttendeeRegistration)
+                            } : undefined}
+                        />
+                    )}
+                </div>
+
+                {/* FAB */}
+                <MobileFAB
+                    icon="plus"
+                    onClick={() => navigate(AppRoute.AttendeeRegistration)}
+                    label="New Attendee"
+                />
+            </div>
+        );
+    }
+
+    // DESKTOP VIEW - Original render
     return (
         <>
             <DuplicateReviewModal
