@@ -9,7 +9,7 @@ import { useSelectedEvent } from '../../contexts/SelectedEventContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '../../types';
-import Sidebar from '../Sidebar';
+import MobileMenu from './MobileMenu';
 
 interface MobileLayoutProps {
     children: ReactNode;
@@ -134,15 +134,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
             />
 
             {isDrawerOpen && (
-                <>
-                    <div
-                        className="fixed inset-0 bg-black/50 z-50"
-                        onClick={() => setIsDrawerOpen(false)}
-                    />
-                    <div className="fixed right-0 top-0 bottom-0 w-64 bg-white dark:bg-slate-900 z-50 shadow-xl">
-                        <Sidebar isOpen={true} currentUser={currentUser} />
-                    </div>
-                </>
+                <MobileMenu isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} />
             )}
         </div>
     );

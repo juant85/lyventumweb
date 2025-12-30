@@ -27,6 +27,7 @@ const iconMap = {
   // Utilitarios
   chevronUp: Lucide.ChevronUp,
   chevronDown: Lucide.ChevronDown,
+  chevronRight: Lucide.ChevronRight,
 
   // Added for existing UI components
   chat: Lucide.MessageCircle,
