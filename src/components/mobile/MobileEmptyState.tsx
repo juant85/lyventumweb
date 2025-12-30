@@ -1,10 +1,8 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { motion } from 'framer-motion';
-import { LucideIcon } from 'lucide-react';
-import Button from '../ui/Button';
 
 interface MobileEmptyStateProps {
-    icon: LucideIcon;
+    icon: ReactNode;
     title: string;
     description: string;
     actionLabel?: string;
@@ -14,7 +12,7 @@ interface MobileEmptyStateProps {
 }
 
 const MobileEmptyState: React.FC<MobileEmptyStateProps> = ({
-    icon: Icon,
+    icon,
     title,
     description,
     actionLabel,
@@ -29,11 +27,11 @@ const MobileEmptyState: React.FC<MobileEmptyStateProps> = ({
             transition={{ duration: 0.4 }}
             className="flex flex-col items-center justify-center py-12 px-4 text-center"
         >
-            {/* Icon with gradient background */}
+            {/*Icon with gradient background */}
             <div className="relative mb-6">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary-500/20 to-secondary-500/20 blur-2xl"></div>
-                <div className="relative bg-gradient-to-br from-primary-500/10 to-secondary-500/10 dark:from-primary-500/20 dark:to-secondary-500/20 p-6 rounded-3xl border border-primary-200 dark:border-primary-800">
-                    <Icon className="w-12 h-12 text-primary-600 dark:text-primary-400" />
+                <div className="relative bg-gradient-to-br from-primary-500/10 to-secondary-500/10 dark:from-primary-500/20 dark:to-secondary-500/20 p-6 rounded-3xl border border-primary-200 dark:border-primary-800 flex items-center justify-center">
+                    {icon}
                 </div>
             </div>
 
@@ -51,22 +49,20 @@ const MobileEmptyState: React.FC<MobileEmptyStateProps> = ({
             {(actionLabel || secondaryActionLabel) && (
                 <div className="flex flex-col sm:flex-row gap-3 w-full max-w-xs">
                     {actionLabel && onAction && (
-                        <Button
+                        <button
                             onClick={onAction}
-                            variant="primary"
-                            className="flex-1"
+                            className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors"
                         >
                             {actionLabel}
-                        </Button>
+                        </button>
                     )}
                     {secondaryActionLabel && onSecondaryAction && (
-                        <Button
+                        <button
                             onClick={onSecondaryAction}
-                            variant="secondary"
-                            className="flex-1"
+                            className="flex-1 px-4 py-2 bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-white rounded-lg text-sm font-medium hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors"
                         >
                             {secondaryActionLabel}
-                        </Button>
+                        </button>
                     )}
                 </div>
             )}
