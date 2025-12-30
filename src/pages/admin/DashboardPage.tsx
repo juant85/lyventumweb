@@ -109,9 +109,8 @@ const DashboardPage: React.FC = () => {
   const { scans, sessions, getOperationalSessionDetails, loadingData, dataError, fetchData, getSessionRegistrationsForSession, getBoothById } = useEventData();
   const { currentEvent, isInitializing } = useSelectedEvent();
   const { config, eventType, isVendorMeeting, isConference, isTradeShow } = useEventTypeConfig();
-  const navigate = useNavigate();
-  const { t } = useLanguage();
   const isMobile = useIsMobile(); // Mobile detection
+  const navigate = useNavigate();
 
   const [sessionRegistrations, setSessionRegistrations] = useState<(SessionRegistration & { boothName?: string })[]>([]);
   const [loadingRegistrations, setLoadingRegistrations] = useState(false);
@@ -304,12 +303,12 @@ const DashboardPage: React.FC = () => {
   // ✨ MOBILE VIEW - Role-Based Dashboards
   if (isMobile) {
     const { currentUser } = useAuth();
-    
+
     // Superadmin gets global event overview
     if (currentUser?.role === 'superadmin') {
       return <SuperAdminMobileDashboard />;
     }
-    
+
     // Organizers get event execution dashboard
     return <OrganizerMobileDashboard />;
   }

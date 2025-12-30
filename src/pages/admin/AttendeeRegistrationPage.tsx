@@ -10,10 +10,21 @@ import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import Alert from '../../components/ui/Alert';
 import Select from '../../components/ui/Select';
-import { UsersGroupIcon, ArrowPathIcon, TableCellsIcon, TrashIcon, PlusCircleIcon, InformationCircleIcon, DocumentArrowDownIcon } from '../../components/Icons';
+import {
+    UsersGroupIcon,
+    ArrowPathIcon,
+    TableCellsIcon,
+    TrashIcon,
+    PlusCircleIcon,
+    InformationCircleIcon,
+    DocumentArrowDownIcon,
+    ArrowLeftIcon
+} from '../../components/Icons';
 import * as XLSX from 'xlsx';
 import { toast } from 'react-hot-toast';
 import { Attendee } from '../../types';
+import { MobileAttendeeList } from '../../components/mobile'; // Updated import
+import { useLocation, useNavigate } from 'react-router-dom';
 
 type ParsedRow = { [key: string]: any; _tempId: string };
 type ColumnMapInfo = {
@@ -63,6 +74,21 @@ const AttendeeRegistrationPage: React.FC = () => {
     const [reviewColumns, setReviewColumns] = useState<{ key: string, label: string }[]>([]);
     const [validationErrors, setValidationErrors] = useState<Map<string, Set<string>>>(new Map());
 
+    // Mobile specific state
+    const isMobile = useIsMobile();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [mobileViewMode, setMobileViewMode] = useState<'list' | 'form'>('list');
+
+    // Deep Linking for Mobile
+    useEffect(() => {
+        if (!isMobile) return;
+        if (location.pathname === '/attendees/add') {
+            setMobileViewMode('form');
+        } else {
+            setMobileViewMode('list');
+        }
+    }, [location.pathname, isMobile]);
 
     const resetState = () => {
         setFeedback(null);
@@ -404,10 +430,37 @@ const AttendeeRegistrationPage: React.FC = () => {
         toast.success("Template downloaded!");
     };
 
-    const isMobile = useIsMobile();
 
+
+    // ✨ MOBILE RENDER
     if (isMobile) {
-        return <MobileAttendeeForm />;
+        // Mobile View Mode Logic
+        if (mobileViewMode === 'form') {
+            return (
+                <div className="pb-20">
+                    <div className="sticky top-0 z-10 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-3 shadow-sm flex items-center gap-3 safe-area-top">
+                        <button onClick={() => setMobileViewMode('list')} className="p-2 -ml-2 text-slate-600 dark:text-slate-300">
+                            <ArrowLeftIcon className="w-6 h-6" />
+                        </button>
+                        <h1 className="text-lg font-bold">Add Attendee</h1>
+                    </div>
+                    <div className="p-4">
+                        <MobileAttendeeForm />
+                    </div>
+                </div>
+            );
+        }
+
+        // Default: List View
+        return (
+            <MobileAttendeeList
+                onAddClick={() => setMobileViewMode('form')}
+                onEditClick={(attendee) => {
+                    // Future: Open edit modal or detail view
+                    toast('Edit feature coming soon', { icon: '🚧' });
+                }}
+            />
+        );
     }
 
     return (

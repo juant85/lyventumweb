@@ -7,7 +7,7 @@ import { Icon } from '../ui/Icon';
 import { useAuth } from '../../contexts/AuthContext';
 import { useSelectedEvent } from '../../contexts/SelectedEventContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { AppRoute } from '../../types';
 import MobileMenu from './MobileMenu';
 
@@ -77,6 +77,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
     const scrollDirection = useScrollDirection();
     const scrollY = useScrollY();
     const navigate = useNavigate();
+    const location = useLocation();
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const getHeaderMode = (): HeaderMode => {
@@ -120,12 +121,19 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
                 </AnimatePresence>
             </motion.header>
 
-            <main
-                className="transition-all duration-300"
-                style={{ paddingTop: `${headerHeight + 16}px` }}
-            >
-                {children}
-            </main>
+            <AnimatePresence mode="wait">
+                <motion.main
+                    key={location.pathname} // Triggers animation on route change
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -10 }}
+                    transition={{ duration: 0.25, ease: "easeOut" }}
+                    className="transition-all duration-300"
+                    style={{ paddingTop: `${headerHeight + 16}px` }}
+                >
+                    {children}
+                </motion.main>
+            </AnimatePresence>
 
             <MobileBottomNav
                 onScanClick={handleScanClick}

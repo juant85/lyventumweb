@@ -90,7 +90,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
                 icon="home"
                 label="Home"
                 onClick={() => navigate(AppRoute.Dashboard)}
-                active={isActive([AppRoute.Dashboard, AppRoute.DataVisualization])}
+                active={isActive([AppRoute.Dashboard, AppRoute.DataVisualization, '/sessions'])}
             />
 
             {/* Live / Analytics - Replaces Events to emphasize Real-Time */}
@@ -125,7 +125,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
                 icon="users"
                 label="People"
                 onClick={() => navigate(AppRoute.AttendeeProfiles)}
-                active={isActive([AppRoute.AttendeeProfiles, AppRoute.AttendeeRegistration])}
+                active={isActive([AppRoute.AttendeeProfiles, AppRoute.AttendeeRegistration, '/attendees'])}
             />
 
             {/* More / Menu */}

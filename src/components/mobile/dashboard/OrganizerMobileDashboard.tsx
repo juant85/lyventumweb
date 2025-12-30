@@ -119,7 +119,7 @@ const OrganizerMobileDashboard: React.FC = () => {
                     {
                         icon: 'userPlus',
                         label: 'Add Attendee',
-                        onClick: () => navigate('/admin/attendees/add'),
+                        onClick: () => navigate('/attendees/add'), // Updated to native mobile route
                         color: 'success'
                     },
                     {

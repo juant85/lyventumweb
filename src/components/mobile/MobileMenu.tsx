@@ -62,6 +62,12 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
             color: 'text-pink-500'
         },
         {
+            label: 'Check-in Desk',
+            icon: 'checkCircle',
+            path: AppRoute.CheckInDesk,
+            color: 'text-teal-500'
+        },
+        {
             label: 'Attendees',
             icon: 'users',
             path: AppRoute.AttendeeProfiles,

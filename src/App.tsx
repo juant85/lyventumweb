@@ -142,6 +142,11 @@ const AppRoutes: React.FC = () => {
       <Route path={AppRoute.AttendeeLocator} element={<ProtectedRoute allowedRoles={['admin', 'organizer', 'superadmin']}><FeatureGuard featureKey={Feature.ATTENDEE_LOCATOR}><AttendeeLocatorPage /></FeatureGuard></ProtectedRoute>} />
       <Route path="/change-password" element={<ProtectedRoute allowedRoles={['admin', 'organizer', 'superadmin']}><ChangePasswordPage /></ProtectedRoute>} />
 
+      {/* Mobile-Friendly "Native" Routes */}
+      <Route path="/sessions/new" element={<ProtectedRoute allowedRoles={['admin', 'organizer', 'superadmin']}><FeatureGuard featureKey={Feature.SESSION_SETTINGS}><SessionSettingsPage /></FeatureGuard></ProtectedRoute>} />
+      <Route path="/sessions/:id" element={<ProtectedRoute allowedRoles={['admin', 'organizer', 'superadmin']}><FeatureGuard featureKey={Feature.SESSION_SETTINGS}><SessionSettingsPage /></FeatureGuard></ProtectedRoute>} />
+      <Route path="/attendees/add" element={<ProtectedRoute allowedRoles={['admin', 'organizer', 'superadmin']}><FeatureGuard featureKey={Feature.ATTENDEE_REGISTRATION}><AttendeeRegistrationPage /></FeatureGuard></ProtectedRoute>} />
+
       {/* SuperAdmin Routes */}
       <Route path={AppRoute.SuperAdminEvents} element={<ProtectedRoute allowedRoles={['superadmin']}><SuperAdminEventsPage /></ProtectedRoute>} />
       <Route path="/admin/attendees" element={<ProtectedRoute allowedRoles={['superadmin']}><SuperAdminAttendeesPage /></ProtectedRoute>} />

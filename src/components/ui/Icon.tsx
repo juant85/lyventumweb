@@ -74,6 +74,14 @@ const iconMap = {
   menu: Lucide.Menu,
   plus: Lucide.Plus,
   trash: Lucide.Trash2,
+
+  // Misc
+  microphone: Lucide.Mic,
+  mapPin: Lucide.MapPin,
+  key: Lucide.Key,
+  phone: Lucide.Phone,
+  search: Lucide.Search,
+  filter: Lucide.Filter,
 } as const;
 
 export type IconName = keyof typeof iconMap;

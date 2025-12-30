@@ -10,7 +10,8 @@ import Select from '../../components/ui/Select';
 import Button from '../../components/ui/Button';
 import Alert from '../../components/ui/Alert';
 import Modal from '../../components/ui/Modal';
-import { PlusCircleIcon, PencilSquareIcon, TrashIcon, CogIcon, DocumentDuplicateIcon, ArrowPathIcon, UserIcon } from '../../components/Icons';
+import { PlusCircleIcon, PencilSquareIcon, TrashIcon, CogIcon, DocumentDuplicateIcon, ArrowPathIcon, UserIcon, ArrowLeftIcon } from '../../components/Icons';
+import { Icon } from '../../components/ui/Icon';
 import { useSelectedEvent } from '../../contexts/SelectedEventContext';
 import { toast } from 'react-hot-toast';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -376,6 +377,22 @@ const BoothSetupPage: React.FC = () => {
     booth.companyName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // State for mobile view mode
+  const [mobileViewMode, setMobileViewMode] = useState<'list' | 'detail'>('list');
+  const [selectedBoothId, setSelectedBoothId] = useState<string | null>(null);
+
+  const selectedBooth = booths.find(b => b.id === selectedBoothId);
+
+  const handleMobileDetail = (boothId: string) => {
+    setSelectedBoothId(boothId);
+    setMobileViewMode('detail');
+  };
+
+  const handleMobileBack = () => {
+    setMobileViewMode('list');
+    setSelectedBoothId(null);
+  };
+
   if (!selectedEventId && !loading) {
     return <Alert type="warning" message={t(localeKeys.noEventSelected)} />
   }
@@ -392,78 +409,184 @@ const BoothSetupPage: React.FC = () => {
           </div>
         </form>
       </Modal>
+      {/* Ensure BoothProfileModal can still be opened on top of detail view */}
       <BoothProfileModal booth={editingBooth} onClose={() => setEditingBooth(null)} onSave={handleUpdateBooth} />
 
-      <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <h1 className="text-3xl font-bold flex items-center"><CogIcon className="w-8 h-8 mr-3 text-primary-600" /> {t(localeKeys.boothSetupTitle)}</h1>
-          {isMobile && (
-            <Button onClick={() => setIsAddModalOpen(true)} leftIcon={<PlusCircleIcon className="w-5 h-5" />}>{t(localeKeys.addNewBooth)}</Button>
-          )}
-        </div>
+      {isMobile ? (
+        <div className="pb-20">
+          {/* Header */}
+          <div className="sticky top-0 z-10 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-3 shadow-sm flex items-center justify-between safe-area-top">
+            {mobileViewMode === 'detail' ? (
+              <div className="flex items-center w-full">
+                <button onClick={handleMobileBack} className="p-2 mr-2 -ml-2 text-slate-600 dark:text-slate-300">
+                  <ArrowLeftIcon className="w-6 h-6" />
+                </button>
+                <h1 className="text-lg font-bold truncate">Booth Details</h1>
+                <button
+                  onClick={() => selectedBooth && setEditingBooth(selectedBooth)}
+                  className="ml-auto p-2 text-primary-600 dark:text-primary-400 font-semibold text-sm"
+                >
+                  Edit
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center justify-between w-full">
+                <h1 className="text-xl font-bold flex items-center"><CogIcon className="w-6 h-6 mr-2 text-primary-600" /> Booths</h1>
+                <Button size="sm" onClick={() => setIsAddModalOpen(true)} leftIcon={<PlusCircleIcon className="w-4 h-4" />}>Add</Button>
+              </div>
+            )}
+          </div>
 
-        <Card>
-          <div className="flex flex-col sm:flex-row gap-4 justify-between items-center mb-4">
-            <Input wrapperClassName="!mb-0 w-full sm:flex-grow" placeholder={t(localeKeys.searchByIdOrCompany)} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
-            {!isMobile && (
+          <div className="p-4">
+            {mobileViewMode === 'list' && (
+              <div className="space-y-4">
+                {/* Search */}
+                <Input wrapperClassName="!mb-0" placeholder={t(localeKeys.searchByIdOrCompany)} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+
+                <div className="flex gap-2">
+                  <Button onClick={handleRegenerateCodes} variant="secondary" className="w-full text-xs" size="sm" leftIcon={<ArrowPathIcon className="w-4 h-4" />}>{t(localeKeys.regenerateCode)}</Button>
+                </div>
+
+                {loading ? <p className="text-center py-4 text-slate-500">Loading booths...</p> : filteredBooths.length === 0 ? (
+                  <div className="text-center py-10 bg-slate-50 dark:bg-slate-800 rounded-xl border border-dashed border-slate-300 dark:border-slate-700">
+                    <p className="text-slate-500">{searchTerm ? 'No matches found.' : 'No booths yet.'}</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {filteredBooths.map(booth => (
+                      <div key={booth.id} onClick={() => handleMobileDetail(booth.id)}>
+                        <SwipeableCard
+                          leftAction={{
+                            icon: <PencilSquareIcon className="w-5 h-5" />,
+                            color: 'blue',
+                            label: 'Edit',
+                            onTrigger: () => setEditingBooth(booth)
+                          }}
+                          rightAction={{
+                            icon: <TrashIcon className="w-5 h-5" />,
+                            color: 'red',
+                            label: 'Delete',
+                            onTrigger: () => handleDeleteBooth(booth)
+                          }}
+                        >
+                          <MobileCard
+                            title={booth.companyName}
+                            subtitle={`ID: ${booth.physicalId}`}
+                            icon={<BuildingStorefrontIcon className="w-5 h-5 text-primary-600" />}
+                            badge={booth.isSponsor ? (
+                              <span className="bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded-full font-medium">
+                                Sponsor
+                              </span>
+                            ) : undefined}
+                            actions={
+                              <div className="flex items-center justify-between w-full mt-2">
+                                <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-900/50 px-2 py-1 rounded">
+                                  <span className="font-mono text-xs font-bold text-slate-600 dark:text-slate-400">{booth.accessCode}</span>
+                                  <button onClick={(e) => { e.stopPropagation(); handleCopyCode(booth.accessCode); }} className="text-slate-400 hover:text-slate-600">
+                                    <DocumentDuplicateIcon className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </div>
+                            }
+                          />
+                        </SwipeableCard>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {mobileViewMode === 'detail' && selectedBooth && (
+              <div className="space-y-6">
+                <Card className="!p-0 overflow-hidden">
+                  <div className="bg-slate-100 dark:bg-slate-800 p-6 flex flex-col items-center text-center border-b border-slate-200 dark:border-slate-700">
+                    <div className="w-16 h-16 bg-white dark:bg-slate-700 rounded-2xl flex items-center justify-center shadow-sm mb-4 overflow-hidden relative">
+                      {selectedBooth.sponsorLogoUrl ? (
+                        <img src={selectedBooth.sponsorLogoUrl} alt={selectedBooth.companyName} className="w-full h-full object-contain p-2" />
+                      ) : (
+                        <BuildingStorefrontIcon className="w-8 h-8 text-primary-500" />
+                      )}
+                    </div>
+                    <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{selectedBooth.companyName}</h2>
+                    {selectedBooth.isSponsor && (
+                      <span className={`px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800`}>
+                        {selectedBooth.sponsorshipTier ? `${selectedBooth.sponsorshipTier.toUpperCase()} SPONSOR` : 'SPONSOR'}
+                      </span>
+                    )}
+                  </div>
+                  <div className="p-4 space-y-4">
+                    <div className="flex items-center gap-3 text-slate-600 dark:text-slate-300">
+                      <div className="w-8 flex justify-center"><span className="text-lg font-bold text-slate-400">#</span></div>
+                      <div>
+                        <p className="font-semibold text-sm">Physical ID</p>
+                        <p className="text-sm font-mono">{selectedBooth.physicalId}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 text-slate-600 dark:text-slate-300">
+                      <div className="w-8 flex justify-center"><Icon name="key" className="w-5 h-5 text-slate-400" /></div>
+                      <div className="w-full">
+                        <p className="font-semibold text-sm">Access Code</p>
+                        <div className="flex items-center justify-between bg-slate-50 dark:bg-slate-900 p-2 rounded mt-1">
+                          <p className="text-sm font-mono font-bold tracking-widest">{selectedBooth.accessCode}</p>
+                          <button onClick={() => handleCopyCode(selectedBooth.accessCode)} className="text-primary-600">
+                            <DocumentDuplicateIcon className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    {(selectedBooth.email || selectedBooth.phone) && (
+                      <div className="pt-2 border-t border-slate-100 dark:border-slate-800 mt-2 space-y-3">
+                        {selectedBooth.email && (
+                          <div className="flex items-center gap-3 text-slate-600 dark:text-slate-300">
+                            <div className="w-8 flex justify-center"><Icon name="mail" className="w-5 h-5 text-slate-400" /></div>
+                            <p className="text-sm">{selectedBooth.email}</p>
+                          </div>
+                        )}
+                        {selectedBooth.phone && (
+                          <div className="flex items-center gap-3 text-slate-600 dark:text-slate-300">
+                            <div className="w-8 flex justify-center"><Icon name="phone" className="w-5 h-5 text-slate-400" /></div>
+                            <p className="text-sm">{selectedBooth.phone}</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    {selectedBooth.notes && (
+                      <div className="pt-2 border-t border-slate-100 dark:border-slate-800 mt-2">
+                        <p className="text-sm text-slate-500 italic">"{selectedBooth.notes}"</p>
+                      </div>
+                    )}
+                  </div>
+                </Card>
+
+                <div className="text-center">
+                  <p className="text-xs text-slate-400 mb-2">Need to update vendors or settings?</p>
+                  <Button variant="secondary" className="w-full justify-center" onClick={() => setEditingBooth(selectedBooth)}>
+                    Manage Booth Settings
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      ) : (
+        /* DESKTOP VIEW */
+        <div className="space-y-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <h1 className="text-3xl font-bold flex items-center"><CogIcon className="w-8 h-8 mr-3 text-primary-600" /> {t(localeKeys.boothSetupTitle)}</h1>
+          </div>
+
+          <Card>
+            <div className="flex flex-col sm:flex-row gap-4 justify-between items-center mb-4">
+              <Input wrapperClassName="!mb-0 w-full sm:flex-grow" placeholder={t(localeKeys.searchByIdOrCompany)} value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
               <div className="flex gap-2">
                 <Button onClick={() => setIsAddModalOpen(true)} leftIcon={<PlusCircleIcon className="w-5 h-5" />}>{t(localeKeys.addNewBooth)}</Button>
                 <Button onClick={handleRegenerateCodes} variant="secondary" leftIcon={<ArrowPathIcon className="w-5 h-5" />} title="Regenerate all access codes">{t(localeKeys.regenerateCode)}</Button>
               </div>
-            )}
-            {isMobile && (
-              <Button onClick={handleRegenerateCodes} variant="secondary" className="w-full" leftIcon={<ArrowPathIcon className="w-5 h-5" />}>{t(localeKeys.regenerateCode)}</Button>
-            )}
-          </div>
+            </div>
 
-          {loading ? <p>{t(localeKeys.loadingBooths)}</p> : (
-            filteredBooths.length === 0 ? <Alert type="info" message={searchTerm ? 'No booths match your search.' : 'No booths configured yet. Click "Add New Booth" to start.'} /> : (
-              isMobile ? (
-                /* Mobile List View */
-                <div className="space-y-4">
-                  {filteredBooths.map(booth => (
-                    <div key={booth.id} className="relative mb-4">
-                      <SwipeableCard
-                        leftAction={{
-                          icon: <PencilSquareIcon className="w-5 h-5" />,
-                          color: 'blue',
-                          label: 'Edit',
-                          onTrigger: () => setEditingBooth(booth)
-                        }}
-                        rightAction={{
-                          icon: <TrashIcon className="w-5 h-5" />,
-                          color: 'red',
-                          label: 'Delete',
-                          onTrigger: () => handleDeleteBooth(booth)
-                        }}
-                      >
-                        <MobileCard
-                          title={booth.companyName}
-                          subtitle={`ID: ${booth.physicalId}`}
-                          icon={<BuildingStorefrontIcon className="w-5 h-5 text-primary-600" />}
-                          badge={booth.isSponsor ? (
-                            <span className="bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded-full font-medium">
-                              Sponsor
-                            </span>
-                          ) : undefined}
-                          onClick={() => setEditingBooth(booth)}
-                          actions={
-                            <div className="flex items-center justify-between w-full">
-                              <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-900/50 px-2 py-1 rounded">
-                                <span className="font-mono text-xs font-bold text-slate-600 dark:text-slate-400">{booth.accessCode}</span>
-                                <button onClick={(e) => { e.stopPropagation(); handleCopyCode(booth.accessCode); }} className="text-slate-400 hover:text-slate-600">
-                                  <DocumentDuplicateIcon className="w-4 h-4" />
-                                </button>
-                              </div>
-                            </div>
-                          }
-                        />
-                      </SwipeableCard>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                /* Desktop Table View */
+            {loading ? <p>{t(localeKeys.loadingBooths)}</p> : (
+              filteredBooths.length === 0 ? <Alert type="info" message={searchTerm ? 'No booths match your search.' : 'No booths configured yet. Click "Add New Booth" to start.'} /> : (
                 <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
                     <thead className="bg-slate-50 dark:bg-slate-700/50">
@@ -495,10 +618,10 @@ const BoothSetupPage: React.FC = () => {
                   </table>
                 </div>
               )
-            )
-          )}
-        </Card>
-      </div>
+            )}
+          </Card>
+        </div>
+      )}
     </>
   );
 };
