@@ -188,43 +188,47 @@ const OrganizerMobileDashboard: React.FC = () => {
                             }}
                         />
                     )}
-                    {/* Speed Dial for Quick Actions */}
-                    <SpeedDialFAB
-                        actions={[
-                            {
-                                icon: 'qrCode',
-                                label: 'Scan QR',
-                                onClick: () => navigate('/admin/scan'),
-                                color: 'bg-primary-600'
-                            },
-                            {
-                                icon: 'checkCircle',
-                                label: 'Check-In Desk',
-                                onClick: () => navigate('/check-in-desk'),
-                                color: 'bg-green-600'
-                            },
-                            {
-                                icon: 'userPlus',
-                                label: 'Add Walk-In',
-                                onClick: () => navigate('/attendees/add'),
-                                color: 'bg-blue-600'
-                            },
-                            {
-                                icon: 'calendar',
-                                label: 'New Session',
-                                onClick: () => navigate('/sessions/new'),
-                                color: 'bg-purple-600'
-                            },
-                            {
-                                icon: 'store',
-                                label: 'Booth Stats',
-                                onClick: () => navigate('/booth-setup'),
-                                color: 'bg-pink-600'
-                            }
-                        ]}
-                    />
                 </div>
-                );
+            </div>
+
+            {/* Speed Dial for Quick Actions */}
+            <SpeedDialFAB
+                actions={[
+                    {
+                        icon: 'qrCode',
+                        label: 'Scan QR',
+                        onClick: () => navigate('/admin/scan'),
+                        color: 'bg-primary-600'
+                    },
+                    {
+                        icon: 'checkCircle',
+                        label: 'Check-In Desk',
+                        onClick: () => navigate('/check-in-desk'),
+                        color: 'bg-green-600'
+                    },
+                    {
+                        icon: 'userPlus',
+                        label: 'Add Walk-In',
+                        onClick: () => navigate('/attendees/add'),
+                        color: 'bg-blue-600'
+                    },
+                    {
+                        icon: 'calendar',
+                        label: 'New Session',
+                        onClick: () => navigate('/sessions/new'),
+                        color: 'bg-purple-600'
+                    },
+                    {
+                        icon: 'store',
+                        label: 'Booth Stats',
+                        onClick: () => navigate('/booth-setup'),
+                        color: 'bg-pink-600'
+                    }
+                ]}
+            />
+        </div>
+    );
 };
 
-                export default OrganizerMobileDashboard;
+export default OrganizerMobileDashboard;
+```
