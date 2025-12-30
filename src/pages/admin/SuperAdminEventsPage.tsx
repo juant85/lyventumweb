@@ -487,82 +487,98 @@ const SuperAdminEventsPage: React.FC = () => {
   );
 
   const editEventModalContent = editingEvent && (
-    <Modal isOpen={!!editingEvent} onClose={() => setEditingEvent(null)} title={t(localeKeys.modalEditTitle, { eventName: editingEvent?.name || '' })} size="lg">
-      <form onSubmit={handleUpdateEvent} className="space-y-4">
-        <Input label={t(localeKeys.headerEventName)} id="edit-event-name" value={editFormState.name} onChange={(e) => setEditFormState({ ...editFormState, name: e.target.value })} required disabled={isSubmitting} />
-        <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 font-montserrat">{t('eventLogo')}</label>
-          <Input type="file" ref={editEventLogoRef} onChange={(e) => { const f = e.target.files?.[0]; if (f) { setEditEventLogoFile(f); setEditEventLogoPreview(URL.createObjectURL(f)); } }} accept="image/*" disabled={isSubmitting} />
-          {editEventLogoPreview && <img src={editEventLogoPreview} alt="Logo Preview" className="mt-2 h-16 w-auto rounded-md bg-slate-100 dark:bg-slate-700 p-2 border" />}
+    <Modal
+      isOpen={!!editingEvent}
+      onClose={() => setEditingEvent(null)}
+      title={t(localeKeys.modalEditTitle, { eventName: editingEvent?.name || '' })}
+      size="lg"
+      footerContent={
+        <div className="flex justify-end gap-3 w-full">
+          <Button type="button" variant="neutral" onClick={() => setEditingEvent(null)} disabled={isSubmitting}>{t(localeKeys.cancel)}</Button>
+          <Button type="submit" variant="primary" form="edit-event-form" disabled={isSubmitting}>{isSubmitting ? t(localeKeys.saving) : t(localeKeys.saveChanges)}</Button>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="relative">
-            <DateTimePicker
-              label={t('startDate')}
-              value={editFormState.startDate ? new Date(editFormState.startDate) : null}
-              onChange={(date) => setEditFormState({ ...editFormState, startDate: date ? date.toISOString().split('T')[0] : '' })}
-              disabled={isSubmitting}
-              placeholderText="Select start date"
-              minDate={new Date()}
-            />
-            <button type="button" onClick={() => setEditFormState({ ...editFormState, startDate: new Date().toISOString().split('T')[0] })} className="absolute top-[34px] right-3 text-xs text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 font-medium bg-white dark:bg-slate-800 px-2 py-1 rounded">Today</button>
+      }
+    >
+      <form id="edit-event-form" onSubmit={handleUpdateEvent} className="flex flex-col h-full">
+        <div className="flex-1 overflow-y-auto max-h-[65vh] p-1 space-y-4">
+          <Input label={t(localeKeys.headerEventName)} id="edit-event-name" value={editFormState.name} onChange={(e) => setEditFormState({ ...editFormState, name: e.target.value })} required disabled={isSubmitting} />
+          <div>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 font-montserrat">{t('eventLogo')}</label>
+            <Input type="file" ref={editEventLogoRef} onChange={(e) => { const f = e.target.files?.[0]; if (f) { setEditEventLogoFile(f); setEditEventLogoPreview(URL.createObjectURL(f)); } }} accept="image/*" disabled={isSubmitting} />
+            {editEventLogoPreview && <img src={editEventLogoPreview} alt="Logo Preview" className="mt-2 h-16 w-auto rounded-md bg-slate-100 dark:bg-slate-700 p-2 border" />}
           </div>
-          <div className="relative">
-            <DateTimePicker
-              label={t('endDate')}
-              value={editFormState.endDate ? new Date(editFormState.endDate) : null}
-              onChange={(date) => setEditFormState({ ...editFormState, endDate: date ? date.toISOString().split('T')[0] : '' })}
-              disabled={isSubmitting}
-              placeholderText="Select end date"
-              minDate={editFormState.startDate ? new Date(editFormState.startDate) : new Date()}
-            />
-            <button type="button" onClick={() => setEditFormState({ ...editFormState, endDate: new Date().toISOString().split('T')[0] })} className="absolute top-[34px] right-3 text-xs text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 font-medium bg-white dark:bg-slate-800 px-2 py-1 rounded">Today</button>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="relative">
+              <DateTimePicker
+                label={t('startDate')}
+                value={editFormState.startDate ? new Date(editFormState.startDate) : null}
+                onChange={(date) => setEditFormState({ ...editFormState, startDate: date ? date.toISOString().split('T')[0] : '' })}
+                disabled={isSubmitting}
+                placeholderText="Select start date"
+                minDate={new Date()}
+              />
+              <button type="button" onClick={() => setEditFormState({ ...editFormState, startDate: new Date().toISOString().split('T')[0] })} className="absolute top-[34px] right-3 text-xs text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 font-medium bg-white dark:bg-slate-800 px-2 py-1 rounded">Today</button>
+            </div>
+            <div className="relative">
+              <DateTimePicker
+                label={t('endDate')}
+                value={editFormState.endDate ? new Date(editFormState.endDate) : null}
+                onChange={(date) => setEditFormState({ ...editFormState, endDate: date ? date.toISOString().split('T')[0] : '' })}
+                disabled={isSubmitting}
+                placeholderText="Select end date"
+                minDate={editFormState.startDate ? new Date(editFormState.startDate) : new Date()}
+              />
+              <button type="button" onClick={() => setEditFormState({ ...editFormState, endDate: new Date().toISOString().split('T')[0] })} className="absolute top-[34px] right-3 text-xs text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 font-medium bg-white dark:bg-slate-800 px-2 py-1 rounded">Today</button>
+            </div>
           </div>
-        </div>
-        <Input label={t(localeKeys.location)} id="edit-event-location" value={editFormState.location} onChange={(e) => setEditFormState({ ...editFormState, location: e.target.value })} disabled={isSubmitting} />
+          <Input label={t(localeKeys.location)} id="edit-event-location" value={editFormState.location} onChange={(e) => setEditFormState({ ...editFormState, location: e.target.value })} disabled={isSubmitting} />
 
-        <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 font-montserrat">Event Timezone</label>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 font-montserrat">Event Timezone</label>
+            <Select
+              value={editFormState.timezone}
+              onChange={(e) => setEditFormState({ ...editFormState, timezone: e.target.value })}
+              options={COMMON_TIMEZONES.map(tz => ({ value: tz.value, label: tz.label }))}
+              disabled={isSubmitting}
+            />
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              🌍 All times will be displayed in this timezone
+            </p>
+          </div>
+
           <Select
-            value={editFormState.timezone}
-            onChange={(e) => setEditFormState({ ...editFormState, timezone: e.target.value })}
-            options={COMMON_TIMEZONES.map(tz => ({ value: tz.value, label: tz.label }))}
+            label={t(localeKeys.subscriptionPlan)}
+            id="event-plan"
+            value={editFormState.planId}
+            onChange={(e) => setEditFormState({ ...editFormState, planId: e.target.value })}
+            options={[{ value: '', label: 'No Plan' }, ...planOptions]}
             disabled={isSubmitting}
           />
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            🌍 All times will be displayed in this timezone
-          </p>
-        </div>
-
-        <Select
-          label={t(localeKeys.subscriptionPlan)}
-          id="event-plan"
-          value={editFormState.planId}
-          onChange={(e) => setEditFormState({ ...editFormState, planId: e.target.value })}
-          options={[{ value: '', label: 'No Plan' }, ...planOptions]}
-          disabled={isSubmitting}
-        />
-        <div className="flex justify-end gap-3 pt-4">
-          <Button type="button" variant="neutral" onClick={() => setEditingEvent(null)} disabled={isSubmitting}>{t(localeKeys.cancel)}</Button>
-          <Button type="submit" variant="primary" disabled={isSubmitting}>{isSubmitting ? t(localeKeys.saving) : t(localeKeys.saveChanges)}</Button>
         </div>
       </form>
     </Modal>
   );
 
   const deleteEventModalContent = deletingEvent && (
-    <Modal isOpen={!!deletingEvent} onClose={() => setDeletingEvent(null)} title={t(localeKeys.modalDeleteTitle, { eventName: deletingEvent?.name || '' })} size="lg">
-      <div className="space-y-4">
-        <Alert type="error" message={<strong>{t('permanentActionWarning')}</strong>} />
-        <p className="font-sans text-sm text-gray-700 dark:text-slate-200" dangerouslySetInnerHTML={{ __html: t('deleteConfirmationPrompt', { eventName: deletingEvent.name }) }} />
-        <p className="font-sans text-sm mt-4" dangerouslySetInnerHTML={{ __html: t('typeToDelete') }} />
-        <Input id="delete-confirm" value={deleteConfirmText} onChange={(e) => setDeleteConfirmText(e.target.value)} placeholder="delete" disabled={isSubmitting} autoFocus />
-        <div className="flex justify-end gap-3 pt-4">
+    <Modal
+      isOpen={!!deletingEvent}
+      onClose={() => setDeletingEvent(null)}
+      title={t(localeKeys.modalDeleteTitle, { eventName: deletingEvent?.name || '' })}
+      size="lg"
+      footerContent={
+        <div className="flex justify-end gap-3 w-full">
           <Button type="button" variant="neutral" onClick={() => setDeletingEvent(null)} disabled={isSubmitting}>{t(localeKeys.cancel)}</Button>
           <Button type="button" variant="accent" onClick={handleDeleteEvent} disabled={isSubmitting || deleteConfirmText.trim().toLowerCase() !== 'delete'}>
             {isSubmitting ? t(localeKeys.deleting) : t(localeKeys.deleteButton)}
           </Button>
         </div>
+      }
+    >
+      <div className="space-y-4">
+        <Alert type="error" message={<strong>{t('permanentActionWarning')}</strong>} />
+        <p className="font-sans text-sm text-gray-700 dark:text-slate-200" dangerouslySetInnerHTML={{ __html: t('deleteConfirmationPrompt', { eventName: deletingEvent.name }) }} />
+        <p className="font-sans text-sm mt-4" dangerouslySetInnerHTML={{ __html: t('typeToDelete') }} />
+        <Input id="delete-confirm" value={deleteConfirmText} onChange={(e) => setDeleteConfirmText(e.target.value)} placeholder="delete" disabled={isSubmitting} autoFocus />
       </div>
     </Modal>
   );
@@ -573,6 +589,14 @@ const SuperAdminEventsPage: React.FC = () => {
       onClose={() => setConfirmingToggle(null)}
       title={confirmingToggle?.currentValue ? 'Deactivate Event?' : 'Activate Event?'}
       size="md"
+      footerContent={
+        <div className="flex justify-end gap-3 w-full">
+          <Button variant="neutral" onClick={() => setConfirmingToggle(null)}>Cancel</Button>
+          <Button variant={confirmingToggle.currentValue ? 'accent' : 'primary'} onClick={confirmToggleActive}>
+            {confirmingToggle.currentValue ? 'Deactivate' : 'Activate'}
+          </Button>
+        </div>
+      }
     >
       <div className="space-y-4">
         <p className="text-slate-700 dark:text-slate-200">
@@ -598,12 +622,6 @@ const SuperAdminEventsPage: React.FC = () => {
             </>
           )}
         </p>
-        <div className="flex justify-end gap-3 pt-4">
-          <Button variant="neutral" onClick={() => setConfirmingToggle(null)}>Cancel</Button>
-          <Button variant={confirmingToggle.currentValue ? 'accent' : 'primary'} onClick={confirmToggleActive}>
-            {confirmingToggle.currentValue ? 'Deactivate' : 'Activate'}
-          </Button>
-        </div>
       </div>
     </Modal>
   );
