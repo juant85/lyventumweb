@@ -419,9 +419,7 @@ const SuperAdminEventsPage: React.FC = () => {
     </th>
   );
 
-  // Shared modal definition (used by both mobile and desktop)
-  // Shared modal definition (used by both mobile and desktop)
-  // Shared modal definition (used by both mobile and desktop)
+  // Shared modal definitions (used by both mobile and desktop)
   const createEventModalContent = isCreateModalOpen && (
     <Modal
       isOpen={true}
@@ -440,7 +438,6 @@ const SuperAdminEventsPage: React.FC = () => {
       <form id="create-event-form" onSubmit={handleCreateEvent} className="space-y-4">
         <Input label={t(localeKeys.headerEventName)} value={newEventName} onChange={(e) => setNewEventName(e.target.value)} required disabled={isSubmitting} />
 
-        {/* Event Type & Timezone - Simplified for mobile */}
         {!isMobile && (
           <>
             <div>
@@ -457,23 +454,18 @@ const SuperAdminEventsPage: React.FC = () => {
                 disabled={isSubmitting}
               />
             </div>
-
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 font-montserrat">Event Timezone</label>
               <Select
                 value={newEventTimezone}
                 onChange={(e) => setNewEventTimezone(e.target.value)}
-                options={COMMON_TIMEZONES.map(tz => ({
-                  value: tz.value,
-                  label: tz.label
-                }))}
+                options={COMMON_TIMEZONES.map(tz => ({ value: tz.value, label: tz.label }))}
                 disabled={isSubmitting}
               />
             </div>
           </>
         )}
 
-        {/* Company Selection */}
         <div>
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 font-montserrat">{t(localeKeys.headerCompany)}</label>
           <div className="flex items-center gap-4">
@@ -483,7 +475,6 @@ const SuperAdminEventsPage: React.FC = () => {
         </div>
         {createMode === 'existing' && <Select label={t('selectCompany')} value={selectedCompanyId} onChange={(e) => setSelectedCompanyId(e.target.value)} options={companyOptions} disabled={isSubmitting || companies.length === 0} />}
 
-        {/* Plan Selection */}
         <Select
           label={t(localeKeys.subscriptionPlan)}
           value={newPlanId}
@@ -492,6 +483,128 @@ const SuperAdminEventsPage: React.FC = () => {
           disabled={isSubmitting}
         />
       </form>
+    </Modal>
+  );
+
+  const editEventModalContent = editingEvent && (
+    <Modal isOpen={!!editingEvent} onClose={() => setEditingEvent(null)} title={t(localeKeys.modalEditTitle, { eventName: editingEvent?.name || '' })} size="lg">
+      <form onSubmit={handleUpdateEvent} className="space-y-4">
+        <Input label={t(localeKeys.headerEventName)} id="edit-event-name" value={editFormState.name} onChange={(e) => setEditFormState({ ...editFormState, name: e.target.value })} required disabled={isSubmitting} />
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 font-montserrat">{t('eventLogo')}</label>
+          <Input type="file" ref={editEventLogoRef} onChange={(e) => { const f = e.target.files?.[0]; if (f) { setEditEventLogoFile(f); setEditEventLogoPreview(URL.createObjectURL(f)); } }} accept="image/*" disabled={isSubmitting} />
+          {editEventLogoPreview && <img src={editEventLogoPreview} alt="Logo Preview" className="mt-2 h-16 w-auto rounded-md bg-slate-100 dark:bg-slate-700 p-2 border" />}
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="relative">
+            <DateTimePicker
+              label={t('startDate')}
+              value={editFormState.startDate ? new Date(editFormState.startDate) : null}
+              onChange={(date) => setEditFormState({ ...editFormState, startDate: date ? date.toISOString().split('T')[0] : '' })}
+              disabled={isSubmitting}
+              placeholderText="Select start date"
+              minDate={new Date()}
+            />
+            <button type="button" onClick={() => setEditFormState({ ...editFormState, startDate: new Date().toISOString().split('T')[0] })} className="absolute top-[34px] right-3 text-xs text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 font-medium bg-white dark:bg-slate-800 px-2 py-1 rounded">Today</button>
+          </div>
+          <div className="relative">
+            <DateTimePicker
+              label={t('endDate')}
+              value={editFormState.endDate ? new Date(editFormState.endDate) : null}
+              onChange={(date) => setEditFormState({ ...editFormState, endDate: date ? date.toISOString().split('T')[0] : '' })}
+              disabled={isSubmitting}
+              placeholderText="Select end date"
+              minDate={editFormState.startDate ? new Date(editFormState.startDate) : new Date()}
+            />
+            <button type="button" onClick={() => setEditFormState({ ...editFormState, endDate: new Date().toISOString().split('T')[0] })} className="absolute top-[34px] right-3 text-xs text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 font-medium bg-white dark:bg-slate-800 px-2 py-1 rounded">Today</button>
+          </div>
+        </div>
+        <Input label={t(localeKeys.location)} id="edit-event-location" value={editFormState.location} onChange={(e) => setEditFormState({ ...editFormState, location: e.target.value })} disabled={isSubmitting} />
+
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 font-montserrat">Event Timezone</label>
+          <Select
+            value={editFormState.timezone}
+            onChange={(e) => setEditFormState({ ...editFormState, timezone: e.target.value })}
+            options={COMMON_TIMEZONES.map(tz => ({ value: tz.value, label: tz.label }))}
+            disabled={isSubmitting}
+          />
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            🌍 All times will be displayed in this timezone
+          </p>
+        </div>
+
+        <Select
+          label={t(localeKeys.subscriptionPlan)}
+          id="event-plan"
+          value={editFormState.planId}
+          onChange={(e) => setEditFormState({ ...editFormState, planId: e.target.value })}
+          options={[{ value: '', label: 'No Plan' }, ...planOptions]}
+          disabled={isSubmitting}
+        />
+        <div className="flex justify-end gap-3 pt-4">
+          <Button type="button" variant="neutral" onClick={() => setEditingEvent(null)} disabled={isSubmitting}>{t(localeKeys.cancel)}</Button>
+          <Button type="submit" variant="primary" disabled={isSubmitting}>{isSubmitting ? t(localeKeys.saving) : t(localeKeys.saveChanges)}</Button>
+        </div>
+      </form>
+    </Modal>
+  );
+
+  const deleteEventModalContent = deletingEvent && (
+    <Modal isOpen={!!deletingEvent} onClose={() => setDeletingEvent(null)} title={t(localeKeys.modalDeleteTitle, { eventName: deletingEvent?.name || '' })} size="lg">
+      <div className="space-y-4">
+        <Alert type="error" message={<strong>{t('permanentActionWarning')}</strong>} />
+        <p className="font-sans text-sm text-gray-700 dark:text-slate-200" dangerouslySetInnerHTML={{ __html: t('deleteConfirmationPrompt', { eventName: deletingEvent.name }) }} />
+        <p className="font-sans text-sm mt-4" dangerouslySetInnerHTML={{ __html: t('typeToDelete') }} />
+        <Input id="delete-confirm" value={deleteConfirmText} onChange={(e) => setDeleteConfirmText(e.target.value)} placeholder="delete" disabled={isSubmitting} autoFocus />
+        <div className="flex justify-end gap-3 pt-4">
+          <Button type="button" variant="neutral" onClick={() => setDeletingEvent(null)} disabled={isSubmitting}>{t(localeKeys.cancel)}</Button>
+          <Button type="button" variant="accent" onClick={handleDeleteEvent} disabled={isSubmitting || deleteConfirmText.trim().toLowerCase() !== 'delete'}>
+            {isSubmitting ? t(localeKeys.deleting) : t(localeKeys.deleteButton)}
+          </Button>
+        </div>
+      </div>
+    </Modal>
+  );
+
+  const toggleEventModalContent = confirmingToggle && (
+    <Modal
+      isOpen={!!confirmingToggle}
+      onClose={() => setConfirmingToggle(null)}
+      title={confirmingToggle?.currentValue ? 'Deactivate Event?' : 'Activate Event?'}
+      size="md"
+    >
+      <div className="space-y-4">
+        <p className="text-slate-700 dark:text-slate-200">
+          {confirmingToggle.currentValue ? (
+            <>
+              <strong>Deactivating this event will:</strong>
+              <ul className="list-disc list-inside mt-2 space-y-1 text-sm">
+                <li>Hide it from the Client Portal</li>
+                <li>Prevent attendee and booth logins</li>
+                <li>Disable real-time features</li>
+                <li className="text-green-600 dark:text-green-400">✓ Historical data will be preserved</li>
+              </ul>
+            </>
+          ) : (
+            <>
+              <strong>Activating this event will:</strong>
+              <ul className="list-disc list-inside mt-2 space-y-1 text-sm">
+                <li>Make it visible in the Client Portal</li>
+                <li>Enable attendee and booth logins</li>
+                <li>Activate all plan features</li>
+                <li>Start real-time tracking</li>
+              </ul>
+            </>
+          )}
+        </p>
+        <div className="flex justify-end gap-3 pt-4">
+          <Button variant="neutral" onClick={() => setConfirmingToggle(null)}>Cancel</Button>
+          <Button variant={confirmingToggle.currentValue ? 'accent' : 'primary'} onClick={confirmToggleActive}>
+            {confirmingToggle.currentValue ? 'Deactivate' : 'Activate'}
+          </Button>
+        </div>
+      </div>
     </Modal>
   );
 
@@ -606,7 +719,11 @@ const SuperAdminEventsPage: React.FC = () => {
         />
 
         {/* Modals */}
+        {/* Modals */}
         {createEventModalContent}
+        {editEventModalContent}
+        {deleteEventModalContent}
+        {toggleEventModalContent}
       </div>
     );
   }
@@ -614,257 +731,11 @@ const SuperAdminEventsPage: React.FC = () => {
   // DESKTOP VIEW - Original render
   return (
     <>
-      <Modal isOpen={isCreateModalOpen} onClose={resetCreateForm} title={t(localeKeys.modalCreateTitle)} size="xl">
-        <form onSubmit={handleCreateEvent} className="space-y-4">
-          <Input label={t(localeKeys.headerEventName)} value={newEventName} onChange={(e) => setNewEventName(e.target.value)} required disabled={isSubmitting} />
-
-          {/* NEW: Event Type Selector */}
-          <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 font-montserrat">Event Type</label>
-            <Select
-              value={newEventType}
-              onChange={(e) => setNewEventType(e.target.value as EventType)}
-              options={[
-                { value: 'vendor_meetings', label: '🤝 Vendor Meetings (B2B Matchmaking)' },
-                { value: 'conference', label: '🎤 Conference (Talks & Presentations)' },
-                { value: 'trade_show', label: '🏢 Trade Show (Open Lead Capture)' },
-                { value: 'hybrid', label: '🔄 Hybrid (All Features)' }
-              ]}
-              disabled={isSubmitting}
-            />
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              💡 Determines available features and workflows for this event
-            </p>
-          </div>
-
-          {/* NEW: Timezone Selector */}
-          <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 font-montserrat">Event Timezone</label>
-            <Select
-              value={newEventTimezone}
-              onChange={(e) => setNewEventTimezone(e.target.value)}
-              options={COMMON_TIMEZONES.map(tz => ({
-                value: tz.value,
-                label: tz.label
-              }))}
-              disabled={isSubmitting}
-            />
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              🌍 All times will be displayed in this timezone
-            </p>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 font-montserrat">{t(localeKeys.headerCompany)}</label>
-            <div className="flex items-center gap-4">
-              <label className="flex items-center"><input type="radio" name="createMode" value="existing" checked={createMode === 'existing'} onChange={() => setCreateMode('existing')} className="h-4 w-4 text-primary-600 focus:ring-primary-500" /> <span className="ml-2">Existing</span></label>
-              <label className="flex items-center"><input type="radio" name="createMode" value="new" checked={createMode === 'new'} onChange={() => setCreateMode('new')} className="h-4 w-4 text-primary-600 focus:ring-primary-500" /> <span className="ml-2">New</span></label>
-            </div>
-          </div>
-          {createMode === 'existing' && <Select label={t('selectCompany')} value={selectedCompanyId} onChange={(e) => setSelectedCompanyId(e.target.value)} options={companyOptions} disabled={isSubmitting || companies.length === 0} />}
-          {createMode === 'new' && (
-            <div className="p-4 border border-slate-200 dark:border-slate-700 rounded-lg space-y-4 bg-slate-50 dark:bg-slate-800/50">
-              <Input label={t('newCompanyName')} value={newCompanyName} onChange={(e) => setNewCompanyName(e.target.value)} required disabled={isSubmitting} />
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 font-montserrat">{t('companyLogo')}</label>
-                <Input
-                  type="file"
-                  ref={companyLogoRef}
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setNewCompanyLogoFile(file);
-                      setNewCompanyLogoPreview(URL.createObjectURL(file));
-                    }
-                  }}
-                  accept="image/*"
-                  disabled={isSubmitting}
-                />
-                {newCompanyLogoPreview && <img src={newCompanyLogoPreview} alt="Logo Preview" className="mt-2 h-16 w-auto rounded-md bg-slate-100 p-2 border" />}
-              </div>
-              <Card title={t('companyContacts')} bodyClassName="!p-0">
-                <div className="space-y-3 p-3 max-h-60 overflow-y-auto">
-                  {newCompanyContacts.map(contact => (
-                    <div key={contact.tempId} className="p-3 border rounded-md bg-white dark:bg-slate-700 relative">
-                      <div className="absolute top-2 right-2 flex items-center gap-2">
-                        <label className="flex items-center text-xs cursor-pointer"><input type="radio" name="is_primary" checked={contact.is_primary} onChange={() => setPrimaryContact(contact.tempId)} className="h-4 w-4" /> <StarIcon className={`w-3 h-3 ml-1 ${contact.is_primary ? 'text-amber-500' : 'text-slate-400'}`} /><span className="ml-1">Primary</span></label>
-                        <Button type="button" size="sm" variant="link" className="p-1 text-accent-500" onClick={() => removeContact(contact.tempId)}><TrashIcon className="w-4 h-4" /></Button>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2 mt-6">
-                        <Input wrapperClassName="!mb-0" label={t('contactName')} value={contact.name || ''} onChange={e => handleContactChange(contact.tempId, 'name', e.target.value)} required />
-                        <Input wrapperClassName="!mb-0" label={t('contactPosition')} value={contact.position || ''} onChange={e => handleContactChange(contact.tempId, 'position', e.target.value)} />
-                        <Input wrapperClassName="!mb-0" label={t('emailLabel')} type="email" value={contact.email || ''} onChange={e => handleContactChange(contact.tempId, 'email', e.target.value)} />
-                        <Input wrapperClassName="!mb-0" label={t('contactPhone')} value={contact.phone || ''} onChange={e => handleContactChange(contact.tempId, 'phone', e.target.value)} />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="p-2 border-t"><Button type="button" size="sm" variant="neutral" onClick={addContact} leftIcon={<PlusCircleIcon className="w-4 h-4" />}>{t('addContact')}</Button></div>
-              </Card>
-            </div>
-          )}
-
-          {/* Visual Plan Selection */}
-          <div className="space-y-3">
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 font-montserrat">
-              {t(localeKeys.subscriptionPlan)}
-            </label>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
-              💡 Select the plan that best fits your event needs. This determines which features will be available.
-            </p>
-
-            <div className="flex justify-end mb-3">
-              <button
-                type="button"
-                onClick={() => setShowPlanComparison(true)}
-                className="text-sm text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-semibold underline transition-colors"
-              >
-                📊 Compare All Plans
-              </button>
-            </div>
-
-            <PlanSelector
-              selectedPlanId={newPlanId}
-              onPlanSelect={(planId) => setNewPlanId(planId)}
-              className="fade-in"
-            />
-          </div>
-
-          <div className="flex justify-end gap-3 pt-4"><Button type="button" variant="neutral" onClick={resetCreateForm}>{t('cancel')}</Button><Button type="submit" variant="primary" disabled={isSubmitting}>{isSubmitting ? t(localeKeys.adding) : t(localeKeys.createSession)}</Button></div>
-        </form>
-      </Modal>
-
-      <Modal isOpen={!!editingEvent} onClose={() => setEditingEvent(null)} title={t(localeKeys.modalEditTitle, { eventName: editingEvent?.name || '' })} size="lg">
-        {editingEvent && (
-          <form onSubmit={handleUpdateEvent} className="space-y-4">
-            <Input label={t(localeKeys.headerEventName)} id="edit-event-name" value={editFormState.name} onChange={(e) => setEditFormState({ ...editFormState, name: e.target.value })} required disabled={isSubmitting} />
-            <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 font-montserrat">{t('eventLogo')}</label>
-              <Input type="file" ref={editEventLogoRef} onChange={(e) => { const f = e.target.files?.[0]; if (f) { setEditEventLogoFile(f); setEditEventLogoPreview(URL.createObjectURL(f)); } }} accept="image/*" disabled={isSubmitting} />
-              {editEventLogoPreview && <img src={editEventLogoPreview} alt="Logo Preview" className="mt-2 h-16 w-auto rounded-md bg-slate-100 dark:bg-slate-700 p-2 border" />}
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="relative">
-                <DateTimePicker
-                  label={t('startDate')}
-                  value={editFormState.startDate ? new Date(editFormState.startDate) : null}
-                  onChange={(date) => setEditFormState({ ...editFormState, startDate: date ? date.toISOString().split('T')[0] : '' })}
-                  disabled={isSubmitting}
-                  placeholderText="Select start date"
-                  minDate={new Date()}
-                />
-                <button type="button" onClick={() => setEditFormState({ ...editFormState, startDate: new Date().toISOString().split('T')[0] })} className="absolute top-[34px] right-3 text-xs text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 font-medium bg-white dark:bg-slate-800 px-2 py-1 rounded">Today</button>
-              </div>
-              <div className="relative">
-                <DateTimePicker
-                  label={t('endDate')}
-                  value={editFormState.endDate ? new Date(editFormState.endDate) : null}
-                  onChange={(date) => setEditFormState({ ...editFormState, endDate: date ? date.toISOString().split('T')[0] : '' })}
-                  disabled={isSubmitting}
-                  placeholderText="Select end date"
-                  minDate={editFormState.startDate ? new Date(editFormState.startDate) : new Date()}
-                />
-                <button type="button" onClick={() => setEditFormState({ ...editFormState, endDate: new Date().toISOString().split('T')[0] })} className="absolute top-[34px] right-3 text-xs text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 font-medium bg-white dark:bg-slate-800 px-2 py-1 rounded">Today</button>
-              </div>
-            </div>
-            <Input label={t(localeKeys.location)} id="edit-event-location" value={editFormState.location} onChange={(e) => setEditFormState({ ...editFormState, location: e.target.value })} disabled={isSubmitting} />
-
-            {/* NEW: Timezone Selector */}
-            <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 font-montserrat">Event Timezone</label>
-              <Select
-                value={editFormState.timezone}
-                onChange={(e) => setEditFormState({ ...editFormState, timezone: e.target.value })}
-                options={COMMON_TIMEZONES.map(tz => ({
-                  value: tz.value,
-                  label: tz.label
-                }))}
-                disabled={isSubmitting}
-              />
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                🌍 All times will be displayed in this timezone
-              </p>
-            </div>
-
-            <Select
-              label={t(localeKeys.subscriptionPlan)}
-              id="event-plan"
-              value={editFormState.planId}
-              onChange={(e) => setEditFormState({ ...editFormState, planId: e.target.value })}
-              options={[{ value: '', label: 'No Plan' }, ...planOptions]}
-              disabled={isSubmitting}
-            />
-            <div className="flex justify-end gap-3 pt-4">\n              <Button type="button" variant="neutral" onClick={() => setEditingEvent(null)} disabled={isSubmitting}>{t(localeKeys.cancel)}</Button>
-
-              <Button type="submit" variant="primary" disabled={isSubmitting}>{isSubmitting ? t(localeKeys.saving) : t(localeKeys.saveChanges)}</Button>
-            </div>
-          </form>
-        )}
-      </Modal>
-
-      <Modal isOpen={!!deletingEvent} onClose={() => setDeletingEvent(null)} title={t(localeKeys.modalDeleteTitle, { eventName: deletingEvent?.name || '' })} size="lg">
-        {deletingEvent && (
-          <div className="space-y-4">
-            <Alert type="error" message={<strong>{t('permanentActionWarning')}</strong>} />
-            <p className="font-sans text-sm text-gray-700 dark:text-slate-200" dangerouslySetInnerHTML={{ __html: t('deleteConfirmationPrompt', { eventName: deletingEvent.name }) }} />
-            <p className="font-sans text-sm mt-4" dangerouslySetInnerHTML={{ __html: t('typeToDelete') }} />
-            <Input id="delete-confirm" value={deleteConfirmText} onChange={(e) => setDeleteConfirmText(e.target.value)} placeholder="delete" disabled={isSubmitting} autoFocus />
-            <div className="flex justify-end gap-3 pt-4">
-              <Button type="button" variant="neutral" onClick={() => setDeletingEvent(null)} disabled={isSubmitting}>{t(localeKeys.cancel)}</Button>
-              <Button type="button" variant="accent" onClick={handleDeleteEvent} disabled={isSubmitting || deleteConfirmText.trim().toLowerCase() !== 'delete'}>
-                {isSubmitting ? t(localeKeys.deleting) : t(localeKeys.deleteButton)}
-              </Button>
-            </div>
-          </div>
-        )}
-      </Modal>
-
-      {/* Confirmation Modal for Activating/Deactivating Event */}
-      <Modal
-        isOpen={!!confirmingToggle}
-        onClose={() => setConfirmingToggle(null)}
-        title={confirmingToggle?.currentValue ? 'Deactivate Event?' : 'Activate Event?'}
-        size="md"
-      >
-        {confirmingToggle && (
-          <div className="space-y-4">
-            <p className="text-slate-700 dark:text-slate-200">
-              {confirmingToggle.currentValue ? (
-                <>
-                  <strong>Deactivating this event will:</strong>
-                  <ul className="list-disc list-inside mt-2 space-y-1 text-sm">
-                    <li>Hide it from the Client Portal</li>
-                    <li>Prevent attendee and booth logins</li>
-                    <li>Disable real-time features</li>
-                    <li className="text-green-600 dark:text-green-400">✓ Historical data will be preserved</li>
-                  </ul>
-                </>
-              ) : (
-                <>
-                  <strong>Activating this event will:</strong>
-                  <ul className="list-disc list-inside mt-2 space-y-1 text-sm">
-                    <li>Make it visible in the Client Portal</li>
-                    <li>Enable attendee and booth logins</li>
-                    <li>Activate all plan features</li>
-                    <li>Start real-time tracking</li>
-                  </ul>
-                </>
-              )}
-            </p>
-            <div className="flex justify-end gap-3 pt-4">
-              <Button variant="neutral" onClick={() => setConfirmingToggle(null)}>
-                Cancel
-              </Button>
-              <Button
-                variant={confirmingToggle.currentValue ? 'accent' : 'primary'}
-                onClick={confirmToggleActive}
-              >
-                {confirmingToggle.currentValue ? 'Deactivate' : 'Activate'}
-              </Button>
-            </div>
-          </div>
-        )}
-      </Modal>
+      {/* Shared Modals */}
+      {createEventModalContent}
+      {editEventModalContent}
+      {deleteEventModalContent}
+      {toggleEventModalContent}
 
       {/* Plan Comparison Modal */}
       <PlanComparisonModal
