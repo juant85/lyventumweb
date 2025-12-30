@@ -103,25 +103,25 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
                 active={isActive(AppRoute.RealTimeAnalytics)}
             />
 
-            {/* Scan Action - Center FAB */}
-            <button
-                onClick={onScanClick}
-                className="relative -top-6 bg-gradient-to-r from-primary-600 to-primary-500 dark:from-primary-500 dark:to-primary-600 text-white rounded-full p-4 shadow-xl hover:shadow-2xl transition-all duration-200 active:scale-95 border-4 border-white dark:border-slate-900"
-                aria-label="Scan QR code"
+            {/* QR Scanner FAB - Center */}
+            <motion.button
+                whileTap={{ scale: 0.9 }}
+                onClick={() => navigate(AppRoute.QRScanner)}
+                className="absolute -top-8 left-1/2 -translate-x-1/2 w-16 h-16 bg-gradient-to-br from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white rounded-full shadow-2xl flex items-center justify-center focus:outline-none focus:ring-4 focus:ring-primary-500/50 transition-all"
+                aria-label="QR Scanner"
             >
-                <Icon name="qrCode" className="w-7 h-7" />
-
+                <Icon name="scan" className="w-7 h-7" />
                 {/* Scan Badge */}
                 {pendingScans > 0 && (
                     <motion.span
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        className="absolute -top-1 -right-1 bg-yellow-500 text-white text-xs font-bold rounded-full min-w-[20px] h-[20px] flex items-center justify-center px-1.5"
+                        className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1.5"
                     >
-                        {pendingScans}
+                        {pendingScans > 99 ? '99+' : pendingScans}
                     </motion.span>
                 )}
-            </button>
+            </motion.button>
 
             {/* Attendees */}
             <NavButton

@@ -95,6 +95,7 @@ const SpeedDialFAB: React.FC<SpeedDialFABProps> = ({ actions }) => {
                 <motion.div
                     animate={{ rotate: isOpen ? 45 : 0 }}
                     transition={{ type: 'spring', stiffness: 200 }}
+                    className="flex items-center justify-center"
                 >
                     <Icon name="plus" className="w-6 h-6" />
                 </motion.div>

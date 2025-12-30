@@ -5,7 +5,7 @@ import { useSelectedEvent } from '../../../contexts/SelectedEventContext';
 import { MobileCard, SpeedDialFAB } from '../index';
 import SwipeableCarousel from '../../ui/SwipeableCarousel';
 import QuickStatCard from '../../dashboard/QuickStatCard';
-import { Calendar, Users, Store, BarChart3, CheckCircle, RefreshCw } from 'lucide-react';
+import { Calendar, Users, Store, BarChart3, CheckCircle, RefreshCw, Activity, FileText } from 'lucide-react';
 import { AppRoute } from '../../../types';
 import { useBoothCapacity } from '../../../hooks/useBoothCapacity';
 import { useAutoRefresh } from '../../../hooks/useAutoRefresh';
@@ -240,45 +240,113 @@ const EventManagementDashboard: React.FC = () => {
                 </SwipeableCarousel>
             </div>
 
-            {/* Quick Actions */}
+            {/* Quick Actions - Modern Premium Design */}
             <div className="px-4">
-                <h2 className="text-lg font-bold mb-3 text-slate-900 dark:text-white">Quick Actions</h2>
-                <div className="grid grid-cols-2 gap-3">
-                    <MobileCard
-                        title="Sessions"
-                        subtitle={`${eventStats.sessions} configured`}
-                        icon={<Calendar className="w-5 h-5 text-blue-600 dark:text-blue-400" />}
+                <h2 className="text-lg font-bold mb-4 text-slate-900 dark:text-white">Quick Actions</h2>
+                <div className="grid grid-cols-2 gap-4">
+                    {/* Sessions */}
+                    <motion.div
+                        whileHover={{ y: -2 }}
+                        whileTap={{ scale: 0.98 }}
                         onClick={() => navigate(AppRoute.SessionSettings)}
-                        className="hover:shadow-lg transition-shadow"
-                    />
-                    <MobileCard
-                        title="Booths Setup"
-                        subtitle={`${eventStats.booths} configured`}
-                        icon={<Store className="w-5 h-5 text-purple-600 dark:text-purple-400" />}
+                        className="relative group cursor-pointer"
+                    >
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl opacity-0 group-hover:opacity-30 blur transition-opacity" />
+                        <div className="relative bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-md hover:shadow-xl transition-all border border-slate-200 dark:border-slate-700">
+                            <div className="w-12 h-12 mb-3 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg">
+                                <Calendar className="w-6 h-6 text-white" />
+                            </div>
+                            <h3 className="font-bold text-sm text-slate-900 dark:text-white mb-1">Sessions</h3>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">{eventStats.sessions} configured</p>
+                        </div>
+                    </motion.div>
+
+                    {/* Booths Setup */}
+                    <motion.div
+                        whileHover={{ y: -2 }}
+                        whileTap={{ scale: 0.98 }}
                         onClick={() => navigate(AppRoute.BoothSetup)}
-                        className="hover:shadow-lg transition-shadow"
-                    />
-                    <MobileCard
-                        title="Check-In"
-                        subtitle="Scan attendees"
-                        icon={<CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />}
+                        className="relative group cursor-pointer"
+                    >
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl opacity-0 group-hover:opacity-30 blur transition-opacity" />
+                        <div className="relative bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-md hover:shadow-xl transition-all border border-slate-200 dark:border-slate-700">
+                            <div className="w-12 h-12 mb-3 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg">
+                                <Store className="w-6 h-6 text-white" />
+                            </div>
+                            <h3 className="font-bold text-sm text-slate-900 dark:text-white mb-1">Booths Setup</h3>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">{eventStats.booths} configured</p>
+                        </div>
+                    </motion.div>
+
+                    {/* Check-In */}
+                    <motion.div
+                        whileHover={{ y: -2 }}
+                        whileTap={{ scale: 0.98 }}
                         onClick={() => navigate(AppRoute.CheckInDesk)}
-                        className="hover:shadow-lg transition-shadow"
-                    />
-                    <MobileCard
-                        title="Attendees"
-                        subtitle={`${eventStats.attendees} registered`}
-                        icon={<Users className="w-5 h-5 text-amber-600 dark:text-amber-400" />}
+                        className="relative group cursor-pointer"
+                    >
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl opacity-0 group-hover:opacity-30 blur transition-opacity" />
+                        <div className="relative bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-md hover:shadow-xl transition-all border border-slate-200 dark:border-slate-700">
+                            <div className="w-12 h-12 mb-3 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
+                                <CheckCircle className="w-6 h-6 text-white" />
+                            </div>
+                            <h3 className="font-bold text-sm text-slate-900 dark:text-white mb-1">Check-In</h3>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">Scan attendees</p>
+                        </div>
+                    </motion.div>
+
+                    {/* Attendees */}
+                    <motion.div
+                        whileHover={{ y: -2 }}
+                        whileTap={{ scale: 0.98 }}
                         onClick={() => navigate(AppRoute.AttendeeProfiles)}
-                        className="hover:shadow-lg transition-shadow"
-                    />
-                    <MobileCard
-                        title="Analytics"
-                        subtitle="Real-time data"
-                        icon={<BarChart3 className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />}
+                        className="relative group cursor-pointer"
+                    >
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl opacity-0 group-hover:opacity-30 blur transition-opacity" />
+                        <div className="relative bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-md hover:shadow-xl transition-all border border-slate-200 dark:border-slate-700">
+                            <div className="w-12 h-12 mb-3 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg">
+                                <Users className="w-6 h-6 text-white" />
+                            </div>
+                            <h3 className="font-bold text-sm text-slate-900 dark:text-white mb-1">Attendees</h3>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">{eventStats.attendees} registered</p>
+                        </div>
+                    </motion.div>
+
+                    {/* Live Monitor */}
+                    <motion.div
+                        whileHover={{ y: -2 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => navigate(AppRoute.RealTimeAnalytics)}
+                        className="relative group cursor-pointer"
+                    >
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-2xl opacity-0 group-hover:opacity-30 blur transition-opacity" />
+                        <div className="relative bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-md hover:shadow-xl transition-all border border-slate-200 dark:border-slate-700">
+                            <div className="w-12 h-12 mb-3 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center shadow-lg">
+                                <Activity className="w-6 h-6 text-white" />
+                            </div>
+                            <h3 className="font-bold text-sm text-slate-900 dark:text-white mb-1">Live Monitor</h3>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">
+                                {liveSession ? 'Real-time data' : 'No live session'}
+                            </p>
+                        </div>
+                    </motion.div>
+
+                    {/* Session Reports */}
+                    <motion.div
+                        whileHover={{ y: -2 }}
+                        whileTap={{ scale: 0.98 }}
                         onClick={() => navigate(AppRoute.DataVisualization)}
-                        className="hover:shadow-lg transition-shadow"
-                    />
+                        className="relative group cursor-pointer"
+                    >
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-violet-500 rounded-2xl opacity-0 group-hover:opacity-30 blur transition-opacity" />
+                        <div className="relative bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-md hover:shadow-xl transition-all border border-slate-200 dark:border-slate-700">
+                            <div className="w-12 h-12 mb-3 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg">
+                                <FileText className="w-6 h-6 text-white" />
+                            </div>
+                            <h3 className="font-bold text-sm text-slate-900 dark:text-white mb-1">Reports</h3>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">Session analysis</p>
+                        </div>
+                    </motion.div>
                 </div>
             </div>
 
