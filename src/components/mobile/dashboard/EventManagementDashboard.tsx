@@ -5,9 +5,11 @@ import { useSelectedEvent } from '../../../contexts/SelectedEventContext';
 import { MobileCard, SpeedDialFAB } from '../index';
 import SwipeableCarousel from '../../ui/SwipeableCarousel';
 import QuickStatCard from '../../dashboard/QuickStatCard';
-import { Calendar, Users, Store, BarChart3, CheckCircle } from 'lucide-react';
+import { Calendar, Users, Store, BarChart3, CheckCircle, RefreshCw } from 'lucide-react';
 import { AppRoute } from '../../../types';
 import { useBoothCapacity } from '../../../hooks/useBoothCapacity';
+import { useAutoRefresh } from '../../../hooks/useAutoRefresh';
+import { motion } from 'framer-motion';
 
 /**
  * Universal Event Management Dashboard for Mobile
@@ -21,6 +23,13 @@ const EventManagementDashboard: React.FC = () => {
 
     const liveSession = getOperationalSessionDetails().session;
     const { getCapacity } = useBoothCapacity(liveSession?.id || '');
+
+    // Auto-refresh for live data (only when session is active)
+    const { lastUpdated, isRefreshing, manualRefresh } = useAutoRefresh({
+        intervalMs: 5000, // Every 5 seconds
+        enabled: !!liveSession, // Only during live sessions
+        onlyWhenActive: true
+    });
 
     // Event-specific stats
     const eventStats = useMemo(() => ({
@@ -55,7 +64,7 @@ const EventManagementDashboard: React.FC = () => {
         return booths
             .map(booth => {
                 const attendeesCount = boothCounts.get(booth.id)?.size || 0;
-                const capacityData = getCapacity(booth.id); \n                const capacity = typeof capacityData === 'number' ? capacityData : capacityData.capacity;
+                const capacity = getCapacity(booth.id); // Returns number directly
                 const percentage = capacity > 0 ? (attendeesCount / capacity) * 100 : 0;
 
                 return {
@@ -92,60 +101,131 @@ const EventManagementDashboard: React.FC = () => {
 
     return (
         <div className="space-y-4 pb-24">
-            {/* Live Session Banner */}
+            {/* Live Session Banner - Modern Design */}
             {liveSession && (
-                <div className="mx-4 mt-4 p-4 bg-gradient-to-r from-green-500/90 to-emerald-500/90 dark:from-green-600/90 dark:to-emerald-600/90 rounded-2xl shadow-lg">
-                    <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-2">
-                            <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
-                            <span className="text-white font-bold text-xs uppercase tracking-wide">Live Now</span>
-                        </div>
-                        <div className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">
-                            <span className="text-white text-xs font-semibold">
-                                {eventStats.liveScans} scans
-                            </span>
-                        </div>
-                    </div>
-                    <h2 className="text-white font-bold text-lg mb-1">{liveSession.name}</h2>
-                    <p className="text-white/90 text-sm mb-3">
-                        {new Date(liveSession.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} -
-                        {new Date(liveSession.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </p>
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mx-4 mt-4 relative overflow-hidden rounded-3xl shadow-2xl"
+                >
+                    {/* Gradient Background with Glow */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500 dark:from-green-600 dark:via-emerald-600 dark:to-teal-600" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
 
-                    {/* Live Booth Status Grid */}
-                    {liveBoothStats.length > 0 && (
-                        <>
-                            <div className="border-t border-white/20 pt-3 mb-3">
-                                <p className="text-white/80 text-xs font-semibold mb-2 uppercase tracking-wide">Booth Status</p>
+                    {/* Glassmorphism Overlay */}
+                    <div className="relative backdrop-blur-sm bg-white/10 p-4">
+                        {/* Header Row */}
+                        <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center gap-2">
+                                <motion.div
+                                    animate={{ scale: [1, 1.2, 1] }}
+                                    transition={{ repeat: Infinity, duration: 2 }}
+                                    className="w-2.5 h-2.5 bg-white rounded-full shadow-lg shadow-white/50"
+                                />
+                                <span className="text-white font-bold text-xs uppercase tracking-wider drop-shadow-md">Live Now</span>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                                {/* Scans Badge */}
+                                <div className="bg-white/30 backdrop-blur-md px-3 py-1 rounded-full border border-white/20">
+                                    <span className="text-white text-xs font-bold">
+                                        {eventStats.liveScans} scans
+                                    </span>
+                                </div>
+
+                                {/* Refresh Indicator */}
+                                <motion.button
+                                    onClick={manualRefresh}
+                                    animate={isRefreshing ? { rotate: 360 } : {}}
+                                    transition={{ duration: 1, repeat: isRefreshing ? Infinity : 0, ease: "linear" }}
+                                    className="p-1.5 bg-white/20 hover:bg-white/30 backdrop-blur-md rounded-full border border-white/20 transition-colors"
+                                    disabled={isRefreshing}
+                                >
+                                    <RefreshCw className="w-3.5 h-3.5 text-white" />
+                                </motion.button>
+                            </div>
+                        </div>
+
+                        {/* Session Info */}
+                        <h2 className="text-white font-bold text-xl mb-1 drop-shadow-md">{liveSession.name}</h2>
+                        <p className="text-white/95 text-sm mb-1 drop-shadow">
+                            {new Date(liveSession.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} -
+                            {new Date(liveSession.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+
+                        {/* Auto-refresh indicator */}
+                        <p className="text-white/70 text-xs mb-3">
+                            {isRefreshing ? (
+                                <span className="flex items-center gap-1">
+                                    <motion.span animate={{ opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 1.5 }}>●</motion.span>
+                                    Updating...
+                                </span>
+                            ) : (
+                                `Updated ${Math.floor((Date.now() - lastUpdated.getTime()) / 1000)}s ago`
+                            )}
+                        </p>
+
+                        {/* Live Booth Status Grid */}
+                        {liveBoothStats.length > 0 && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.2 }}
+                                className="border-t border-white/30 pt-3 mb-3"
+                            >
+                                <p className="text-white/90 text-xs font-bold mb-2 uppercase tracking-wider drop-shadow">Booth Status</p>
                                 <div className="grid grid-cols-2 gap-2">
-                                    {liveBoothStats.map(booth => (
-                                        <div
+                                    {liveBoothStats.map((booth, index) => (
+                                        <motion.div
                                             key={booth.id}
-                                            className={`p-2 rounded-lg border ${getBoothColor(booth.percentage, booth.attendeesCount)}`}
+                                            initial={{ opacity: 0, scale: 0.9 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            transition={{ delay: 0.1 * index }}
+                                            whileTap={{ scale: 0.98 }}
+                                            className={`p-2.5 rounded-xl border backdrop-blur-sm ${getBoothColor(booth.percentage, booth.attendeesCount)} shadow-lg`}
                                         >
-                                            <div className="flex items-center justify-between mb-1">
+                                            <div className="flex items-center justify-between mb-1.5">
                                                 <p className="text-xs font-bold truncate pr-1">{booth.physicalId}</p>
-                                                {booth.percentage >= 99 && <span className="text-xs">🟢</span>}
-                                                {booth.percentage > 0 && booth.percentage < 99 && <span className="text-xs">🟡</span>}
-                                                {booth.attendeesCount === 0 && <span className="text-xs">🔴</span>}
+                                                <motion.span
+                                                    initial={{ scale: 0 }}
+                                                    animate={{ scale: 1 }}
+                                                    transition={{ delay: 0.3 + (0.1 * index), type: "spring" }}
+                                                    className="text-sm"
+                                                >
+                                                    {booth.percentage >= 99 && '🟢'}
+                                                    {booth.percentage > 0 && booth.percentage < 99 && '🟡'}
+                                                    {booth.attendeesCount === 0 && '🔴'}
+                                                </motion.span>
                                             </div>
-                                            <p className="text-lg font-bold leading-none">
-                                                {booth.attendeesCount}<span className="text-xs opacity-60">/{booth.capacity}</span>
+                                            <p className="text-xl font-bold leading-none">
+                                                {booth.attendeesCount}<span className="text-sm opacity-70">/{booth.capacity}</span>
                                             </p>
-                                        </div>
+                                            {/* Progress bar */}
+                                            <div className="mt-2 h-1 bg-black/20 rounded-full overflow-hidden">
+                                                <motion.div
+                                                    initial={{ width: 0 }}
+                                                    animate={{ width: `${Math.min(booth.percentage, 100)}%` }}
+                                                    transition={{ delay: 0.4 + (0.1 * index), duration: 0.8, ease: "easeOut" }}
+                                                    className="h-full bg-white/80 rounded-full"
+                                                />
+                                            </div>
+                                        </motion.div>
                                     ))}
                                 </div>
-                            </div>
-                        </>
-                    )}
+                            </motion.div>
+                        )}
 
-                    <button
-                        onClick={() => navigate(AppRoute.RealTimeAnalytics)}
-                        className="w-full bg-white/20 hover:bg-white/30 backdrop-blur-sm py-2 rounded-lg text-white font-semibold text-sm transition-colors"
-                    >
-                        View Full Analytics →
-                    </button>
-                </div>
+                        {/* View Full Analytics Button */}
+                        <motion.button
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => navigate(AppRoute.RealTimeAnalytics)}
+                            className="w-full bg-white/25 hover:bg-white/35 backdrop-blur-md py-2.5 rounded-xl text-white font-bold text-sm transition-all border border-white/30 shadow-lg"
+                        >
+                            View Full Analytics →
+                        </motion.button>
+                    </div>
+                </motion.div>
             )}
 
             {/* Quick Stats */}
