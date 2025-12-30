@@ -280,22 +280,6 @@ const SessionSettingsPage: React.FC = () => {
     // Derive selectedSession from selectedSessionId
     const selectedSession = sessions.find(s => s.id === selectedSessionId) || null;
 
-    const resetFormToDefaults = () => {
-        setSessionName('');
-        setStartTime('');
-        setEndTime('');
-        setSessionType('meeting');
-        setLocation('');
-        setDescription('');
-        setSpeaker('');
-        setMaxCapacity('');
-        setIsCreatingNew(true);
-        setSelectedSessionId('');
-        setFeedback(null);
-    };
-
-    // ... existing logic ...
-
     useEffect(() => {
         if (selectedSessionId) {
             setLoadingRegs(true);
