@@ -23,6 +23,7 @@ import { localeKeys } from '../../i18n/locales';
 import KioskModeWrapper from '../../components/scanner/KioskModeWrapper';
 import SkeletonScanner from '../../components/scanner/SkeletonScanner';
 import ScanResultCard from '../../components/scanner/ScanResultCard';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 declare var Html5QrcodeScanner: any;
 declare var Html5QrcodeScanType: any;
@@ -96,6 +97,9 @@ const QRScannerPage: React.FC = () => {
   const [operationalSessionInfo, setOperationalSessionInfo] = useState<ActiveSessionReturn | null>(null);
   const [lastScanResult, setLastScanResult] = useState<{ success: boolean; message: string; attendeeName?: string } | null>(null);
   const [scanResult, setScanResult] = useState<ScanResult | null>(null); // Smart scan result for card display
+
+  // Mobile detection
+  const isMobile = useIsMobile();
 
   // Stats for kiosk mode
   const [todayScans, setTodayScans] = useState(0);
@@ -447,6 +451,97 @@ const QRScannerPage: React.FC = () => {
   // VENDOR MODE RENDER (Default)
   // ══════════════════════════════════════════════════════════════════════════
 
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // MOBILE OPTIMIZED RENDER
+  // ══════════════════════════════════════════════════════════════════════════
+  if (isMobile) {
+    return (
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 pb-safe">
+        {/* Fullscreen Scanner Container */}
+        <div className="relative h-screen flex flex-col">
+          {/* Header Bar - Compact */}
+          <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-4 safe-area-top">
+            <div className="flex justify-between items-center">
+              <div className="flex-1">
+                <h1 className="text-lg font-bold text-slate-900 dark:text-white truncate">
+                  {activeBooth?.companyName || 'Scanner'}
+                </h1>
+                {activeBooth && (
+                  <p className="text-sm text-slate-500 dark:text-slate-400">Booth {activeBooth.physicalId}</p>
+                )}
+              </div>
+              <Button
+                onClick={handleLogout}
+                variant="neutral"
+                size="sm"
+                className="flex-shrink-0"
+              >
+                {t(localeKeys.logout)}
+              </Button>
+            </div>
+
+            {/* Pending Scans Indicator */}
+            {pendingScans.length > 0 && (
+              <div className="mt-2 p-2 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 flex items-center gap-2">
+                <ArrowPathIcon className={`w-4 h-4 text-yellow-700 dark:text-yellow-300 ${isSyncing ? 'animate-spin' : ''}`} />
+                <span className="text-xs font-medium text-yellow-800 dark:text-yellow-200">
+                  {pendingScans.length} pending
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Scanner Area - Fullscreen */}
+          {scanResult ? (
+            <div className="flex-1 flex items-center justify-center p-4">
+              <ScanResultCard
+                result={scanResult}
+                onNext={handleNextScan}
+                autoCloseDelay={0}
+              />
+            </div>
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center p-4">
+              <div className="w-full max-w-md aspect-square rounded-2xl overflow-hidden border-4 border-primary-500 shadow-2xl">
+                <div id="qr-scanner-container" className="w-full h-full"></div>
+              </div>
+              <p className="mt-6 text-center text-lg font-semibold text-slate-700 dark:text-slate-300">
+                📱 Point camera at QR code
+              </p>
+            </div>
+          )}
+
+          {/* Manual Entry - Bottom Sheet Style */}
+          <div className="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 p-4 safe-area-bottom">
+            <form onSubmit={handleManualSubmit} className="space-y-3">
+              <Input
+                label="Manual Entry"
+                id="manual-attendee-id-mobile"
+                value={attendeeId}
+                onChange={(e) => setAttendeeId(e.target.value)}
+                placeholder="Enter attendee ID"
+                wrapperClassName="!mb-0"
+                className="text-lg"
+              />
+              <Button
+                type="submit"
+                variant="primary"
+                disabled={!activeBooth || isLoadingManualSubmit}
+                className="w-full h-14 text-lg font-semibold"
+              >
+                {isLoadingManualSubmit ? t(localeKeys.submitting) : 'Submit'}
+              </Button>
+            </form>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // DESKTOP VENDOR MODE RENDER (Original)
+  // ══════════════════════════════════════════════════════════════════════════
 
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
