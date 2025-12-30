@@ -160,10 +160,40 @@ const QRScannerPage: React.FC = () => {
   }, [isOrganizerMode, eventContextLoading, activeBooth, booths, getBoothById, navigate, selectedEventId, scannerMode]);
 
 
-  useEffect(() => {
-    if (typeof Audio !== "undefined") {
-      audioRef.current = new Audio('/sounds/beep.mp3');
-      audioRef.current.load();
+  // Improved Audio Context for Success/Error sounds
+  const playSound = useCallback((success: boolean) => {
+    try {
+      const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioContext) return;
+
+      const ctx = new AudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      if (success) {
+        // High pitch "ding"
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, ctx.currentTime); // A5
+        osc.frequency.exponentialRampToValueAtTime(1760, ctx.currentTime + 0.1); // A6
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.1);
+      } else {
+        // Low pitch "buzz"
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(150, ctx.currentTime);
+        osc.frequency.linearRampToValueAtTime(100, ctx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.3);
+      }
+    } catch (e) {
+      console.error("Audio playback error:", e);
     }
   }, []);
 
@@ -177,12 +207,7 @@ const QRScannerPage: React.FC = () => {
     return () => clearInterval(intervalId);
   }, [sessions, getOperationalSessionDetails]);
 
-  const playSound = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play().catch(error => console.warn("Audio play failed:", error));
-    }
-  }, []);
+
 
   const vibrateDevice = useCallback(() => {
     if (navigator.vibrate) navigator.vibrate(200);
@@ -240,6 +265,7 @@ const QRScannerPage: React.FC = () => {
     } catch (error) {
       console.error("Error in handleSubmitScan:", error);
       toast.error('Unexpected error processing scan.');
+      playSound(false); // Fail sound
     } finally {
       if (isManualSubmit) setIsLoadingManualSubmit(false);
     }
@@ -249,9 +275,11 @@ const QRScannerPage: React.FC = () => {
     if (isProcessingAutoScanRef.current) return;
     isProcessingAutoScanRef.current = true;
     try {
-      playSound();
       vibrateDevice();
       setAttendeeId(decodedText);
+      // Play success sound is handled inside handleSubmitScan if successful, 
+      // but we play a preliminary "read" sound here
+      playSound(true);
       await handleSubmitScan(decodedText, false);
     } catch (error) {
       console.error("Error in onScanSuccess:", error);
@@ -503,7 +531,14 @@ const QRScannerPage: React.FC = () => {
             </div>
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center p-4">
-              <div className="w-full max-w-md aspect-square rounded-2xl overflow-hidden border-4 border-primary-500 shadow-2xl">
+              <div className="w-full max-w-md aspect-square rounded-2xl overflow-hidden border-4 border-primary-500 shadow-2xl bg-black relative">
+                {/* Center alignment fix for the library's injected elements */}
+                <style>{`
+                    #qr-scanner-container { width: 100% !important; height: 100% !important; display: flex !important; justify-content: center; align-items: center; overflow: hidden; }
+                    #qr-scanner-container video { object-fit: cover !important; width: 100% !important; height: 100% !important; border-radius: 12px; }
+                    #qr-scanner-container__scan_region { width: 100% !important; min-height: 100% !important; }
+                    #qr-scanner-container__dashboard_section_csr span { display: none !important; } /* Hide "Code Scanner" text */
+                 `}</style>
                 <div id="qr-scanner-container" className="w-full h-full"></div>
               </div>
               <p className="mt-6 text-center text-lg font-semibold text-slate-700 dark:text-slate-300">
