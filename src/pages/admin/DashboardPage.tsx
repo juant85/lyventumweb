@@ -306,7 +306,7 @@ const DashboardPage: React.FC = () => {
   if (isMobile) {
     const { currentUser } = useAuth();
     const { selectedEventId } = useSelectedEvent();
-    const EventManagementDashboard = React.lazy(() => import('../components/mobile/dashboard/EventManagementDashboard'));
+    const EventManagementDashboard = React.lazy(() => import('../../components/mobile/dashboard/EventManagementDashboard'));
 
     // No event selected → Show appropriate list
     if (!selectedEventId) {

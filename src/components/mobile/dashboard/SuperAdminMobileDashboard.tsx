@@ -100,7 +100,7 @@ const SuperAdminMobileDashboard: React.FC = () => {
                                 subtitle={event.companyName || 'No organization'}
                                 icon={<Building2 className="w-5 h-5 text-blue-600" />}
                                 badge={getEventStatusBadge(event)}
-                                onClick={() => navigate(`/admin/dashboard`)}
+                                onClick={() => handleEventClick(event.id)}
                             />
                         ))
                     ) : (
