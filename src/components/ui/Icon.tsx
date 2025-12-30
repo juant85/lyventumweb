@@ -74,6 +74,9 @@ const iconMap = {
   menu: Lucide.Menu,
   plus: Lucide.Plus,
   trash: Lucide.Trash2,
+  play: Lucide.Play,
+  stop: Lucide.Square,
+  alert: Lucide.AlertTriangle,
 
   // Misc
   microphone: Lucide.Mic,

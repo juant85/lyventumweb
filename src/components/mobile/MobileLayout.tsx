@@ -11,6 +11,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { AppRoute } from '../../types';
 import MobileMenu from './MobileMenu';
 import MobileErrorBoundary from './MobileErrorBoundary';
+import GlobalSearch from './GlobalSearch';
 
 interface MobileLayoutProps {
     children: ReactNode;
@@ -79,7 +80,8 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
     const scrollY = useScrollY();
     const navigate = useNavigate();
     const location = useLocation();
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
 
     const getHeaderMode = (): HeaderMode => {
         if (scrollY < 50) return 'expanded';
@@ -96,7 +98,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
     };
 
     const handleMoreClick = () => {
-        setIsDrawerOpen(true);
+        setIsMenuOpen(true);
     };
 
     return (
@@ -114,12 +116,31 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
             >
                 <AnimatePresence mode="wait">
                     {headerMode === 'expanded' && (
-                        <ExpandedHeader key="expanded" currentEvent={currentEvent} currentUser={currentUser} onMenuClick={handleMoreClick} />
+                        <ExpandedHeader key="expanded" currentEvent={currentEvent} currentUser={currentUser} />
                     )}
                     {headerMode === 'compact' && (
-                        <CompactHeader key="compact" currentEvent={currentEvent} onMenuClick={handleMoreClick} />
+                        <CompactHeader key="compact" currentEvent={currentEvent} />
                     )}
                 </AnimatePresence>
+                <div className="flex items-center gap-2 ml-auto">
+                    {/* Global Search Button */}
+                    <button
+                        onClick={() => setIsSearchOpen(true)}
+                        className="p-2 hover:bg-white/10 rounded-lg transition-colors text-slate-600 dark:text-slate-300"
+                        aria-label="Search attendees"
+                    >
+                        <Icon name="search" className="w-5 h-5" />
+                    </button>
+
+                    {/* Menu Button */}
+                    <button
+                        onClick={() => setIsMenuOpen(true)}
+                        className="p-2 hover:bg-white/10 rounded-lg transition-colors text-slate-600 dark:text-slate-300"
+                        aria-label="Open menu"
+                    >
+                        <Icon name="menu" className="w-6 h-6" />
+                    </button>
+                </div>
             </motion.header>
 
             <AnimatePresence mode="wait">
@@ -144,9 +165,11 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
                 pendingScans={0}
             />
 
-            {isDrawerOpen && (
-                <MobileMenu isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} />
-            )}
+            {/* Mobile Menu */}
+            <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+
+            {/* Global Search */}
+            <GlobalSearch isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
         </div>
     );
 };
