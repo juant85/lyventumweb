@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icon, IconName } from '../ui/Icon';
+import haptics from '../../utils/haptics';
 
 export interface SpeedDialAction {
     icon: IconName;
@@ -23,8 +24,16 @@ const SpeedDialFAB: React.FC<SpeedDialFABProps> = ({ actions }) => {
     };
 
     const handleActionClick = (action: SpeedDialAction) => {
+        haptics.light(); // Haptic feedback
         action.onClick();
         setIsOpen(false);
+    };
+
+    const handleToggle = () => {
+        if (!isOpen) {
+            haptics.selection(); // Haptic when opening
+        }
+        setIsOpen(!isOpen);
     };
 
     return (
@@ -76,11 +85,11 @@ const SpeedDialFAB: React.FC<SpeedDialFABProps> = ({ actions }) => {
                 )}
             </AnimatePresence>
 
-            {/* Main FAB */}
+            {/* Main FAB Button */}
             <motion.button
                 whileTap={{ scale: 0.9 }}
-                onClick={() => setIsOpen(!isOpen)}
-                className={`fixed bottom-24 right-4 z-50 w-14 h-14 bg-gradient-to-br from-primary-600 to-primary-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center`}
+                onClick={handleToggle}
+                className="fixed bottom-20 right-6 z-50 w-14 h-14 bg-gradient-to-br from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white rounded-full shadow-2xl flex items-center justify-center focus:outline-none focus:ring-4 focus:ring-primary-500/50"
                 aria-label="Quick Actions"
             >
                 <motion.div
