@@ -55,8 +55,8 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
                 <Icon
                     name={icon as any}
                     className={`w-6 h-6 transition-all duration-200 ${active
-                            ? 'text-primary-600 dark:text-primary-400 scale-110'
-                            : 'text-slate-500 dark:text-slate-400 group-active:scale-95'
+                        ? 'text-primary-600 dark:text-primary-400 scale-110'
+                        : 'text-slate-500 dark:text-slate-400 group-active:scale-95'
                         }`}
                 />
 
@@ -74,8 +74,8 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
 
             {/* Label */}
             <span className={`text-[10px] font-medium mt-0.5 transition-colors ${active
-                    ? 'text-primary-600 dark:text-primary-400'
-                    : 'text-slate-500 dark:text-slate-400'
+                ? 'text-primary-600 dark:text-primary-400'
+                : 'text-slate-500 dark:text-slate-400'
                 }`}>
                 {label}
             </span>
@@ -124,8 +124,8 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
             <NavButton
                 icon="users"
                 label="People"
-                onClick={() => navigate('/admin/attendee-profiles')}
-                active={isActive(['/admin/attendee-profiles', '/admin/attendee-registration'])}
+                onClick={() => navigate(AppRoute.AttendeeProfiles)}
+                active={isActive([AppRoute.AttendeeProfiles, AppRoute.AttendeeRegistration])}
             />
 
             {/* More / Menu */}

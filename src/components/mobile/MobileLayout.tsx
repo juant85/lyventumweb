@@ -17,7 +17,7 @@ interface MobileLayoutProps {
 
 type HeaderMode = 'expanded' | 'compact' | 'hidden';
 
-const ExpandedHeader: React.FC<{ currentEvent: any; currentUser: any }> = ({ currentEvent, currentUser }) => (
+const ExpandedHeader: React.FC<{ currentEvent: any; currentUser: any; onMenuClick: () => void }> = ({ currentEvent, currentUser, onMenuClick }) => (
     <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -44,30 +44,42 @@ const ExpandedHeader: React.FC<{ currentEvent: any; currentUser: any }> = ({ cur
             </div>
         </div>
 
-        <div className="h-8 w-8 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300">
+        <button
+            onClick={onMenuClick}
+            className="h-8 w-8 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 active:scale-95 transition-transform"
+        >
             <Icon name="user" className="w-4 h-4" />
-        </div>
+        </button>
     </motion.div>
 );
 
-const CompactHeader: React.FC<{ currentEvent: any }> = ({ currentEvent }) => (
+const CompactHeader: React.FC<{ currentEvent: any; onMenuClick: () => void }> = ({ currentEvent, onMenuClick }) => (
     <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className="flex items-center gap-2"
+        className="flex items-center justify-between w-full"
     >
-        {currentEvent?.eventLogoUrl ? (
-            <img src={currentEvent.eventLogoUrl} alt="Event" className="h-6 w-6 rounded-md object-contain" />
-        ) : (
-            <div className="h-6 w-6 rounded-md bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center text-white font-bold text-xs">
-                {currentEvent?.name?.[0] || 'L'}
-            </div>
-        )}
-        <span className="text-sm font-semibold text-slate-800 dark:text-slate-100 truncate">
-            {currentEvent?.name || 'Lyventum'}
-        </span>
+        <div className="flex items-center gap-2">
+            {currentEvent?.eventLogoUrl ? (
+                <img src={currentEvent.eventLogoUrl} alt="Event" className="h-6 w-6 rounded-md object-contain" />
+            ) : (
+                <div className="h-6 w-6 rounded-md bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center text-white font-bold text-xs">
+                    {currentEvent?.name?.[0] || 'L'}
+                </div>
+            )}
+            <span className="text-sm font-semibold text-slate-800 dark:text-slate-100 truncate">
+                {currentEvent?.name || 'Lyventum'}
+            </span>
+        </div>
+
+        <button
+            onClick={onMenuClick}
+            className="h-8 w-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 active:scale-95 transition-transform"
+        >
+            <Icon name="menu" className="w-4 h-4" />
+        </button>
     </motion.div>
 );
 
@@ -112,10 +124,10 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
             >
                 <AnimatePresence mode="wait">
                     {headerMode === 'expanded' && (
-                        <ExpandedHeader key="expanded" currentEvent={currentEvent} currentUser={currentUser} />
+                        <ExpandedHeader key="expanded" currentEvent={currentEvent} currentUser={currentUser} onMenuClick={handleMoreClick} />
                     )}
                     {headerMode === 'compact' && (
-                        <CompactHeader key="compact" currentEvent={currentEvent} />
+                        <CompactHeader key="compact" currentEvent={currentEvent} onMenuClick={handleMoreClick} />
                     )}
                 </AnimatePresence>
             </motion.header>
