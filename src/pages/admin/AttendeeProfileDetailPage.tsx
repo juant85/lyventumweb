@@ -25,6 +25,8 @@ import AttendeeSessionManager from '../../components/admin/AttendeeSessionManage
 import EmailHistoryCard from '../../components/admin/EmailHistoryCard';
 import AccessControlCard from '../../components/admin/attendee/AccessControlCard';
 import Tabs from '../../components/ui/Tabs';
+import { useIsMobile } from '../../hooks/useIsMobile';
+import { MobileFAB } from '../../components/mobile';
 
 type AttendeeAgendaItem = SessionRegistration & {
   sessionName: string;
@@ -35,6 +37,7 @@ type AttendeeAgendaItem = SessionRegistration & {
 export default function AttendeeProfileDetailPage() {
   const { attendeeId } = useParams<{ attendeeId: string }>();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const { getAttendeeById, updateAttendee, deleteAttendee, loadingData: eventDataLoading, getSessionRegistrationsForAttendee } = useEventData();
   const { selectedEventId } = useSelectedEvent();
   const { isFeatureEnabled } = useFeatureFlags();
@@ -406,6 +409,180 @@ export default function AttendeeProfileDetailPage() {
       )
     }
   ];
+
+  if (isMobile) {
+    return (
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 pb-24">
+        {/* Sticky Header */}
+        <div className="sticky top-0 z-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="sm" onClick={() => navigate(AppRoute.AttendeeProfiles)} className="!p-1">
+              <ArrowLeftIcon className="w-6 h-6 text-slate-600 dark:text-slate-300" />
+            </Button>
+            <h1 className="text-lg font-bold text-slate-900 dark:text-white truncate max-w-[200px]">
+              {attendee?.name || 'Loading...'}
+            </h1>
+          </div>
+          <FeatureGuard featureKey={Feature.ATTENDEE_PORTAL_PREVIEW}>
+            <Button size="sm" variant="secondary" onClick={() => setIsPreviewModalOpen(true)} className="!px-3 !py-1">
+              <EyeIcon className="w-5 h-5 text-slate-600 dark:text-slate-300" />
+            </Button>
+          </FeatureGuard>
+        </div>
+
+        {/* Action Modals */}
+        <CameraModal
+          isOpen={!!photographingAttendee}
+          onClose={() => setPhotographingAttendee(null)}
+          onCapture={handleSavePhoto}
+          isSaving={isSavingPhoto}
+        />
+        <FeatureGuard featureKey={Feature.ATTENDEE_PORTAL_PREVIEW}>
+          <AttendeePortalPreviewModal
+            isOpen={isPreviewModalOpen}
+            onClose={() => setIsPreviewModalOpen(false)}
+            attendee={attendee}
+          />
+        </FeatureGuard>
+        {/* Delete & Photo Modals (Reused from desktop definition) */}
+        <Modal isOpen={isDeleteModalOpen} onClose={() => setIsDeleteModalOpen(false)} title={`Delete Attendee`}>
+          {/* Simplified Delete Modal Content for Mobile */}
+          <div className="space-y-4">
+            <Alert type="error" message={<strong>Permanent Action</strong>} />
+            <p className="text-sm">Type <strong className="font-mono">delete</strong> to confirm.</p>
+            <Input value={deleteConfirmText} onChange={(e) => setDeleteConfirmText(e.target.value)} placeholder="delete" autoFocus />
+          </div>
+          <div className="flex justify-end gap-2 mt-4">
+            <Button variant="neutral" onClick={() => setIsDeleteModalOpen(false)}>Cancel</Button>
+            <Button variant="accent" onClick={handleDeleteConfirmed} disabled={deleteConfirmText.toLowerCase() !== 'delete'}>Delete</Button>
+          </div>
+        </Modal>
+        <Modal isOpen={isDeletePhotoModalOpen} onClose={() => setIsDeletePhotoModalOpen(false)} title="Delete Photo?">
+          <div className="space-y-4 pt-2">
+            <p className="text-sm">Are you sure you want to remove the profile photo?</p>
+            <div className="flex justify-end gap-2">
+              <Button variant="neutral" onClick={() => setIsDeletePhotoModalOpen(false)}>Cancel</Button>
+              <Button variant="accent" onClick={handleDeletePhoto} disabled={isDeletingPhoto}>Delete</Button>
+            </div>
+          </div>
+        </Modal>
+
+        {/* Content */}
+        {!attendee ? (
+          <div className="p-8 text-center text-slate-500">Attendee not found.</div>
+        ) : (
+          <div className="space-y-6 p-4">
+            {/* Profile Hero */}
+            <div className="flex flex-col items-center gap-4">
+              <div className="relative group">
+                <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white dark:border-slate-800 shadow-lg bg-slate-200">
+                  {avatarPreview ? (
+                    <img src={avatarPreview} alt={attendee.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-slate-400">
+                      <UserCircleIcon className="w-16 h-16" />
+                    </div>
+                  )}
+                </div>
+                <button
+                  onClick={() => canTakePhoto ? handleTakePhoto() : null}
+                  className="absolute bottom-0 right-0 bg-primary-600 text-white p-2 rounded-full shadow-lg"
+                >
+                  <CameraIcon className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="text-center">
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white">{attendee.name}</h2>
+                <p className="text-slate-500 dark:text-slate-400 text-sm">{attendee.organization}</p>
+                {attendee.position && <p className="text-slate-400 text-xs mt-1">{attendee.position}</p>}
+
+                <div className="flex flex-wrap gap-2 justify-center mt-3">
+                  {attendee.is_vendor && (
+                    <span className="px-2 py-1 text-xs font-bold bg-purple-100 text-purple-800 rounded-full">VENDOR</span>
+                  )}
+                  {checkInTime ? (
+                    <span className="px-2 py-1 text-xs font-bold bg-green-100 text-green-800 rounded-full">✓ Checked In</span>
+                  ) : (
+                    <span className="px-2 py-1 text-xs font-bold bg-slate-100 text-slate-600 rounded-full">Pending</span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile Tabs */}
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+              <Tabs
+                tabs={[
+                  {
+                    id: 'details',
+                    label: 'Details',
+                    icon: <UserCircleIcon className="w-4 h-4" />,
+                    content: (
+                      <form id="mobile-attendee-form" onSubmit={handleSave} className="p-4 space-y-4">
+                        <Input label="Name" name="name" value={formData.name || ''} onChange={handleInputChange} required />
+                        <Input label="Organization" name="organization" value={formData.organization || ''} onChange={handleInputChange} required />
+                        <Input label="Email" type="email" name="email" value={formData.email || ''} onChange={handleInputChange} />
+                        <Input label="Phone" name="phone" value={formData.phone || ''} onChange={handleInputChange} />
+                        <Input label="Position" name="position" value={formData.position || ''} onChange={handleInputChange} />
+                        <div className="space-y-3 pt-2">
+                          <p className="text-xs font-bold uppercase text-slate-500">Preferences</p>
+                          <Checkbox name="last_day_lunch" label="Last Day Lunch" checked={!!formData.last_day_lunch} onChange={handleInputChange} />
+                          <Checkbox name="is_veggie" label="Vegetarian" checked={!!formData.is_veggie} onChange={handleInputChange} />
+                          <Checkbox name="has_tour" label="City Tour" checked={!!formData.has_tour} onChange={handleInputChange} />
+                        </div>
+                        <div className="pt-6">
+                          <Button type="button" variant="ghost" className="w-full text-red-600 border-red-200 hover:bg-red-50" onClick={() => setIsDeleteModalOpen(true)}>
+                            Delete Profile
+                          </Button>
+                        </div>
+                      </form>
+                    )
+                  },
+                  {
+                    id: 'agenda',
+                    label: 'Agenda',
+                    icon: <ClockIcon className="w-4 h-4" />,
+                    content: (
+                      <div className="p-4 space-y-3">
+                        {agenda.length === 0 ? (
+                          <p className="text-center text-slate-500 py-8">No meetings scheduled.</p>
+                        ) : (
+                          agenda.map(item => (
+                            <div key={item.id} className="bg-slate-50 dark:bg-slate-700/50 p-3 rounded-lg border border-slate-100 dark:border-slate-700">
+                              <p className="font-bold text-slate-800 dark:text-slate-200 text-sm">{item.sessionName}</p>
+                              <div className="flex justify-between items-center mt-2 text-xs text-slate-500">
+                                <span>{new Date(item.sessionStartTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                {item.boothName && <span className="bg-blue-100 text-blue-800 px-2 py-0.5 rounded">{item.boothName}</span>}
+                              </div>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    )
+                  }
+                ]}
+                defaultTabId="details"
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Sticky Footer Action */}
+        <div className="fixed bottom-0 left-0 right-0 p-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 z-30">
+          <Button
+            type="submit"
+            form="mobile-attendee-form"
+            variant="primary"
+            className="w-full"
+            disabled={isSaving}
+            size="lg"
+          >
+            {isSaving ? 'Saving...' : 'Save Changes'}
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

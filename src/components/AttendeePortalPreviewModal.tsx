@@ -15,14 +15,14 @@ import autoTable from 'jspdf-autotable';
 import QRCode from 'qrcode';
 
 interface AttendeePortalPreviewModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  attendee: Attendee | null;
+    isOpen: boolean;
+    onClose: () => void;
+    attendee: Attendee | null;
 }
 
-type AttendeeAgendaItem = SessionRegistration & { 
-    sessionName: string; 
-    sessionStartTime: string; 
+type AttendeeAgendaItem = SessionRegistration & {
+    sessionName: string;
+    sessionStartTime: string;
     boothName?: string;
     boothDetails?: { physicalId: string; };
 };
@@ -41,7 +41,7 @@ const AttendeePortalPreviewModal: React.FC<AttendeePortalPreviewModalProps> = ({
             getSessionRegistrationsForAttendee(attendee.id)
                 .then(result => {
                     if (result.success) {
-                        const sortedAgenda = (result.data as AttendeeAgendaItem[]).sort((a, b) => 
+                        const sortedAgenda = (result.data as AttendeeAgendaItem[]).sort((a, b) =>
                             new Date(a.sessionStartTime).getTime() - new Date(b.sessionStartTime).getTime()
                         );
                         setAgenda(sortedAgenda);
@@ -67,7 +67,7 @@ const AttendeePortalPreviewModal: React.FC<AttendeePortalPreviewModalProps> = ({
                 unit: 'in',
                 format: 'letter'
             });
-            doc.deletePage(1); 
+            doc.deletePage(1);
 
             // --- DEFINE STYLES & HELPERS ---
             const FONT_SANS = 'helvetica';
@@ -82,7 +82,7 @@ const AttendeePortalPreviewModal: React.FC<AttendeePortalPreviewModalProps> = ({
             const BADGE_WIDTH_IN = 3.5;
             const BADGE_HEIGHT_IN = 5.5;
 
-            const imageToDataUrlWithDims = (url: string): Promise<{data: string, w: number, h: number}> => {
+            const imageToDataUrlWithDims = (url: string): Promise<{ data: string, w: number, h: number }> => {
                 return new Promise((resolve) => {
                     const img = new Image();
                     img.crossOrigin = 'Anonymous';
@@ -90,17 +90,17 @@ const AttendeePortalPreviewModal: React.FC<AttendeePortalPreviewModalProps> = ({
                         const canvas = document.createElement('canvas');
                         canvas.width = img.width; canvas.height = img.height;
                         const ctx = canvas.getContext('2d');
-                        if (!ctx) return resolve({data: '', w: 0, h: 0});
+                        if (!ctx) return resolve({ data: '', w: 0, h: 0 });
                         ctx.drawImage(img, 0, 0);
-                        resolve({data: canvas.toDataURL('image/png'), w: img.width, h: img.height});
+                        resolve({ data: canvas.toDataURL('image/png'), w: img.width, h: img.height });
                     };
-                    img.onerror = () => resolve({data: '', w: 0, h: 0});
+                    img.onerror = () => resolve({ data: '', w: 0, h: 0 });
                     img.src = url;
                 });
             };
-            
-            const getLogoDisplayDimensions = (originalW: number, originalH: number, maxHeight: number): {w: number, h: number} => {
-                if (!originalW || !originalH) return {w: maxHeight, h: maxHeight};
+
+            const getLogoDisplayDimensions = (originalW: number, originalH: number, maxHeight: number): { w: number, h: number } => {
+                if (!originalW || !originalH) return { w: maxHeight, h: maxHeight };
                 const aspectRatio = originalW / originalH;
                 const newWidth = maxHeight * aspectRatio;
                 const maxAllowedWidth = 1.5; // Prevent single logo from taking too much horizontal space
@@ -123,7 +123,7 @@ const AttendeePortalPreviewModal: React.FC<AttendeePortalPreviewModalProps> = ({
 
             doc.setFillColor(255, 255, 255);
             doc.rect(0, 0, BADGE_WIDTH_IN, BADGE_HEIGHT_IN, 'F');
-            
+
             // Header with Logos
             const logoMaxHeight = 0.5;
             if (companyLogoResult && companyLogoResult.data) {
@@ -134,7 +134,7 @@ const AttendeePortalPreviewModal: React.FC<AttendeePortalPreviewModalProps> = ({
                 const dims = getLogoDisplayDimensions(eventLogoResult.w, eventLogoResult.h, logoMaxHeight);
                 doc.addImage(eventLogoResult.data, 'PNG', BADGE_WIDTH_IN - margin - dims.w, 0.2, dims.w, dims.h, undefined, 'FAST');
             }
-            
+
             // QR Code
             const qrSize = 1.8;
             const qrX = (BADGE_WIDTH_IN - qrSize) / 2;
@@ -157,7 +157,7 @@ const AttendeePortalPreviewModal: React.FC<AttendeePortalPreviewModalProps> = ({
             doc.setFontSize(16); // Reduced size
             doc.setFont(FONT_SANS, 'normal');
             doc.setTextColor(TEXT_COLOR_MEDIUM);
-            const orgLines = doc.splitTextToSize(attendee.organization || 'No Organization', BADGE_WIDTH_IN - (margin*2));
+            const orgLines = doc.splitTextToSize(attendee.organization || 'No Organization', BADGE_WIDTH_IN - (margin * 2));
             doc.text(orgLines, BADGE_WIDTH_IN / 2, orgY, { align: 'center' });
 
             // Role Indicator Bar
@@ -176,25 +176,25 @@ const AttendeePortalPreviewModal: React.FC<AttendeePortalPreviewModalProps> = ({
                 doc.addPage('letter');
                 const agendaPageWidth = doc.internal.pageSize.getWidth();
                 const agendaMargin = 0.5;
-                
+
                 // Agenda Header with Logos
                 const agendaLogoMaxHeight = 0.75; // Enlarged
-                if(companyLogoResult && companyLogoResult.data) {
+                if (companyLogoResult && companyLogoResult.data) {
                     const dims = getLogoDisplayDimensions(companyLogoResult.w, companyLogoResult.h, agendaLogoMaxHeight);
                     doc.addImage(companyLogoResult.data, 'PNG', agendaMargin, 0.4, dims.w, dims.h, undefined, 'FAST');
                 }
-                if(eventLogoResult && eventLogoResult.data) {
+                if (eventLogoResult && eventLogoResult.data) {
                     const dims = getLogoDisplayDimensions(eventLogoResult.w, eventLogoResult.h, agendaLogoMaxHeight);
                     doc.addImage(eventLogoResult.data, 'PNG', agendaPageWidth - agendaMargin - dims.w, 0.4, dims.w, dims.h, undefined, 'FAST');
                 }
-                
+
                 let lastFinalY = agendaLogoMaxHeight + 0.5;
                 doc.setFontSize(28); // New Title Size
                 doc.setFont(FONT_SANS, 'bold');
                 doc.setTextColor(TEXT_COLOR_DARK);
                 doc.text('Your Personalized Agenda', agendaPageWidth / 2, lastFinalY, { align: 'center' });
                 lastFinalY += 0.4;
-                
+
                 // Group agenda items by date
                 const groupedAgenda = agenda.reduce((acc, item) => {
                     const itemDate = new Date(item.sessionStartTime);
@@ -243,15 +243,15 @@ const AttendeePortalPreviewModal: React.FC<AttendeePortalPreviewModalProps> = ({
                             lastFinalY = data.cursor?.y || 1;
                         }
                     });
-                    
+
                     lastFinalY = (doc as any).lastAutoTable.finalY + 0.4;
                     dayCounter++;
                 }
             }
-            
+
             const safeFileName = `${attendee.name.replace(/[^a-z0-9]/gi, '_')}_LyVenTum_Info.pdf`;
             doc.save(safeFileName);
-            
+
             toast.success('PDF generated successfully!', { id: toastId });
 
         } catch (error: any) {
@@ -261,11 +261,11 @@ const AttendeePortalPreviewModal: React.FC<AttendeePortalPreviewModalProps> = ({
     };
 
     const footerContent = (
-        <div className="flex items-center gap-3">
-            <Button onClick={generatePdf} variant="secondary" leftIcon={<PrinterIcon className="w-5 h-5" />}>
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+            <Button onClick={generatePdf} variant="secondary" leftIcon={<PrinterIcon className="w-5 h-5" />} className="w-full sm:w-auto justify-center">
                 Download PDF
             </Button>
-            <Button onClick={onClose} variant="primary">
+            <Button onClick={onClose} variant="primary" className="w-full sm:w-auto justify-center">
                 Close
             </Button>
         </div>
@@ -288,11 +288,11 @@ const AttendeePortalPreviewModal: React.FC<AttendeePortalPreviewModalProps> = ({
                 )}
                 {error && <Alert type="error" message={error} />}
                 {!isLoading && !error && attendee && (
-                     <div className="space-y-6">
-                         <div className="p-4 bg-slate-100 dark:bg-slate-900 rounded-lg">
+                    <div className="space-y-6">
+                        <div className="p-4 bg-slate-100 dark:bg-slate-900 rounded-lg">
                             <AttendeeBadge attendee={attendee} />
-                         </div>
-                         <Card title="My Agenda" className="bg-white dark:bg-slate-800">
+                        </div>
+                        <Card title="My Agenda" className="bg-white dark:bg-slate-800">
                             {agenda.length > 0 ? (
                                 <ul className="space-y-4">
                                     {agenda.map(reg => (
@@ -322,7 +322,7 @@ const AttendeePortalPreviewModal: React.FC<AttendeePortalPreviewModalProps> = ({
                                 <p className="text-gray-500 dark:text-slate-400 text-center p-4">This attendee has no scheduled meetings.</p>
                             )}
                         </Card>
-                     </div>
+                    </div>
                 )}
             </div>
         </Modal>
