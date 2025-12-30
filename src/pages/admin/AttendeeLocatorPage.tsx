@@ -11,7 +11,7 @@ import { MagnifyingGlassIcon, ArrowPathIcon, UserIcon, BuildingStorefrontIcon, L
 import { toast } from 'react-hot-toast';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { localeKeys } from '../../i18n/locales';
-import { useAutoRefresh, getTimeAgoString, REFRESH_INTERVALS } from '../../hooks/useAutoRefresh';
+import { useAutoRefresh } from '../../hooks/useAutoRefresh';
 
 interface SortedMissingAttendee extends SessionRegistration {
     boothName?: string;
@@ -41,13 +41,10 @@ const AttendeeLocatorPage: React.FC = () => {
     const liveSession = useMemo(() => operationalDetails.session, [operationalDetails]);
 
     // Auto-refresh for real-time missing attendee updates
-    const [autoRefreshState, autoRefreshControls] = useAutoRefresh({
+    const { lastUpdated, isRefreshing, manualRefresh } = useAutoRefresh({
+        intervalMs: 10000,
         enabled: true,
-        intervalMs: REFRESH_INTERVALS.NORMAL, // 30 seconds
-        onRefresh: async () => {
-            await fetchData(false); // Silent refresh
-        },
-        pauseOnHidden: true
+        onlyWhenActive: true
     });
 
     useEffect(() => {
@@ -240,8 +237,8 @@ const AttendeeLocatorPage: React.FC = () => {
                         <button
                             onClick={autoRefreshControls.toggle}
                             className={`p-1 rounded transition-all ${autoRefreshState.enabled
-                                    ? 'text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20'
-                                    : 'text-slate-400 dark:text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700'
+                                ? 'text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20'
+                                : 'text-slate-400 dark:text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700'
                                 }`}
                             title={autoRefreshState.enabled ? 'Desactivar auto-refresh' : 'Activar auto-refresh'}
                         >

@@ -8,7 +8,7 @@ import { TableCellsIcon, CheckCircleIcon, XMarkIcon, UserIcon, UserPlusIcon, Exc
 
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../supabaseClient';
-import { useAutoRefresh, getTimeAgoString, REFRESH_INTERVALS } from '../../hooks/useAutoRefresh';
+import { useAutoRefresh } from '../../hooks/useAutoRefresh';
 import { ArrowPathIcon } from '../../components/Icons';
 import { toast } from 'react-hot-toast';
 import { AppRoute } from '../../types';
@@ -246,13 +246,10 @@ const DataVisualizationPage: React.FC = () => {
   const { selectedEventId, currentEvent, fetchAvailableEvents, updateEvent } = useSelectedEvent();
 
   // Auto-refresh setup for real-time monitoring
-  const [autoRefreshState, autoRefreshControls] = useAutoRefresh({
-    enabled: true, // Start enabled by default
-    intervalMs: REFRESH_INTERVALS.NORMAL, // 30 seconds
-    onRefresh: async () => {
-      await fetchData(false); // Silent refresh (no loader)
-    },
-    pauseOnHidden: true // Pause when tab hidden to save battery
+  const { lastUpdated, isRefreshing, manualRefresh } = useAutoRefresh({
+    intervalMs: 10000,
+    enabled: true,
+    onlyWhenActive: true
   });
 
   // --- AUTO-SYNC EVENT DATES WITH SESSIONS ---
