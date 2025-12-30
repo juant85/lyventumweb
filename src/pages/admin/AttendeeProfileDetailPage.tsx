@@ -473,9 +473,11 @@ export default function AttendeeProfileDetailPage() {
         ) : (
           <div className="space-y-6 p-4">
             {/* Profile Hero */}
-            <div className="flex flex-col items-center gap-4">
+            <div className="flex flex-col items-center gap-4 bg-gradient-to-b from-primary-50/50 to-transparent dark:from-primary-900/10 py-6 -mx-4 px-4 rounded-2xl">
               <div className="relative group">
-                <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white dark:border-slate-800 shadow-lg bg-slate-200">
+                {/* Gradient border ring */}
+                <div className="absolute -inset-1 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full blur opacity-30 group-hover:opacity-60 transition-opacity" />
+                <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-white dark:border-slate-800 shadow-xl bg-slate-200">
                   {avatarPreview ? (
                     <img src={avatarPreview} alt={attendee.name} className="w-full h-full object-cover" />
                   ) : (
@@ -486,7 +488,7 @@ export default function AttendeeProfileDetailPage() {
                 </div>
                 <button
                   onClick={() => canTakePhoto ? handleTakePhoto() : null}
-                  className="absolute bottom-0 right-0 bg-primary-600 text-white p-2 rounded-full shadow-lg"
+                  className="absolute bottom-0 right-0 bg-gradient-to-br from-primary-600 to-primary-700 text-white p-2 rounded-full shadow-lg hover:shadow-xl transition-all"
                 >
                   <CameraIcon className="w-4 h-4" />
                 </button>
