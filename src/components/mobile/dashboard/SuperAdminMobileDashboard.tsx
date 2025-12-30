@@ -105,13 +105,11 @@ const SuperAdminMobileDashboard: React.FC = () => {
                         ))
                     ) : (
                         <MobileEmptyState
-                            icon={<Calendar className="w-8 h-8" />}
+                            icon={<Calendar className="w-12 h-12 text-primary-600" />}
                             title="No Events Yet"
                             description="Create your first event to get started"
-                            action={{
-                                label: 'Create Event',
-                                onClick: () => navigate(AppRoute.SuperAdminEvents)
-                            }}
+                            actionLabel="Create Event"
+                            onAction={() => navigate(AppRoute.SuperAdminEvents)}
                         />
                     )}
                 </div>

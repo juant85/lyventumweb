@@ -136,7 +136,7 @@ const OrganizerMobileDashboard: React.FC = () => {
                                 key={booth.id}
                                 title={booth.companyName}
                                 subtitle={`Physical ID: ${booth.physicalId}`}
-                                icon={InboxIcon}
+                                icon={<div className="w-5 h-5 text-pink-500">🏢</div>}
                                 badge={
                                     <span className="bg-primary-100 text-primary-700 text-xs px-2 py-1 rounded-full font-bold">
                                         {booth.visitors} visitors
@@ -150,10 +150,8 @@ const OrganizerMobileDashboard: React.FC = () => {
                             icon={<div className="text-4xl">🏢</div>}
                             title="No Booths Yet"
                             description="Add booths to track engagement"
-                            action={{
-                                label: "Add Booth",
-                                onClick: () => navigate('/booth-setup')
-                            }}
+                            actionLabel="Add Booth"
+                            onAction={() => navigate('/booth-setup')}
                         />
                     )}
                 </div>
@@ -182,13 +180,11 @@ const OrganizerMobileDashboard: React.FC = () => {
                         ))
                     ) : (
                         <MobileEmptyState
-                            icon={Calendar}
+                            icon={<Calendar className="w-12 h-12 text-primary-600" />}
                             title="No Upcoming Sessions"
                             description="Create your first session to get started with your event"
-                            action={{
-                                label: 'Create Session',
-                                onClick: () => navigate('/sessions/new')
-                            }}
+                            actionLabel="Create Session"
+                            onAction={() => navigate('/sessions')}
                         />
                     )}
                 </div>

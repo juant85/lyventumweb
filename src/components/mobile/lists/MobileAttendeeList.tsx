@@ -142,13 +142,11 @@ const MobileAttendeeList: React.FC<MobileAttendeeListProps> = ({ onAddClick, onE
                     ))
                 ) : (
                     <MobileEmptyState
-                        icon={<UserIcon className="w-12 h-12 text-slate-300" />}
+                        icon={<UserIcon className="w-12 h-12 text-primary-600" />}
                         title={searchTerm ? "No matches found" : "No attendees yet"}
                         description={searchTerm ? "Try adjusting your search terms" : "Start by adding your first attendee"}
-                        action={searchTerm ? undefined : {
-                            label: "Add Attendee",
-                            onClick: onAddClick
-                        }}
+                        actionLabel={searchTerm ? undefined : "Add Attendee"}
+                        onAction={searchTerm ? undefined : onAddClick}
                     />
                 )}
             </div>
