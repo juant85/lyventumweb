@@ -64,8 +64,8 @@ const MobileBoothSelector: React.FC<MobileBoothSelectorProps> = ({ booths, onSel
                             className="w-full bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm border border-slate-200 dark:border-slate-700 flex items-center gap-4 min-h-[80px] hover:shadow-md transition-shadow"
                         >
                             {/* Physical ID Badge */}
-                            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center text-white font-bold text-lg flex-shrink-0 shadow-lg">
-                                {booth.physicalId}
+                            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center text-white flex-shrink-0 shadow-lg">
+                                <Icon name="store" className="w-8 h-8" />
                             </div>
 
                             {/* Booth Info */}

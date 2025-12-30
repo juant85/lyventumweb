@@ -136,7 +136,7 @@ const OrganizerMobileDashboard: React.FC = () => {
                                 key={booth.id}
                                 title={booth.companyName}
                                 subtitle={`Physical ID: ${booth.physicalId}`}
-                                icon={<div className="w-5 h-5 text-pink-500">🏢</div>}
+                                icon={InboxIcon}
                                 badge={
                                     <span className="bg-primary-100 text-primary-700 text-xs px-2 py-1 rounded-full font-bold">
                                         {booth.visitors} visitors
@@ -182,7 +182,7 @@ const OrganizerMobileDashboard: React.FC = () => {
                         ))
                     ) : (
                         <MobileEmptyState
-                            icon={<Calendar className="w-8 h-8" />}
+                            icon={Calendar}
                             title="No Upcoming Sessions"
                             description="Create your first session to get started with your event"
                             action={{

@@ -71,8 +71,8 @@ const MobileAttendeeList: React.FC<MobileAttendeeListProps> = ({ onAddClick, onE
                     <button
                         onClick={() => setFilterTab('all')}
                         className={`flex-1 py-2 px-3 text-sm font-semibold rounded-lg transition-colors ${filterTab === 'all'
-                                ? 'bg-primary-600 text-white'
-                                : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
+                            ? 'bg-primary-600 text-white'
+                            : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
                             }`}
                     >
                         All ({stats.all})
@@ -80,8 +80,8 @@ const MobileAttendeeList: React.FC<MobileAttendeeListProps> = ({ onAddClick, onE
                     <button
                         onClick={() => setFilterTab('checkedIn')}
                         className={`flex-1 py-2 px-3 text-sm font-semibold rounded-lg transition-colors ${filterTab === 'checkedIn'
-                                ? 'bg-green-600 text-white'
-                                : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
+                            ? 'bg-green-600 text-white'
+                            : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
                             }`}
                     >
                         ✓ In ({stats.checkedIn})
@@ -89,8 +89,8 @@ const MobileAttendeeList: React.FC<MobileAttendeeListProps> = ({ onAddClick, onE
                     <button
                         onClick={() => setFilterTab('expected')}
                         className={`flex-1 py-2 px-3 text-sm font-semibold rounded-lg transition-colors ${filterTab === 'expected'
-                                ? 'bg-amber-600 text-white'
-                                : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
+                            ? 'bg-amber-600 text-white'
+                            : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
                             }`}
                     >
                         ⏳ Wait ({stats.expected})
@@ -120,7 +120,7 @@ const MobileAttendeeList: React.FC<MobileAttendeeListProps> = ({ onAddClick, onE
                             key={attendee.id}
                             title={attendee.name}
                             subtitle={attendee.organization}
-                            icon={<UserIcon className="w-5 h-5 text-slate-500" />}
+                            icon={<Users className="w-5 h-5 text-slate-500" />}
                             badge={attendee.checkInTime ? (
                                 <span className="bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wide">
                                     Checked In

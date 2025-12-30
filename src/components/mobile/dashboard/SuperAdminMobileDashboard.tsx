@@ -98,7 +98,7 @@ const SuperAdminMobileDashboard: React.FC = () => {
                                 key={event.id}
                                 title={event.name}
                                 subtitle={event.companyName || 'No organization'}
-                                icon={<Building2 className="w-5 h-5 text-blue-600" />}
+                                icon={Building2}
                                 badge={getEventStatusBadge(event)}
                                 onClick={() => handleEventClick(event.id)}
                             />
