@@ -48,6 +48,12 @@ const iconMap = {
   // Fallback icon
   fallback: Lucide.CircleHelp,
 
+  // Additional icons for MobileMenu
+  chart: Lucide.BarChart3,
+  activity: Lucide.Activity,
+  user: Lucide.User,
+  close: Lucide.X,
+
   // Added for Sidebar Refinement
   barChart: Lucide.BarChartBig,
   fileText: Lucide.FileText,
@@ -66,8 +72,6 @@ const iconMap = {
   // Mobile UI
   home: Lucide.Home,
   menu: Lucide.Menu,
-  user: Lucide.User,
-  close: Lucide.X,
   plus: Lucide.Plus,
 } as const;
 
