@@ -1,7 +1,8 @@
 {
-    "name": "LyVenTum - Event Management Platform",
+    "name": "LyVenTum",
     "short_name": "LyVenTum",
-    "description": "Advanced event management system with real-time monitoring and QR scanning",
+    "id": "/",
+    "description": "Event Management Platform",
     "start_url": "/",
     "scope": "/",
     "display": "standalone",

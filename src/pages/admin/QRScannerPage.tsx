@@ -499,14 +499,27 @@ const QRScannerPage: React.FC = () => {
                   <p className="text-sm text-slate-500 dark:text-slate-400">Booth {activeBooth.physicalId}</p>
                 )}
               </div>
-              <Button
-                onClick={handleLogout}
-                variant="neutral"
-                size="sm"
-                className="flex-shrink-0"
-              >
-                {t(localeKeys.logout)}
-              </Button>
+              <div className="flex items-center gap-2">
+                {activeBooth && (
+                  <Button
+                    onClick={handleToggleKioskMode}
+                    variant="secondary"
+                    size="sm"
+                    className="flex-shrink-0"
+                    title="Toggle Kiosk Mode"
+                  >
+                    <Icon name="grid" size={16} />
+                  </Button>
+                )}
+                <Button
+                  onClick={handleLogout}
+                  variant="neutral"
+                  size="sm"
+                  className="flex-shrink-0"
+                >
+                  {t(localeKeys.logout)}
+                </Button>
+              </div>
             </div>
 
             {/* Pending Scans Indicator */}

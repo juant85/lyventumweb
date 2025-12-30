@@ -22,6 +22,8 @@ import { useBoothCapacity } from '../../hooks/useBoothCapacity';
 import AvailableAttendeesModal from '../../components/admin/AvailableAttendeesModal';
 import BulkRegistrationModal from '../../components/admin/BulkRegistrationModal';
 import { PresentationChartLineIcon, BuildingStorefrontIcon, MapIcon, UsersGroupIcon as IconUsersGroup } from '../../components/Icons';
+import { MobileCard, SpeedDialFAB, MobileEmptyState } from '../../components/mobile';
+import SwipeableCard from '../../components/ui/SwipeableCard';
 
 
 const formatDateForInput = (dateValue: string | Date): string => {
@@ -191,14 +193,14 @@ const ShiftDatesModal: React.FC<{
 
 // ... imports
 import { useIsMobile } from '../../hooks/useIsMobile';
-// The following import is already present above, no need to duplicate.
+// MobileCard import removed (using top-level import)
 // import { ArrowLeftIcon } from '../../components/Icons'; // Ensure this is imported
 
 const SessionSettingsPage: React.FC = () => {
     const isMobile = useIsMobile();
     const [mobileViewMode, setMobileViewMode] = useState<'list' | 'form'>('list');
 
-    const { sessions, allConfiguredBooths, addSession, updateSession, attendees, getSessionRegistrationsForSession, getSessionRegistrationsForAttendee, updateSessionBoothAssignments, loadingData, addSessionRegistration, deleteSessionRegistration } = useEventData();
+    const { sessions, allConfiguredBooths, addSession, updateSession, deleteSession, attendees, getSessionRegistrationsForSession, getSessionRegistrationsForAttendee, updateSessionBoothAssignments, loadingData, addSessionRegistration, deleteSessionRegistration } = useEventData();
     const { selectedEventId, currentEvent } = useSelectedEvent();
     const { config, eventType } = useEventTypeConfig();
 
@@ -211,6 +213,18 @@ const SessionSettingsPage: React.FC = () => {
     const [description, setDescription] = useState('');
     const [speaker, setSpeaker] = useState('');
     const [maxCapacity, setMaxCapacity] = useState('');
+
+    const handleDeleteSession = async (id: string) => {
+        if (window.confirm('Delete this session? This cannot be undone.')) {
+            try {
+                await deleteSession(id);
+                toast.success('Session deleted');
+            } catch (error: any) {
+                console.error('Delete failed', error);
+                toast.error('Failed to delete session');
+            }
+        }
+    };
 
     const [isCreatingNew, setIsCreatingNew] = useState(true);
     const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
@@ -642,21 +656,40 @@ const SessionSettingsPage: React.FC = () => {
                             ) : (
                                 <div className="space-y-3">
                                     {sessions.sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime()).map(s => (
-                                        <div
-                                            key={s.id}
-                                            className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 flex justify-between items-center"
-                                            onClick={() => handleMobileEdit(s.id)}
-                                        >
-                                            <div>
-                                                <h3 className="font-bold text-slate-800 dark:text-slate-200">{s.name}</h3>
-                                                <div className="text-sm text-slate-500 mt-1 flex flex-col gap-0.5">
-                                                    <span className="flex items-center gap-1.5"><Icon name="clock" className="w-3 h-3" /> {new Date(s.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                                                    {s.location && <span className="flex items-center gap-1.5"><MapIcon className="w-3 h-3" /> {s.location}</span>}
-                                                </div>
-                                            </div>
-                                            <div className="text-slate-400">
-                                                <Icon name="chevronRight" className="w-5 h-5" />
-                                            </div>
+                                        <div key={s.id} onClick={() => handleMobileEdit(s.id)}>
+                                            <SwipeableCard
+                                                leftAction={{
+                                                    icon: <Icon name="edit" className="w-5 h-5" />,
+                                                    color: 'blue',
+                                                    label: 'Edit',
+                                                    onTrigger: () => handleMobileEdit(s.id)
+                                                }}
+                                                rightAction={{
+                                                    icon: <Icon name="trash" className="w-5 h-5" />,
+                                                    color: 'red',
+                                                    label: 'Delete',
+                                                    onTrigger: () => handleDeleteSession(s.id)
+                                                }}
+                                            >
+                                                <MobileCard
+                                                    title={s.name}
+                                                    subtitle={`${new Date(s.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • ${s.location || 'No Location'}`}
+                                                    icon={<Icon name="clock" className="w-5 h-5 text-primary-600" />}
+                                                    badge={
+                                                        <span className={`px-2 py-0.5 rounded text-xs font-semibold ${s.sessionType === 'break' ? 'bg-amber-100 text-amber-800' :
+                                                            s.sessionType === 'networking' ? 'bg-green-100 text-green-800' :
+                                                                'bg-brandBlue/10 text-brandBlue'
+                                                            }`}>
+                                                            {s.sessionType === 'meeting' ? 'Meeting' : s.sessionType === 'presentation' ? 'Talk' : s.sessionType === 'networking' ? 'Networking' : 'Break'}
+                                                        </span>
+                                                    }
+                                                    actions={
+                                                        <div className="flex justify-between w-full text-xs text-slate-500">
+                                                            <span>{s.maxCapacity ? `Ends ${new Date(s.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : `Ends ${new Date(s.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`}</span>
+                                                        </div>
+                                                    }
+                                                />
+                                            </SwipeableCard>
                                         </div>
                                     ))}
                                 </div>

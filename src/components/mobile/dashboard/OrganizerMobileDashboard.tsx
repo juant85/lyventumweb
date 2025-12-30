@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useEventData } from '../../../contexts/EventDataContext';
-import { MobileCard, MobileFAB, MobileEmptyState } from '../index';
+import { MobileCard, SpeedDialFAB, MobileEmptyState } from '../index';
 import SwipeableCarousel from '../../ui/SwipeableCarousel';
 import QuickStatCard from '../../dashboard/QuickStatCard';
 import { Calendar } from 'lucide-react';
@@ -108,11 +108,27 @@ const OrganizerMobileDashboard: React.FC = () => {
                 </div>
             </div>
 
-            {/* FAB */}
-            <MobileFAB
-                icon="plus"
-                onClick={() => navigate('/sessions/new')}
-                label="New Session"
+            <SpeedDialFAB
+                actions={[
+                    {
+                        icon: 'qrCode',
+                        label: 'Quick Scan',
+                        onClick: () => navigate('/admin/scan'),
+                        color: 'primary'
+                    },
+                    {
+                        icon: 'userPlus',
+                        label: 'Add Attendee',
+                        onClick: () => navigate('/admin/attendees/add'),
+                        color: 'success'
+                    },
+                    {
+                        icon: 'plus',
+                        label: 'New Session',
+                        onClick: () => navigate('/sessions/new'),
+                        color: 'secondary'
+                    }
+                ]}
             />
         </div>
     );

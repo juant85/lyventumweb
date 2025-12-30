@@ -3,7 +3,7 @@ import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedEvent } from '../../../contexts/SelectedEventContext';
 import { useEventData } from '../../../contexts/EventDataContext';
-import { MobileCard, MobileFAB, MobileEmptyState } from '../index';
+import { MobileCard, SpeedDialFAB, MobileEmptyState } from '../index';
 import SwipeableCarousel from '../../ui/SwipeableCarousel';
 import QuickStatCard from '../../dashboard/QuickStatCard';
 import { Building2, Calendar } from 'lucide-react';
@@ -137,11 +137,28 @@ const SuperAdminMobileDashboard: React.FC = () => {
                 </div>
             </div>
 
-            {/* FAB - Navigate to Events Management */}
-            <MobileFAB
-                icon="plus"
-                onClick={() => navigate(AppRoute.SuperAdminEvents)}
-                label="New Event"
+            {/* Speed Dial FAB */}
+            <SpeedDialFAB
+                actions={[
+                    {
+                        icon: 'settings',
+                        label: 'Settings',
+                        onClick: () => navigate('/admin/settings'),
+                        color: 'secondary'
+                    },
+                    {
+                        icon: 'calendar',
+                        label: 'Manage Events',
+                        onClick: () => navigate(AppRoute.SuperAdminEvents),
+                        color: 'primary'
+                    },
+                    {
+                        icon: 'plus',
+                        label: 'Create Event',
+                        onClick: () => navigate(AppRoute.SuperAdminEvents), // Opens modal in Events page
+                        color: 'success'
+                    }
+                ]}
             />
         </div>
     );

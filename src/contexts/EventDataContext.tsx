@@ -43,6 +43,7 @@ interface EventDataContextType {
   fetchData: (isInitialLoad?: boolean) => Promise<void>;
   addSession: (sessionName: string, startTime: string, endTime: string, details?: Partial<Session>) => Promise<{ success: boolean, message: string, newSession?: Session }>;
   updateSession: (updatedSession: Session) => Promise<{ success: boolean, message: string, updatedSession?: Session }>;
+  deleteSession: (sessionId: string) => Promise<{ success: boolean, message: string }>; // Added
   addScan: (attendeeId: string, boothId: string, notes?: string, deviceId?: string) => Promise<{ success: boolean, message: string, scan?: ScanRecord, wasOffline: boolean }>;
   deleteScan: (scanId: string) => Promise<{ success: boolean, message: string }>;
   getBoothById: (boothId: string) => Booth | undefined;
@@ -679,6 +680,13 @@ export const EventDataProvider: React.FC<{ children: ReactNode }> = ({ children 
     return { success: true, message: 'Session updated successfully.', updatedSession: mapSessionFromDb(data as SessionWithCapacities) };
   }, [fetchData]);
 
+  const deleteSession: EventDataContextType['deleteSession'] = useCallback(async (sessionId) => {
+    const { error: deleteError } = await supabase.from('sessions').delete().eq('id', sessionId);
+    if (deleteError) return { success: false, message: `Failed to delete session: ${deleteError.message}` };
+    await fetchData(false);
+    return { success: true, message: 'Session deleted successfully.' };
+  }, [fetchData]);
+
   type SessionAssignment = Pick<Database['public']['Tables']['session_registrations']['Row'], 'id' | 'attendee_id' | 'expected_booth_id'>;
 
   const updateSessionBoothAssignments: EventDataContextType['updateSessionBoothAssignments'] = useCallback(async (sessionId, boothId, newAttendeeIds) => {
@@ -1225,7 +1233,7 @@ export const EventDataProvider: React.FC<{ children: ReactNode }> = ({ children 
 
     sessions, scans, pendingScans, booths, attendees, loadingData, dataError, isSyncing,
     realtimeEnabled, realtimeConnected, changedBoothIds,
-    fetchData, addSession, updateSession, addScan, deleteScan, getBoothById, getBoothName,
+    fetchData, addSession, updateSession, deleteSession, addScan, deleteScan, getBoothById, getBoothName,
     activeBoothsForSession, allConfiguredBooths, clearAllEventDataFromSupabase,
     addBooth, updateBooth, deleteBooth, regenerateAllBoothAccessCodes,
     getOperationalSessionDetails, findOrCreateAttendeesBatch, addSessionRegistrationsBatch,

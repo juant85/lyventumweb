@@ -65,24 +65,26 @@ const BoothLeaderboard: React.FC<{ data: { name: string, uniqueVisitors: number,
   const { t } = useLanguage();
   return (
     <Card title={t(localeKeys.boothLeaderboard)} icon={<BuildingStorefrontIcon className="w-6 h-6 text-green-500" />} bodyClassName="!p-0">
-      <table className="w-full text-sm">
-        <thead className="sticky top-0 bg-slate-100 dark:bg-slate-700 z-10">
-          <tr className="border-b border-slate-200 dark:border-slate-600">
-            <th className="p-3 text-left font-semibold text-slate-600 dark:text-slate-300">Booth</th>
-            <th className="p-3 text-right font-semibold text-slate-600 dark:text-slate-300">Unique Visitors</th>
-            <th className="p-3 text-right font-semibold text-slate-600 dark:text-slate-300">Total Scans</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((booth, index) => (
-            <tr key={index} className="border-b border-slate-100 dark:border-slate-700/50 last:border-0">
-              <td className="p-3 font-medium text-slate-800 dark:text-slate-200">{booth.name}</td>
-              <td className="p-3 text-right font-semibold text-primary-600 dark:text-primary-400">{booth.uniqueVisitors}</td>
-              <td className="p-3 text-right text-slate-500 dark:text-slate-400">{booth.totalScans}</td>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm min-w-[300px]">
+          <thead className="sticky top-0 bg-slate-100 dark:bg-slate-700 z-10">
+            <tr className="border-b border-slate-200 dark:border-slate-600">
+              <th className="p-3 text-left font-semibold text-slate-600 dark:text-slate-300">Booth</th>
+              <th className="p-3 text-right font-semibold text-slate-600 dark:text-slate-300">Unique Visitors</th>
+              <th className="p-3 text-right font-semibold text-slate-600 dark:text-slate-300">Total Scans</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data.map((booth, index) => (
+              <tr key={index} className="border-b border-slate-100 dark:border-slate-700/50 last:border-0">
+                <td className="p-3 font-medium text-slate-800 dark:text-slate-200">{booth.name}</td>
+                <td className="p-3 text-right font-semibold text-primary-600 dark:text-primary-400">{booth.uniqueVisitors}</td>
+                <td className="p-3 text-right text-slate-500 dark:text-slate-400">{booth.totalScans}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </Card>
   );
 };

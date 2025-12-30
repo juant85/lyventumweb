@@ -17,6 +17,9 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { localeKeys } from '../../i18n/locales';
 import { supabase } from '../../supabaseClient';
 import { useIsMobile } from '../../hooks/useIsMobile';
+import MobileCard from '../../components/mobile/MobileCard';
+import SwipeableCard from '../../components/ui/SwipeableCard';
+import { BuildingStorefrontIcon } from '../../components/Icons'; // Ensure icon is imported
 
 const BoothProfileModal: React.FC<{
   booth: Booth | null;
@@ -419,36 +422,43 @@ const BoothSetupPage: React.FC = () => {
                 /* Mobile List View */
                 <div className="space-y-4">
                   {filteredBooths.map(booth => (
-                    <div key={booth.id} className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm relative">
-                      <div className="flex justify-between items-start mb-2">
-                        <div>
-                          <h3 className="font-bold text-lg text-slate-800 dark:text-slate-100">{booth.companyName}</h3>
-                          <span className="text-xs font-mono text-slate-500 bg-slate-100 dark:bg-slate-900 px-2 py-0.5 rounded">ID: {booth.physicalId}</span>
-                        </div>
-                        <div className="flex gap-2">
-                          <button onClick={() => setEditingBooth(booth)} className="p-2 text-primary-600 bg-primary-50 dark:bg-primary-900/30 rounded-full">
-                            <PencilSquareIcon className="w-5 h-5" />
-                          </button>
-                          <button onClick={() => handleDeleteBooth(booth)} className="p-2 text-red-600 bg-red-50 dark:bg-red-900/30 rounded-full">
-                            <TrashIcon className="w-5 h-5" />
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="mt-3 flex items-center justify-between bg-slate-50 dark:bg-slate-900/50 p-2 rounded-lg">
-                        <span className="text-sm text-slate-500">Code:</span>
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono font-bold text-slate-700 dark:text-slate-300">{booth.accessCode}</span>
-                          <button onClick={() => handleCopyCode(booth.accessCode)} className="text-slate-400 hover:text-slate-600">
-                            <DocumentDuplicateIcon className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
-                      {booth.isSponsor && (
-                        <div className="mt-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
-                          Using Sponsor
-                        </div>
-                      )}
+                    <div key={booth.id} className="relative mb-4">
+                      <SwipeableCard
+                        leftAction={{
+                          icon: <PencilSquareIcon className="w-5 h-5" />,
+                          color: 'blue',
+                          label: 'Edit',
+                          onTrigger: () => setEditingBooth(booth)
+                        }}
+                        rightAction={{
+                          icon: <TrashIcon className="w-5 h-5" />,
+                          color: 'red',
+                          label: 'Delete',
+                          onTrigger: () => handleDeleteBooth(booth)
+                        }}
+                      >
+                        <MobileCard
+                          title={booth.companyName}
+                          subtitle={`ID: ${booth.physicalId}`}
+                          icon={<BuildingStorefrontIcon className="w-5 h-5 text-primary-600" />}
+                          badge={booth.isSponsor ? (
+                            <span className="bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded-full font-medium">
+                              Sponsor
+                            </span>
+                          ) : undefined}
+                          onClick={() => setEditingBooth(booth)}
+                          actions={
+                            <div className="flex items-center justify-between w-full">
+                              <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-900/50 px-2 py-1 rounded">
+                                <span className="font-mono text-xs font-bold text-slate-600 dark:text-slate-400">{booth.accessCode}</span>
+                                <button onClick={(e) => { e.stopPropagation(); handleCopyCode(booth.accessCode); }} className="text-slate-400 hover:text-slate-600">
+                                  <DocumentDuplicateIcon className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </div>
+                          }
+                        />
+                      </SwipeableCard>
                     </div>
                   ))}
                 </div>

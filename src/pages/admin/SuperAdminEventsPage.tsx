@@ -438,32 +438,32 @@ const SuperAdminEventsPage: React.FC = () => {
       <form id="create-event-form" onSubmit={handleCreateEvent} className="space-y-4">
         <Input label={t(localeKeys.headerEventName)} value={newEventName} onChange={(e) => setNewEventName(e.target.value)} required disabled={isSubmitting} />
 
+        {/* Event Type - Visible on Mobile too */}
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 font-montserrat">Event Type</label>
+          <Select
+            value={newEventType}
+            onChange={(e) => setNewEventType(e.target.value as EventType)}
+            options={[
+              { value: 'vendor_meetings', label: '🤝 Vendor Meetings' },
+              { value: 'conference', label: '🎤 Conference' },
+              { value: 'trade_show', label: '🏢 Trade Show' },
+              { value: 'hybrid', label: '🔄 Hybrid' }
+            ]}
+            disabled={isSubmitting}
+          />
+        </div>
+
         {!isMobile && (
-          <>
-            <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 font-montserrat">Event Type</label>
-              <Select
-                value={newEventType}
-                onChange={(e) => setNewEventType(e.target.value as EventType)}
-                options={[
-                  { value: 'vendor_meetings', label: '🤝 Vendor Meetings (B2B Matchmaking)' },
-                  { value: 'conference', label: '🎤 Conference (Talks & Presentations)' },
-                  { value: 'trade_show', label: '🏢 Trade Show (Open Lead Capture)' },
-                  { value: 'hybrid', label: '🔄 Hybrid (All Features)' }
-                ]}
-                disabled={isSubmitting}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 font-montserrat">Event Timezone</label>
-              <Select
-                value={newEventTimezone}
-                onChange={(e) => setNewEventTimezone(e.target.value)}
-                options={COMMON_TIMEZONES.map(tz => ({ value: tz.value, label: tz.label }))}
-                disabled={isSubmitting}
-              />
-            </div>
-          </>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 font-montserrat">Event Timezone</label>
+            <Select
+              value={newEventTimezone}
+              onChange={(e) => setNewEventTimezone(e.target.value)}
+              options={COMMON_TIMEZONES.map(tz => ({ value: tz.value, label: tz.label }))}
+              disabled={isSubmitting}
+            />
+          </div>
         )}
 
         <div>
