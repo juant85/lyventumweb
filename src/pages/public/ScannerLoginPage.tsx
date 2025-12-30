@@ -117,23 +117,23 @@ const ScannerLoginPage: React.FC = () => {
 
   return (
     <div
-      className="min-h-screen bg-slate-950 flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
+      className="min-h-screen bg-slate-950 flex flex-col items-center justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8"
       style={{ backgroundImage: `radial-gradient(circle at 1px 1px, rgba(100, 116, 139, 0.2) 1px, transparent 0)`, backgroundSize: '20px 20px' }}
     >
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center mb-10">
+      <div className="max-w-md w-full space-y-6 sm:space-y-8">
+        <div className="text-center mb-6 sm:mb-10">
           <Link to={AppRoute.Landing} className="inline-block group">
-            <LyVentumLogo className="h-20 w-auto filter drop-shadow-[0_4px_10px_rgba(59,130,246,0.25)] dark:drop-shadow-[0_5px_15px_rgba(96,165,250,0.25)] transition-transform duration-300 group-hover:scale-105" />
+            <LyVentumLogo className="h-12 sm:h-20 w-auto filter drop-shadow-[0_4px_10px_rgba(59,130,246,0.25)] dark:drop-shadow-[0_5px_15px_rgba(96,165,250,0.25)] transition-transform duration-300 group-hover:scale-105" />
           </Link>
         </div>
 
-        <BackgroundGradient containerClassName="rounded-2xl" className="bg-slate-900/80 backdrop-blur-md rounded-[22px] p-8 space-y-6">
+        <BackgroundGradient containerClassName="rounded-2xl" className="bg-slate-900/80 backdrop-blur-md rounded-[22px] p-6 sm:p-8 space-y-6">
           <div className="text-center">
-            <QrCodeIcon className="w-10 h-10 mx-auto text-secondary-400 mb-2" />
-            <h2 className="text-2xl font-bold text-slate-100">
+            <QrCodeIcon className="w-8 h-8 sm:w-10 sm:h-10 mx-auto text-secondary-400 mb-2" />
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-100">
               Acceso al Escáner
             </h2>
-            <p className="text-slate-400 mt-2 text-sm">
+            <p className="text-slate-400 mt-2 text-xs sm:text-sm">
               {t(localeKeys.accessCodePrompt)}
             </p>
           </div>
