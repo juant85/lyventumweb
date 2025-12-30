@@ -385,6 +385,9 @@ const EventManagementDashboard: React.FC = () => {
                 <div className="grid grid-cols-2 gap-4">
                     {/* Sessions */}
                     <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.05, duration: 0.3 }}
                         whileHover={{ y: -2 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => navigate(AppRoute.SessionSettings)}
@@ -436,6 +439,9 @@ const EventManagementDashboard: React.FC = () => {
 
                     {/* Attendees */}
                     <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.10, duration: 0.3 }}
                         whileHover={{ y: -2 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => navigate(AppRoute.AttendeeProfiles)}
