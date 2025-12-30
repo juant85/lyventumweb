@@ -420,12 +420,27 @@ const SuperAdminEventsPage: React.FC = () => {
   );
 
   // Shared modal definition (used by both mobile and desktop)
+  // Shared modal definition (used by both mobile and desktop)
+  // Shared modal definition (used by both mobile and desktop)
   const createEventModalContent = isCreateModalOpen && (
-    <Modal isOpen={true} onClose={resetCreateForm} title={t(localeKeys.modalCreateTitle)} size="xl">
-      <form onSubmit={handleCreateEvent} className="space-y-4">
+    <Modal
+      isOpen={true}
+      onClose={resetCreateForm}
+      title={t(localeKeys.modalCreateTitle)}
+      size="xl"
+      footerContent={
+        <div className="flex justify-end gap-3 w-full">
+          <Button type="button" variant="neutral" onClick={resetCreateForm}>{t('cancel')}</Button>
+          <Button type="submit" variant="primary" form="create-event-form" disabled={isSubmitting}>
+            {isSubmitting ? t(localeKeys.adding) : t(localeKeys.createSession)}
+          </Button>
+        </div>
+      }
+    >
+      <form id="create-event-form" onSubmit={handleCreateEvent} className="space-y-4">
         <Input label={t(localeKeys.headerEventName)} value={newEventName} onChange={(e) => setNewEventName(e.target.value)} required disabled={isSubmitting} />
 
-        {/* Event Type Selector - Simplified for mobile */}
+        {/* Event Type & Timezone - Simplified for mobile */}
         {!isMobile && (
           <>
             <div>
@@ -462,13 +477,13 @@ const SuperAdminEventsPage: React.FC = () => {
         <div>
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 font-montserrat">{t(localeKeys.headerCompany)}</label>
           <div className="flex items-center gap-4">
-            <label className="flex items-center"><input type="radio" name="createMode" value="existing" checked={createMode === 'existing'} onChange={() => setCreateMode('existing')} className="h-4 w-4 text-primary-600 focus:ring-primary-500" /> <span className="ml-2">Existing</span></label>
-            <label className="flex items-center"><input type="radio" name="createMode" value="new" checked={createMode === 'new'} onChange={() => setCreateMode('new')} className="h-4 w-4 text-primary-600 focus:ring-primary-500" /> <span className="ml-2">New</span></label>
+            <label className="flex items-center"><input type="radio" name="createMode" value="existing" checked={createMode === 'existing'} onChange={() => setCreateMode('existing')} className="h-4 w-4 text-primary-600 focus:ring-primary-500" /> <span className="ml-2 text-sm">Existing</span></label>
+            <label className="flex items-center"><input type="radio" name="createMode" value="new" checked={createMode === 'new'} onChange={() => setCreateMode('new')} className="h-4 w-4 text-primary-600 focus:ring-primary-500" /> <span className="ml-2 text-sm">New</span></label>
           </div>
         </div>
         {createMode === 'existing' && <Select label={t('selectCompany')} value={selectedCompanyId} onChange={(e) => setSelectedCompanyId(e.target.value)} options={companyOptions} disabled={isSubmitting || companies.length === 0} />}
 
-        {/* Plan Selection - Simplified for mobile */}
+        {/* Plan Selection */}
         <Select
           label={t(localeKeys.subscriptionPlan)}
           value={newPlanId}
@@ -476,11 +491,6 @@ const SuperAdminEventsPage: React.FC = () => {
           options={[{ value: '', label: 'No Plan' }, ...planOptions]}
           disabled={isSubmitting}
         />
-
-        <div className="flex justify-end gap-3 pt-4">
-          <Button type="button" variant="neutral" onClick={resetCreateForm}>{t('cancel')}</Button>
-          <Button type="submit" variant="primary" disabled={isSubmitting}>{isSubmitting ? t(localeKeys.adding) : t(localeKeys.createSession)}</Button>
-        </div>
       </form>
     </Modal>
   );
