@@ -1,5 +1,5 @@
 // src/components/mobile/dashboard/OrganizerMobileDashboard.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useEventData } from '../../../contexts/EventDataContext';
 import { MobileCard, SpeedDialFAB, MobileEmptyState } from '../index';
@@ -8,10 +8,15 @@ import QuickStatCard from '../../dashboard/QuickStatCard';
 import { Calendar } from 'lucide-react';
 import { useAutoRefresh } from '../../../hooks/useAutoRefresh';
 import LiveIndicator from '../LiveIndicator';
+import InviteOrganizerModal from '../InviteOrganizerModal';
+import PendingInvitationsCard from '../PendingInvitationsCard';
+import { useSelectedEvent } from '../../../contexts/SelectedEventContext';
 
 const OrganizerMobileDashboard: React.FC = () => {
     const { scans, sessions, booths, attendees } = useEventData();
+    const { currentEvent } = useSelectedEvent();
     const navigate = useNavigate();
+    const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
     // Auto-refresh every 10 seconds
     const { lastUpdated, isRefreshing, manualRefresh } = useAutoRefresh({
@@ -114,6 +119,16 @@ const OrganizerMobileDashboard: React.FC = () => {
                     />
                 </SwipeableCarousel>
             </div>
+
+            {/* Invitations Section */}
+            {currentEvent && (
+                <div className="px-4">
+                    <PendingInvitationsCard
+                        eventId={currentEvent.id}
+                        onInvite={() => setIsInviteModalOpen(true)}
+                    />
+                </div>
+            )}
 
             {/* Top Booths */}
             <div className="px-4">
@@ -226,6 +241,16 @@ const OrganizerMobileDashboard: React.FC = () => {
                     }
                 ]}
             />
+
+            {/* Invite Organizer Modal */}
+            {currentEvent && (
+                <InviteOrganizerModal
+                    isOpen={isInviteModalOpen}
+                    onClose={() => setIsInviteModalOpen(false)}
+                    eventId={currentEvent.id}
+                    eventName={currentEvent.name}
+                />
+            )}
         </div>
     );
 };
