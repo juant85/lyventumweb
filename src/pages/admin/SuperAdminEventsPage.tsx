@@ -24,6 +24,10 @@ import EmptyState from '../../components/ui/EmptyState';
 import { InboxIcon } from 'lucide-react';
 import EventOrganizersModal from '../../components/EventOrganizersModal';
 import { UsersGroupIcon } from '../../components/Icons';
+import { useIsMobile } from '../../hooks/useIsMobile';
+import { MobileCard, MobileFAB, MobileSearchBar, MobileEmptyState } from '../../components/mobile';
+import SwipeableCard from '../../components/ui/SwipeableCard';
+import { Building2, Calendar, Edit2, Trash2 } from 'lucide-react';
 
 type PlanRow = Database['public']['Tables']['plans']['Row'];
 type CompanyRow = Database['public']['Tables']['companies']['Row'];
@@ -86,6 +90,9 @@ const SuperAdminEventsPage: React.FC = () => {
 
   // Event Organizers Modal State
   const [managingOrganizersFor, setManagingOrganizersFor] = useState<EventWithCounts | null>(null);
+
+  // Mobile detection
+  const isMobile = useIsMobile();
 
 
   const fetchAllData = useCallback(async () => {
@@ -412,6 +419,103 @@ const SuperAdminEventsPage: React.FC = () => {
     </th>
   );
 
+  // ✨ MOBILE VIEW
+  if (isMobile) {
+    return (
+      <div className="space-y-6 pb-24">
+        {/* Header */}
+        <div className="px-4">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">Events</h1>
+          <MobileSearchBar
+            value={searchTerm}
+            onChange={setSearchTerm}
+            placeholder="Search events..."
+          />
+        </div>
+
+        {/* Events List */}
+        <div className="px-4 space-y-3">
+          {loadingEvents ? (
+            <div className="space-y-3">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="h-24 bg-slate-200 dark:bg-slate-700 rounded-2xl animate-pulse" />
+              ))}
+            </div>
+          ) : sortedAndFilteredEvents.length > 0 ? (
+            sortedAndFilteredEvents.map(event => {
+              const portalStatus = getPortalStatus(event);
+              return (
+                <SwipeableCard
+                  key={event.id}
+                  leftAction={{
+                    icon: <Edit2 className="w-5 h-5" />,
+                    label: "Edit",
+                    color: "blue",
+                    onTrigger: () => setEditingEvent(event)
+                  }}
+                  rightAction={{
+                    icon: <Trash2 className="w-5 h-5" />,
+                    label: "Delete",
+                    color: "red",
+                    onTrigger: () => setDeletingEvent(event)
+                  }}
+                >
+                  <MobileCard
+                    title={event.name}
+                    subtitle={`${event.company_name || 'No Company'} • ${formatDateForDisplay(event.start_date)}`}
+                    icon={<Building2 className="w-5 h-5 text-primary-600" />}
+                    badge={
+                      <div className="flex items-center gap-1">
+                        <span className="text-lg">{portalStatus.icon}</span>
+                        <span className={`text-xs font-bold ${portalStatus.color}`}>
+                          {portalStatus.label}
+                        </span>
+                      </div>
+                    }
+                    onClick={() => handleManageEvent(event.id)}
+                    actions={
+                      <div className="flex gap-2 text-xs text-slate-500 dark:text-slate-400">
+                        <span>📊 {event.booth_count || 0} booths</span>
+                        <span>•</span>
+                        <span>👥 {event.attendee_count || 0} attendees</span>
+                        {event.plan_name && (
+                          <>
+                            <span>•</span>
+                            <span className="text-primary-600 dark:text-primary-400 font-semibold">
+                              {event.plan_name}
+                            </span>
+                          </>
+                        )}
+                      </div>
+                    }
+                  />
+                </SwipeableCard>
+              );
+            })
+          ) : (
+            <MobileEmptyState
+              icon={<InboxIcon className="w-8 h-8" />}
+              title={searchTerm ? "No events found" : "No events yet"}
+              description={searchTerm ? `No results for "${searchTerm}"` : "Create your first event to get started"}
+              action={!searchTerm ? {
+                label: "Create Event",
+                onClick: () => setIsCreateModalOpen(true)
+              } : undefined}
+            />
+          )}
+        </div>
+
+        {/* FAB */}
+        <MobileFAB
+          icon="plus"
+          onClick={() => setIsCreateModalOpen(true)}
+          label="New Event"
+        />
+      </div>
+    );
+  }
+
+  // DESKTOP VIEW - Original render
   return (
     <>
       <Modal isOpen={isCreateModalOpen} onClose={resetCreateForm} title={t(localeKeys.modalCreateTitle)} size="xl">
