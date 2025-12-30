@@ -485,57 +485,43 @@ const QRScannerPage: React.FC = () => {
   // ══════════════════════════════════════════════════════════════════════════
   if (isMobile) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 pb-safe">
-        {/* Fullscreen Scanner Container */}
-        <div className="relative h-screen flex flex-col">
-          {/* Header Bar - Compact */}
-          <div className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 p-4 safe-area-top">
+      <div className="fixed inset-0 bg-black z-50">
+        {/* Camera View */}
+        <div className="relative h-full flex flex-col">
+          {/* Compact Header */}
+          <div className="bg-gradient-to-b from-black/80 to-transparent p-4 safe-area-top">
             <div className="flex justify-between items-center">
               <div className="flex-1">
-                <h1 className="text-lg font-bold text-slate-900 dark:text-white truncate">
-                  {activeBooth?.companyName || 'Scanner'}
+                <h1 className="text-lg font-bold text-white truncate">
+                  {activeBooth?.companyName || 'QR Scanner'}
                 </h1>
                 {activeBooth && (
-                  <p className="text-sm text-slate-500 dark:text-slate-400">Booth {activeBooth.physicalId}</p>
+                  <p className="text-sm text-white/80">Booth {activeBooth.physicalId}</p>
                 )}
               </div>
-              <div className="flex items-center gap-2">
-                {activeBooth && (
-                  <Button
-                    onClick={handleToggleKioskMode}
-                    variant="secondary"
-                    size="sm"
-                    className="flex-shrink-0"
-                    title="Toggle Kiosk Mode"
-                  >
-                    <Icon name="grid" size={16} />
-                  </Button>
-                )}
-                <Button
-                  onClick={handleLogout}
-                  variant="neutral"
-                  size="sm"
-                  className="flex-shrink-0"
-                >
-                  {t(localeKeys.logout)}
-                </Button>
-              </div>
+              <button
+                onClick={handleLogout}
+                className="ml-3 min-h-[44px] min-w-[44px] bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-colors"
+                aria-label="Close"
+              >
+                <Icon name="x" size={24} />
+              </button>
             </div>
 
-            {/* Pending Scans Indicator */}
+            {/* Pending Scans Badge */}
             {pendingScans.length > 0 && (
-              <div className="mt-2 p-2 rounded-lg bg-yellow-100 dark:bg-yellow-900/30 flex items-center gap-2">
-                <ArrowPathIcon className={`w-4 h-4 text-yellow-700 dark:text-yellow-300 ${isSyncing ? 'animate-spin' : ''}`} />
-                <span className="text-xs font-medium text-yellow-800 dark:text-yellow-200">
+              <div className="mt-3 px-3 py-2 rounded-lg bg-yellow-500/20 backdrop-blur-sm border border-yellow-400/30 flex items-center gap-2">
+                <ArrowPathIcon className={`w-4 h-4 text-yellow-300 ${isSyncing ? 'animate-spin' : ''}`} />
+                <span className="text-xs font-semibold text-yellow-100">
                   {pendingScans.length} pending
                 </span>
               </div>
             )}
           </div>
 
-          {/* Scanner Area - Fullscreen */}
+          {/* Scanner Container */}
           {scanResult ? (
-            <div className="flex-1 flex items-center justify-center p-4">
+            <div className="flex-1 flex items-center justify-center p-6 bg-gradient-to-b from-transparent to-black/40">
               <ScanResultCard
                 result={scanResult}
                 onNext={handleNextScan}
@@ -543,43 +529,87 @@ const QRScannerPage: React.FC = () => {
               />
             </div>
           ) : (
-            <div className="flex-1 flex flex-col items-center justify-center p-4">
-              <div className="w-full max-w-md aspect-square rounded-2xl overflow-hidden border-4 border-primary-500 shadow-2xl bg-black relative">
-                {/* Center alignment fix for the library's injected elements */}
-                <style>{`
-                    #qr-scanner-container { width: 100% !important; height: 100% !important; display: flex !important; justify-content: center; align-items: center; overflow: hidden; }
-                    #qr-scanner-container video { object-fit: cover !important; width: 100% !important; height: 100% !important; border-radius: 12px; }
-                    #qr-scanner-container__scan_region { width: 100% !important; min-height: 100% !important; }
-                    #qr-scanner-container__dashboard_section_csr span { display: none !important; } /* Hide "Code Scanner" text */
-                 `}</style>
-                <div id="qr-scanner-container" className="w-full h-full"></div>
+            <div className="flex-1 flex flex-col items-center justify-center px-6">
+              {/* Scan Frame with Animated Corners */}
+              <div className="relative w-full max-w-sm aspect-square">
+                {/* Scanner injection container */}
+                <div className="absolute inset-0 rounded-3xl overflow-hidden">
+                  <style>{`
+                    #qr-scanner-container { 
+                      width: 100% !important; 
+                      height: 100% !important; 
+                      display: flex !important; 
+                      justify-content: center; 
+                      align-items: center; 
+                    }
+                    #qr-scanner-container video { 
+                      object-fit: cover !important; 
+                      width: 100% !important; 
+                      height: 100% !important; 
+                    }
+                    #qr-scanner-container__scan_region { 
+                      width: 100% !important; 
+                      min-height: 100% !important; 
+                    }
+                    #qr-scanner-container__dashboard_section_csr span { 
+                      display: none !important; 
+                    }
+                  `}</style>
+                  <div id="qr-scanner-container" className="w-full h-full"></div>
+                </div>
+
+                {/* Animated Corner Overlays */}
+                <div className="absolute inset-0 pointer-events-none">
+                  {/* Top-left */}
+                  <div className="absolute top-0 left-0 w-16 h-16">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary-500 to-transparent rounded-tl-3xl animate-pulse"></div>
+                    <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-primary-500 to-transparent rounded-tl-3xl animate-pulse"></div>
+                  </div>
+                  {/* Top-right */}
+                  <div className="absolute top-0 right-0 w-16 h-16">
+                    <div className="absolute top-0 right-0 w-full h-1 bg-gradient-to-l from-primary-500 to-transparent rounded-tr-3xl animate-pulse"></div>
+                    <div className="absolute top-0 right-0 w-1 h-full bg-gradient-to-b from-primary-500 to-transparent rounded-tr-3xl animate-pulse"></div>
+                  </div>
+                  {/* Bottom-left */}
+                  <div className="absolute bottom-0 left-0 w-16 h-16">
+                    <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-primary-500 to-transparent rounded-bl-3xl animate-pulse"></div>
+                    <div className="absolute bottom-0 left-0 w-1 h-full bg-gradient-to-t from-primary-500 to-transparent rounded-bl-3xl animate-pulse"></div>
+                  </div>
+                  {/* Bottom-right */}
+                  <div className="absolute bottom-0 right-0 w-16 h-16">
+                    <div className="absolute bottom-0 right-0 w-full h-1 bg-gradient-to-l from-primary-500 to-transparent rounded-br-3xl animate-pulse"></div>
+                    <div className="absolute bottom-0 right-0 w-1 h-full bg-gradient-to-t from-primary-500 to-transparent rounded-br-3xl animate-pulse"></div>
+                  </div>
+                </div>
               </div>
-              <p className="mt-6 text-center text-lg font-semibold text-slate-700 dark:text-slate-300">
+
+              {/* Instructions */}
+              <p className="mt-8 text-center text-white text-lg font-semibold px-4 drop-shadow-lg">
                 📱 Point camera at QR code
               </p>
             </div>
           )}
 
-          {/* Manual Entry - Bottom Sheet Style */}
-          <div className="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 p-4 safe-area-bottom">
+          {/* Bottom Controls */}
+          <div className="bg-gradient-to-t from-black/80 to-transparent p-6 safe-area-bottom">
+            {/* Manual Entry Form */}
             <form onSubmit={handleManualSubmit} className="space-y-3">
               <Input
-                label="Manual Entry"
+                label=""
                 id="manual-attendee-id-mobile"
                 value={attendeeId}
                 onChange={(e) => setAttendeeId(e.target.value)}
-                placeholder="Enter attendee ID"
+                placeholder="Manual entry: Attendee ID"
                 wrapperClassName="!mb-0"
-                className="text-lg"
+                className="text-base bg-white/10 backdrop-blur-sm border-white/20 text-white placeholder-white/60"
               />
-              <Button
+              <button
                 type="submit"
-                variant="primary"
                 disabled={!activeBooth || isLoadingManualSubmit}
-                className="w-full h-14 text-lg font-semibold"
+                className="w-full min-h-[56px] bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white rounded-xl font-bold text-lg shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoadingManualSubmit ? t(localeKeys.submitting) : 'Submit'}
-              </Button>
+                {isLoadingManualSubmit ? t(localeKeys.submitting) : 'Submit Manually'}
+              </button>
             </form>
           </div>
         </div>
