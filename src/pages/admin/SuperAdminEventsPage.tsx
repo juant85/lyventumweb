@@ -596,7 +596,7 @@ const SuperAdminEventsPage: React.FC = () => {
         />
 
         {/* Modals */}
-        {createEventModal}
+        {createEventModalContent}
       </div>
     );
   }
