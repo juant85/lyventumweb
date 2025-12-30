@@ -18,6 +18,7 @@ import { localeKeys } from '../../i18n/locales';
 import TemplateSelector from '../../components/reports/TemplateSelector';
 import TemplatePreview from '../../components/reports/TemplatePreview';
 import { getTemplateById } from '../../utils/reportTemplates';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 
 const ReportsPage: React.FC = () => {
@@ -25,6 +26,7 @@ const ReportsPage: React.FC = () => {
     const { currentEvent, selectedEventId } = useSelectedEvent();
     const { config, isTradeShow } = useEventTypeConfig(); // NEW
     const { t } = useLanguage();
+    const isMobile = useIsMobile();
 
     const [selectedBoothId, setSelectedBoothId] = useState<string>('');
     const [isGenerating, setIsGenerating] = useState<null | 'summary' | 'booth' | 'summary-charts' | 'booth-csv' | 'trade-show-csv'>(null);
@@ -292,7 +294,7 @@ const ReportsPage: React.FC = () => {
                 </div>
             )}
 
-            <div className="space-y-8">
+            <div className={`space-y-8 ${isMobile ? 'pb-28' : ''}`}>
                 <div>
                     <h1 className="text-3xl font-bold flex items-center font-montserrat text-slate-800 dark:text-slate-100">
                         <Icon name="reports" className="w-8 h-8 mr-3 text-primary-600" />
@@ -381,7 +383,7 @@ const ReportsPage: React.FC = () => {
                 )}
 
                 {/* Original/Legacy Options */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'} gap-8`}>
                     <Card title={t(localeKeys.eventSummaryReport)}>
                         <p className="text-sm text-slate-600 mb-4">
                             {t(localeKeys.eventSummaryDesc)}

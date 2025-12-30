@@ -200,7 +200,7 @@ const RealTimeAnalyticsPage: React.FC = () => {
   }
 
   return (
-    <div className={`space-y-6 ${isMobile ? 'pb-24' : ''}`}>
+    <div className={`space-y-6 ${isMobile ? 'pb-28' : ''}`}>
       <div>
         <div className="flex justify-between items-start mb-2">
           <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100 font-montserrat">
