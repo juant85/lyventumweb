@@ -1,13 +1,13 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Users, Store, CheckCircle, Percent } from 'lucide-react';
+import { Users, Store, CheckCircle, Percent, Calendar, Clock } from 'lucide-react';
 
 interface QuickStatCardProps {
     label: string;
     value: string | number;
-    icon: 'users' | 'store' | 'checkCircle' | 'percent';
-    color: 'blue' | 'green' | 'amber' | 'purple' | 'orange';
+    icon: 'users' | 'store' | 'checkCircle' | 'percent' | 'calendar' | 'clock';
+    color: 'blue' | 'green' | 'amber' | 'purple' | 'orange' | 'pink';
 }
 
 const QuickStatCard: React.FC<QuickStatCardProps> = ({ label, value, icon, color }) => {
@@ -17,6 +17,7 @@ const QuickStatCard: React.FC<QuickStatCardProps> = ({ label, value, icon, color
         amber: 'from-amber-500 to-amber-600',
         purple: 'from-purple-500 to-purple-600',
         orange: 'from-orange-500 to-orange-600',
+        pink: 'from-pink-500 to-pink-600',
     };
 
     const iconMap = {
@@ -24,6 +25,8 @@ const QuickStatCard: React.FC<QuickStatCardProps> = ({ label, value, icon, color
         store: Store,
         checkCircle: CheckCircle,
         percent: Percent,
+        calendar: Calendar,
+        clock: Clock,
     };
 
     const IconComponent = iconMap[icon];

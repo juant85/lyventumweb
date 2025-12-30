@@ -6,7 +6,7 @@ export interface SpeedDialAction {
     icon: IconName;
     label: string;
     onClick: () => void;
-    color?: 'primary' | 'secondary' | 'success';
+    color?: string; // Changed to accept any color class
 }
 
 interface SpeedDialFABProps {
@@ -67,7 +67,7 @@ const SpeedDialFAB: React.FC<SpeedDialFABProps> = ({ actions }) => {
                                 </span>
 
                                 {/* Action Button */}
-                                <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${colorMap[action.color || 'primary']} text-white shadow-lg flex items-center justify-center group-hover:shadow-xl transition-all`}>
+                                <div className={`w-12 h-12 rounded-full ${action.color || 'bg-gradient-to-br from-primary-600 to-primary-700'} text-white shadow-lg flex items-center justify-center group-hover:shadow-xl transition-all`}>
                                     <Icon name={action.icon} className="w-6 h-6" />
                                 </div>
                             </motion.button>
