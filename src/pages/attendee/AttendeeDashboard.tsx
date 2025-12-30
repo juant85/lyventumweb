@@ -245,7 +245,7 @@ export default function AttendeeDashboard() {
         <div className="space-y-6 pb-6">
             {/* QR Badge Section */}
             <div id="badge" ref={badgeRef} className="scroll-mt-4">
-                <div className="sticky top-0 z-10 bg-gradient-to-br from-primary-50 to-primary-100 dark:from-slate-800 dark:to-slate-700 rounded-2xl p-6 shadow-lg border border-primary-100 dark:border-slate-600">
+                <div className="sticky top-20 z-10 bg-gradient-to-br from-primary-50 to-primary-100 dark:from-slate-800 dark:to-slate-700 rounded-2xl p-6 shadow-lg border border-primary-100 dark:border-slate-600">
                     <div className="relative flex flex-col items-center">
                         <div className="bg-white p-4 rounded-xl shadow-md relative z-10">
                             <AttendeeBadge attendee={attendeeData} />
@@ -375,7 +375,7 @@ export default function AttendeeDashboard() {
                         <div className="pl-2">
                             {Object.entries(agendaByDay).map(([date, items]) => (
                                 <React.Fragment key={date}>
-                                    <div className="sticky top-20 z-10 py-2 bg-white dark:bg-slate-800 text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">
+                                    <div className="sticky top-24 md:top-20 z-10 py-2 bg-white dark:bg-slate-800 text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">
                                         {date}
                                     </div>
                                     {items.map((item, idx) => renderTimelineItem(item, idx === items.length - 1))}
