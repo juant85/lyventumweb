@@ -4,7 +4,7 @@ import { useEventData } from '../../../contexts/EventDataContext';
 import Input from '../../ui/Input';
 import Button from '../../ui/Button';
 import { UserPlusIcon, ArrowPathIcon } from '../../Icons';
-import { toast } from 'react-hot-toast';
+import { showSuccess, showError } from '../../../utils/toastHelpers';
 
 const MobileAttendeeForm: React.FC = () => {
     const { addWalkInAttendee } = useEventData();
@@ -24,7 +24,7 @@ const MobileAttendeeForm: React.FC = () => {
         e.preventDefault();
 
         if (!formData.firstName || !formData.lastName || !formData.organization) {
-            toast.error('First Name, Last Name, and Organization are required.');
+            showError('First Name, Last Name, and Organization are required.');
             return;
         }
 
@@ -37,13 +37,13 @@ const MobileAttendeeForm: React.FC = () => {
             });
 
             if (result.success) {
-                toast.success('Attendee added successfully!');
+                showSuccess('Attendee added successfully!');
                 setFormData({ firstName: '', lastName: '', email: '', organization: '' });
             } else {
-                toast.error(result.message || 'Failed to add attendee.');
+                showError(result.message || 'Failed to add attendee.');
             }
         } catch (error) {
-            toast.error('An unexpected error occurred.');
+            showError('An unexpected error occurred.');
             console.error(error);
         } finally {
             setIsSubmitting(false);
