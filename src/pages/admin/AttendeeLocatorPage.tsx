@@ -230,32 +230,6 @@ const AttendeeLocatorPage: React.FC = () => {
                     <MagnifyingGlassIcon className="w-8 h-8 mr-3 text-primary-600" />
                     {t(localeKeys.attendeeLocatorTitle)}
                 </h1>
-
-                {/* Auto-refresh indicator */}
-                {liveSession && (
-                    <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
-                        <button
-                            onClick={autoRefreshControls.toggle}
-                            className={`p-1 rounded transition-all ${autoRefreshState.enabled
-                                ? 'text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20'
-                                : 'text-slate-400 dark:text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700'
-                                }`}
-                            title={autoRefreshState.enabled ? 'Desactivar auto-refresh' : 'Activar auto-refresh'}
-                        >
-                            <ArrowPathIcon
-                                className={`w-4 h-4 ${autoRefreshState.isRefreshing ? 'animate-spin' : ''}`}
-                            />
-                        </button>
-                        <div className="flex flex-col">
-                            <span className="text-[10px] font-medium text-slate-500 dark:text-slate-400">
-                                {autoRefreshState.enabled ? '🔄 Auto-refresh' : 'Pausado'}
-                            </span>
-                            <span className="text-[9px] text-slate-400 dark:text-slate-500">
-                                {getTimeAgoString(autoRefreshState.lastRefreshTime)}
-                            </span>
-                        </div>
-                    </div>
-                )}
             </div>
 
             <p className="text-slate-600 dark:text-slate-300">

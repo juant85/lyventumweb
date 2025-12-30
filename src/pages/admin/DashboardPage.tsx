@@ -111,6 +111,8 @@ const DashboardPage: React.FC = () => {
   const { config, eventType, isVendorMeeting, isConference, isTradeShow } = useEventTypeConfig();
   const isMobile = useIsMobile(); // Mobile detection
   const navigate = useNavigate();
+  const { t } = useLanguage();
+
 
   const [sessionRegistrations, setSessionRegistrations] = useState<(SessionRegistration & { boothName?: string })[]>([]);
   const [loadingRegistrations, setLoadingRegistrations] = useState(false);

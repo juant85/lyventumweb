@@ -657,13 +657,8 @@ const DataVisualizationPage: React.FC = () => {
 
     return (
       <div className="space-y-6 pb-20">
-        {/* 1. Header & Live Status */}
         <div className="flex justify-between items-center mb-2">
           <h1 className="text-xl font-bold font-montserrat text-slate-900 dark:text-white">Dashboard</h1>
-          <div className="flex items-center gap-2">
-            {/* Auto-refresh small indicator */}
-            <div className={`w-2 h-2 rounded-full ${autoRefreshState.isRefreshing ? 'bg-primary-500 animate-ping' : 'bg-green-500'}`} />
-          </div>
         </div>
 
         {/* 2. Session Banner */}
@@ -826,30 +821,6 @@ const DataVisualizationPage: React.FC = () => {
 
           {/* Controls - Stack on mobile, row on tablet+ */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-2 items-stretch sm:items-center">
-            {/* Auto-refresh indicator & controls */}
-            <div className="flex items-center gap-2 px-3 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
-              <button
-                onClick={autoRefreshControls.toggle}
-                className={`p-2 rounded transition-all touch-manipulation min-w-[44px] min-h-[44px] flex items-center justify-center ${autoRefreshState.enabled
-                  ? 'text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 active:bg-green-100 dark:active:bg-green-900/30'
-                  : 'text-slate-400 dark:text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-700 active:bg-slate-300 dark:active:bg-slate-600'
-                  }`}
-                title={autoRefreshState.enabled ? 'Desactivar auto-refresh' : 'Activar auto-refresh'}
-              >
-                <ArrowPathIcon
-                  className={`w-5 h-5 ${autoRefreshState.isRefreshing ? 'animate-spin' : ''}`}
-                />
-              </button>
-              <div className="flex flex-col">
-                <span className="text-xs sm:text-[10px] font-medium text-slate-600 dark:text-slate-400">
-                  {autoRefreshState.enabled ? '🔄 Auto-refresh' : 'Pausado'}
-                </span>
-                <span className="text-[10px] sm:text-[9px] text-slate-500 dark:text-slate-500">
-                  {getTimeAgoString(autoRefreshState.lastRefreshTime)}
-                </span>
-              </div>
-            </div>
-
             {/* Action buttons - Full width on mobile, inline on tablet+ */}
             <div className="flex gap-2">
               {isFeatureEnabled(Feature.SESSION_SETTINGS) && (
