@@ -504,7 +504,7 @@ const QRScannerPage: React.FC = () => {
                 className="ml-3 min-h-[44px] min-w-[44px] bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-colors"
                 aria-label="Close"
               >
-                <Icon name="x" size={24} />
+                <Icon name="close" size={24} />
               </button>
             </div>
 
