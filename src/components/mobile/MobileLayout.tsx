@@ -12,6 +12,7 @@ import { AppRoute } from '../../types';
 import MobileMenu from './MobileMenu';
 import MobileErrorBoundary from './MobileErrorBoundary';
 import GlobalSearch from './GlobalSearch';
+import { MobileEventSwitcher } from './navigation';
 
 interface MobileLayoutProps {
     children: ReactNode;
@@ -19,7 +20,7 @@ interface MobileLayoutProps {
 
 type HeaderMode = 'expanded' | 'compact' | 'hidden';
 
-const ExpandedHeader: React.FC<{ currentEvent: any; currentUser: any }> = ({ currentEvent, currentUser }) => (
+const ExpandedHeader: React.FC<{ currentEvent: any; currentUser: any; onEventSwitcherClick: () => void }> = ({ currentEvent, currentUser, onEventSwitcherClick }) => (
     <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -27,7 +28,10 @@ const ExpandedHeader: React.FC<{ currentEvent: any; currentUser: any }> = ({ cur
         transition={{ duration: 0.2 }}
         className="flex items-center justify-between w-full"
     >
-        <div className="flex items-center gap-3">
+        <button
+            onClick={onEventSwitcherClick}
+            className="flex items-center gap-3 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg px-2 py-1 -ml-2 transition-colors"
+        >
             {currentEvent?.eventLogoUrl ? (
                 <img src={currentEvent.eventLogoUrl} alt="Event" className="h-8 w-8 rounded-lg object-contain bg-slate-100 dark:bg-slate-800" />
             ) : (
@@ -37,19 +41,21 @@ const ExpandedHeader: React.FC<{ currentEvent: any; currentUser: any }> = ({ cur
             )}
 
             <div className="flex flex-col">
-                <h1 className="text-sm font-bold text-slate-800 dark:text-slate-100 leading-tight truncate max-w-[250px]">
-                    {currentEvent?.name || 'Lyventum'}
-                </h1>
+                <div className="flex items-center gap-1">
+                    <h1 className="text-sm font-bold text-slate-800 dark:text-slate-100 leading-tight truncate max-w-[200px]">
+                        {currentEvent?.name || 'Lyventum'}
+                    </h1>
+                    <Icon name="chevronDown" className="w-4 h-4 text-slate-400" />
+                </div>
                 <span className="text-[10px] uppercase tracking-wide font-semibold text-primary-600 dark:text-primary-400">
                     {currentUser?.role || 'Guest'}
                 </span>
             </div>
-        </div>
-        {/* User button removed to avoid redundancy with Bottom Nav "More" */}
+        </button>
     </motion.div>
 );
 
-const CompactHeader: React.FC<{ currentEvent: any }> = ({ currentEvent }) => (
+const CompactHeader: React.FC<{ currentEvent: any; onEventSwitcherClick: () => void }> = ({ currentEvent, onEventSwitcherClick }) => (
     <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -57,7 +63,10 @@ const CompactHeader: React.FC<{ currentEvent: any }> = ({ currentEvent }) => (
         transition={{ duration: 0.2 }}
         className="flex items-center justify-center w-full"
     >
-        <div className="flex items-center gap-2">
+        <button
+            onClick={onEventSwitcherClick}
+            className="flex items-center gap-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg px-3 py-1 transition-colors"
+        >
             {currentEvent?.eventLogoUrl ? (
                 <img src={currentEvent.eventLogoUrl} alt="Event" className="h-6 w-6 rounded-md object-contain" />
             ) : (
@@ -68,20 +77,21 @@ const CompactHeader: React.FC<{ currentEvent: any }> = ({ currentEvent }) => (
             <span className="text-sm font-semibold text-slate-800 dark:text-slate-100 truncate">
                 {currentEvent?.name || 'Lyventum'}
             </span>
-        </div>
-        {/* Menu button removed to avoid redundancy with Bottom Nav "More" */}
+            <Icon name="chevronDown" className="w-3 h-3 text-slate-400" />
+        </button>
     </motion.div>
 );
 
 const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
     const { currentUser } = useAuth();
-    const { currentEvent } = useSelectedEvent();
+    const { currentEvent, setSelectedEventId } = useSelectedEvent();
     const scrollDirection = useScrollDirection();
     const scrollY = useScrollY();
     const navigate = useNavigate();
     const location = useLocation();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [isEventSwitcherOpen, setIsEventSwitcherOpen] = useState(false);
 
     const getHeaderMode = (): HeaderMode => {
         if (scrollY < 50) return 'expanded';
@@ -116,10 +126,19 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
             >
                 <AnimatePresence mode="wait">
                     {headerMode === 'expanded' && (
-                        <ExpandedHeader key="expanded" currentEvent={currentEvent} currentUser={currentUser} />
+                        <ExpandedHeader
+                            key="expanded"
+                            currentEvent={currentEvent}
+                            currentUser={currentUser}
+                            onEventSwitcherClick={() => setIsEventSwitcherOpen(true)}
+                        />
                     )}
                     {headerMode === 'compact' && (
-                        <CompactHeader key="compact" currentEvent={currentEvent} />
+                        <CompactHeader
+                            key="compact"
+                            currentEvent={currentEvent}
+                            onEventSwitcherClick={() => setIsEventSwitcherOpen(true)}
+                        />
                     )}
                 </AnimatePresence>
                 <div className="flex items-center gap-2 ml-auto">
@@ -170,6 +189,14 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
 
             {/* Global Search */}
             <GlobalSearch isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+
+            {/* Event Switcher */}
+            <MobileEventSwitcher
+                isOpen={isEventSwitcherOpen}
+                onClose={() => setIsEventSwitcherOpen(false)}
+                onEventSelect={(eventId) => setSelectedEventId(eventId)}
+                onCreateEvent={() => navigate(AppRoute.SuperAdminEvents)}
+            />
         </div>
     );
 };
