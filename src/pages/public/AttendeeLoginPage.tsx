@@ -168,7 +168,7 @@ const AttendeeLoginPage: React.FC = () => {
                     </Link>
                 </div>
 
-                <BackgroundGradient containerClassName="rounded-2xl" className="bg-slate-900/80 backdrop-blur-md rounded-[22px] p-8 space-y-6">
+                <BackgroundGradient containerClassName="rounded-2xl" className="bg-slate-900/80 backdrop-blur-md rounded-[22px] p-4 sm:p-8 space-y-6">
                     {!showResend ? (
                         <>
                             {/* Code Input Mode */}

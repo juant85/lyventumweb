@@ -118,7 +118,7 @@ export default function AttendeeAccessPage() {
                 </div>
 
                 {/* Form Card */}
-                <div className="bg-white rounded-2xl shadow-2xl p-8">
+                <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-8">
                     <form onSubmit={handleSubmit}>
                         <div className="mb-6">
                             <label className="block text-sm font-semibold text-slate-700 mb-3 text-center">

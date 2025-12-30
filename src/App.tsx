@@ -108,6 +108,7 @@ const AppRoutes: React.FC = () => {
       <Route path={AppRoute.EventSelection} element={<EventSelectionPage />} />
       <Route path={AppRoute.AttendeePortalLogin} element={<AttendeeLoginPage />} />
       <Route path="/access" element={<AttendeeAccessPage />} />
+      <Route path="/attendee/access" element={<Navigate to="/access" replace />} />
       <Route path={AppRoute.BoothLogin} element={<ScannerLoginPage />} />
       <Route path="/set-password" element={<SetPasswordPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
