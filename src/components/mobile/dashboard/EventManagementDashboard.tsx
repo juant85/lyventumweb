@@ -5,7 +5,7 @@ import { useSelectedEvent } from '../../../contexts/SelectedEventContext';
 import { MobileCard, SpeedDialFAB } from '../index';
 import SwipeableCarousel from '../../ui/SwipeableCarousel';
 import QuickStatCard from '../../dashboard/QuickStatCard';
-import { Calendar, Users, Store, BarChart3 } from 'lucide-react';
+import { Calendar, Users, Store, BarChart3, CheckCircle } from 'lucide-react';
 import { AppRoute } from '../../../types';
 
 /**
@@ -87,26 +87,37 @@ const EventManagementDashboard: React.FC = () => {
                     <MobileCard
                         title="Sessions"
                         subtitle={`${eventStats.sessions} configured`}
-                        icon={<Calendar className="w-5 h-5 text-blue-600" />}
+                        icon={<Calendar className="w-5 h-5 text-blue-600 dark:text-blue-400" />}
                         onClick={() => navigate(AppRoute.SessionSettings)}
+                        className="hover:shadow-lg transition-shadow"
                     />
                     <MobileCard
                         title="Booths"
                         subtitle={`${eventStats.booths} active`}
-                        icon={<Store className="w-5 h-5 text-purple-600" />}
+                        icon={<Store className="w-5 h-5 text-purple-600 dark:text-purple-400" />}
                         onClick={() => navigate(AppRoute.BoothSetup)}
+                        className="hover:shadow-lg transition-shadow"
+                    />
+                    <MobileCard
+                        title="Check-In"
+                        subtitle="Scan attendees"
+                        icon={<CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />}
+                        onClick={() => navigate(AppRoute.CheckInDesk)}
+                        className="hover:shadow-lg transition-shadow"
                     />
                     <MobileCard
                         title="Attendees"
                         subtitle={`${eventStats.attendees} registered`}
-                        icon={<Users className="w-5 h-5 text-green-600" />}
+                        icon={<Users className="w-5 h-5 text-amber-600 dark:text-amber-400" />}
                         onClick={() => navigate(AppRoute.AttendeeProfiles)}
+                        className="hover:shadow-lg transition-shadow"
                     />
                     <MobileCard
                         title="Analytics"
                         subtitle="Real-time data"
-                        icon={<BarChart3 className="w-5 h-5 text-amber-600" />}
+                        icon={<BarChart3 className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />}
                         onClick={() => navigate(AppRoute.DataVisualization)}
+                        className="hover:shadow-lg transition-shadow"
                     />
                 </div>
             </div>
