@@ -714,13 +714,11 @@ const SuperAdminEventsPage: React.FC = () => {
             })
           ) : (
             <MobileEmptyState
-              icon={<InboxIcon className="w-8 h-8" />}
+              icon={<Calendar className="w-12 h-12 text-primary-600" />}
               title={searchTerm ? "No events found" : "No events yet"}
               description={searchTerm ? `No results for "${searchTerm}"` : "Create your first event to get started"}
-              action={!searchTerm ? {
-                label: "Create Event",
-                onClick: () => setIsCreateModalOpen(true)
-              } : undefined}
+              actionLabel={searchTerm ? undefined : "Create Event"}
+              onAction={searchTerm ? undefined : () => setIsCreateModalOpen(true)}
             />
           )}
         </div>
