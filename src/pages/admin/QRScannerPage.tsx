@@ -24,6 +24,7 @@ import KioskModeWrapper from '../../components/scanner/KioskModeWrapper';
 import SkeletonScanner from '../../components/scanner/SkeletonScanner';
 import ScanResultCard from '../../components/scanner/ScanResultCard';
 import { useIsMobile } from '../../hooks/useIsMobile';
+import MobileBoothSelector from '../../components/mobile/MobileBoothSelector';
 
 declare var Html5QrcodeScanner: any;
 declare var Html5QrcodeScanType: any;
@@ -426,6 +427,10 @@ const QRScannerPage: React.FC = () => {
   }
 
   if (isOrganizerMode && !activeBooth && !activeSessionId) {
+    // Use mobile-optimized selector for mobile devices
+    if (isMobile) {
+      return <MobileBoothSelector booths={booths} onSelect={handleStartScanning} />;
+    }
     return <OrganizerBoothSelector booths={booths} onStartScanning={handleStartScanning} />;
   }
 

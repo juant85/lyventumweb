@@ -100,7 +100,7 @@ const EventManagementDashboard: React.FC = () => {
     }
 
     return (
-        <div className="space-y-4 pb-24">
+        <div className="space-y-4 pb-28">
             {/* Live Session Banner - Modern Design */}
             {liveSession && (
                 <motion.div

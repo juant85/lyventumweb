@@ -65,7 +65,7 @@ const OrganizerMobileDashboard: React.FC = () => {
     };
 
     return (
-        <div className="space-y-6 pb-24">
+        <div className="space-y-6 pb-28">
             {/* Live Indicator */}
             <div className="px-4 pt-2">
                 <LiveIndicator

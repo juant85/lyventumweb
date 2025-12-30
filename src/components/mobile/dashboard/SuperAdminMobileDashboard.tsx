@@ -56,7 +56,7 @@ const SuperAdminMobileDashboard: React.FC = () => {
     };
 
     return (
-        <div className="space-y-6 pb-24">
+        <div className="space-y-6 pb-28">
             {/* Global Stats Carousel */}
             <div>
                 <h2 className="text-lg font-bold mb-3 px-4 text-slate-900 dark:text-white">System Overview</h2>
