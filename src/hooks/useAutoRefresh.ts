@@ -1,151 +1,88 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useEventData } from '../contexts/EventDataContext';
 
-export interface AutoRefreshConfig {
-    enabled: boolean;
-    intervalMs: number;
-    onRefresh: () => Promise<void> | void;
-    pauseOnHidden?: boolean;
+interface UseAutoRefreshOptions {
+    intervalMs?: number;
+    enabled?: boolean;
+    onlyWhenActive?: boolean; // Stop refreshing when tab is hidden
 }
 
-export interface AutoRefreshState {
-    isRefreshing: boolean;
-    lastRefreshTime: Date | null;
-    enabled: boolean;
-    intervalMs: number;
-}
+export const useAutoRefresh = (options: UseAutoRefreshOptions = {}) => {
+    const {
+        intervalMs = 15000, // Default: 15 seconds
+        enabled = true,
+        onlyWhenActive = true
+    } = options;
 
-export interface AutoRefreshControls {
-    toggle: () => void;
-    setInterval: (ms: number) => void;
-    refresh: () => Promise<void>;
-}
-
-/**
- * Hook for automatic data refresh with configurable intervals
- * Features:
- * - Configurable refresh interval
- * - Enable/disable toggle
- * - Manual refresh trigger
- * - Pause when tab/window hidden (battery optimization)
- * - Track last refresh time
- */
-export const useAutoRefresh = (
-    config: AutoRefreshConfig
-): [AutoRefreshState, AutoRefreshControls] => {
-    const [enabled, setEnabled] = useState(config.enabled);
-    const [intervalMs, setIntervalMs] = useState(config.intervalMs);
+    const { fetchData } = useEventData();
+    const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
     const [isRefreshing, setIsRefreshing] = useState(false);
-    const [lastRefreshTime, setLastRefreshTime] = useState<Date | null>(null);
-
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
-    const isTabVisibleRef = useRef(true);
 
-    // Manual refresh function
-    const refresh = useCallback(async () => {
-        if (isRefreshing) return;
-
-        setIsRefreshing(true);
-        try {
-            await config.onRefresh();
-            setLastRefreshTime(new Date());
-        } catch (error) {
-            console.error('[AutoRefresh] Refresh failed:', error);
-        } finally {
-            setIsRefreshing(false);
-        }
-    }, [config, isRefreshing]);
-
-    // Clear existing interval
-    const clearRefreshInterval = useCallback(() => {
-        if (intervalRef.current) {
-            clearInterval(intervalRef.current);
-            intervalRef.current = null;
-        }
-    }, []);
-
-    // Start auto-refresh interval
-    const startRefreshInterval = useCallback(() => {
-        clearRefreshInterval();
-
-        if (!enabled || intervalMs <= 0) return;
-
-        intervalRef.current = setInterval(() => {
-            // Only refresh if tab is visible (or pauseOnHidden is false)
-            if (isTabVisibleRef.current || !config.pauseOnHidden) {
-                refresh();
-            }
-        }, intervalMs);
-    }, [enabled, intervalMs, refresh, clearRefreshInterval, config.pauseOnHidden]);
-
-    // Handle visibility change (pause when tab hidden)
     useEffect(() => {
-        if (!config.pauseOnHidden) return;
+        if (!enabled) return;
 
-        const handleVisibilityChange = () => {
-            isTabVisibleRef.current = !document.hidden;
+        const handleRefresh = async () => {
+            // Check if tab is active (if option enabled)
+            if (onlyWhenActive && document.hidden) {
+                return;
+            }
 
-            // If tab becomes visible and auto-refresh is enabled, refresh immediately
-            if (isTabVisibleRef.current && enabled) {
-                refresh();
+            setIsRefreshing(true);
+            try {
+                await fetchData();
+                setLastUpdated(new Date());
+            } catch (error) {
+                console.error('Auto-refresh failed:', error);
+            } finally {
+                setIsRefreshing(false);
             }
         };
 
-        document.addEventListener('visibilitychange', handleVisibilityChange);
-        return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-    }, [config.pauseOnHidden, enabled, refresh]);
+        // Initial fetch
+        handleRefresh();
 
-    // Start/stop interval when config changes
-    useEffect(() => {
-        if (enabled) {
-            startRefreshInterval();
-        } else {
-            clearRefreshInterval();
+        // Set up interval
+        intervalRef.current = setInterval(handleRefresh, intervalMs);
+
+        // Handle visibility change
+        const handleVisibilityChange = () => {
+            if (!document.hidden && onlyWhenActive) {
+                // Tab became active, refresh immediately
+                handleRefresh();
+            }
+        };
+
+        if (onlyWhenActive) {
+            document.addEventListener('visibilitychange', handleVisibilityChange);
         }
 
-        return clearRefreshInterval;
-    }, [enabled, intervalMs, startRefreshInterval, clearRefreshInterval]);
+        // Cleanup
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+            }
+            if (onlyWhenActive) {
+                document.removeEventListener('visibilitychange', handleVisibilityChange);
+            }
+        };
+    }, [enabled, intervalMs, onlyWhenActive, fetchData]);
 
-    // Controls
-    const controls: AutoRefreshControls = {
-        toggle: () => setEnabled(prev => !prev),
-        setInterval: (ms: number) => setIntervalMs(ms),
-        refresh,
+    const manualRefresh = async () => {
+        setIsRefreshing(true);
+        try {
+            await fetchData();
+            setLastUpdated(new Date());
+        } catch (error) {
+            console.error('Manual refresh failed:', error);
+        } finally {
+            setIsRefreshing(false);
+        }
     };
 
-    const state: AutoRefreshState = {
+    return {
+        lastUpdated,
         isRefreshing,
-        lastRefreshTime,
-        enabled,
-        intervalMs,
+        manualRefresh
     };
-
-    return [state, controls];
 };
-
-/**
- * Format time ago string
- */
-export const getTimeAgoString = (date: Date | null): string => {
-    if (!date) return 'Nunca';
-
-    const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
-
-    if (seconds < 5) return 'Justo ahora';
-    if (seconds < 60) return `Hace ${seconds}s`;
-
-    const minutes = Math.floor(seconds / 60);
-    if (minutes < 60) return `Hace ${minutes}m`;
-
-    const hours = Math.floor(minutes / 60);
-    return `Hace ${hours}h`;
-};
-
-/**
- * Common refresh intervals
- */
-export const REFRESH_INTERVALS = {
-    FAST: 10000,      // 10 seconds
-    NORMAL: 30000,    // 30 seconds (default)
-    SLOW: 60000,      // 1 minute
-    VERY_SLOW: 300000 // 5 minutes
-} as const;

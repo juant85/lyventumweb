@@ -1,5 +1,6 @@
 // src/pages/admin/RealTimeAnalyticsPage.tsx
 import { useIsMobile } from '../../hooks/useIsMobile';
+import { useAutoRefresh } from '../../hooks/useAutoRefresh';
 import React, { useMemo } from 'react';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 import { useEventData } from '../../contexts/EventDataContext';
@@ -10,6 +11,7 @@ import Alert from '../../components/ui/Alert';
 import { FunnelIcon, PresentationChartLineIcon, BuildingStorefrontIcon, UsersGroupIcon, ClockIcon } from '../../components/Icons';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { localeKeys } from '../../i18n/locales';
+import LiveIndicator from '../../components/mobile/LiveIndicator';
 
 // Custom Tooltip for charts
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -95,6 +97,13 @@ const RealTimeAnalyticsPage: React.FC = () => {
   const { theme } = useTheme();
   const { t } = useLanguage();
   const isMobile = useIsMobile();
+
+  // Auto-refresh every 5 seconds for real-time analytics
+  const { lastUpdated, isRefreshing, manualRefresh } = useAutoRefresh({
+    intervalMs: 5000,
+    enabled: true,
+    onlyWhenActive: true
+  });
 
 
   const tickColor = theme === 'dark' ? '#94a3b8' : '#64748b';
@@ -193,9 +202,16 @@ const RealTimeAnalyticsPage: React.FC = () => {
   return (
     <div className={`space-y-6 ${isMobile ? 'pb-24' : ''}`}>
       <div>
-        <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100 font-montserrat">
-          Analytics & Insights
-        </h1>
+        <div className="flex justify-between items-start mb-2">
+          <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100 font-montserrat">
+            Analytics & Insights
+          </h1>
+          <LiveIndicator
+            lastUpdated={lastUpdated}
+            isRefreshing={isRefreshing}
+            onRefresh={manualRefresh}
+          />
+        </div>
         <p className="text-slate-500 dark:text-slate-400 mt-2">
           Discover patterns and trends across your entire event
         </p>

@@ -6,10 +6,19 @@ import { MobileCard, SpeedDialFAB, MobileEmptyState } from '../index';
 import SwipeableCarousel from '../../ui/SwipeableCarousel';
 import QuickStatCard from '../../dashboard/QuickStatCard';
 import { Calendar } from 'lucide-react';
+import { useAutoRefresh } from '../../../hooks/useAutoRefresh';
+import LiveIndicator from '../LiveIndicator';
 
 const OrganizerMobileDashboard: React.FC = () => {
     const { scans, sessions, booths, attendees } = useEventData();
     const navigate = useNavigate();
+
+    // Auto-refresh every 10 seconds
+    const { lastUpdated, isRefreshing, manualRefresh } = useAutoRefresh({
+        intervalMs: 10000,
+        enabled: true,
+        onlyWhenActive: true
+    });
 
     const allSessions = sessions.sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
     const upcomingSessions = allSessions
@@ -54,6 +63,15 @@ const OrganizerMobileDashboard: React.FC = () => {
 
     return (
         <div className="space-y-6 pb-24">
+            {/* Live Indicator */}
+            <div className="px-4 pt-2">
+                <LiveIndicator
+                    lastUpdated={lastUpdated}
+                    isRefreshing={isRefreshing}
+                    onRefresh={manualRefresh}
+                />
+            </div>
+
             {/* Stats Carousel */}
             <div>
                 <h2 className="text-lg font-bold mb-3 px-4 text-slate-900 dark:text-white">Quick Stats</h2>
