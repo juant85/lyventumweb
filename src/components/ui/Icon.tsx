@@ -67,6 +67,7 @@ const iconMap = {
   menu: Lucide.Menu,
   user: Lucide.User,
   close: Lucide.X,
+  plus: Lucide.Plus,
 } as const;
 
 export type IconName = keyof typeof iconMap;
