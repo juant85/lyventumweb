@@ -98,6 +98,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [allPlans, setAllPlans] = useState<PlanRow[]>([]);
+  const isMobile = useIsMobile(); // Mobile detection (Moved to top to prevent Hook errors)
 
   useEffect(() => {
     if (currentUser?.role === 'superadmin') {
@@ -142,7 +143,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   const isAttendeePortal = currentUser?.role === 'attendee';
   const isManagingEventAsSuperAdmin = currentUser?.role === 'superadmin' && location.pathname !== AppRoute.SuperAdminEvents;
-  const isMobile = useIsMobile(); // Mobile detection
+
 
   const handleSimulatePlan = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const planId = e.target.value;
