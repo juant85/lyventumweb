@@ -6,7 +6,7 @@ import { useEventData } from '../../../contexts/EventDataContext';
 import { MobileCard, SpeedDialFAB, MobileEmptyState } from '../index';
 import SwipeableCarousel from '../../ui/SwipeableCarousel';
 import QuickStatCard from '../../dashboard/QuickStatCard';
-import { Building2, Calendar } from 'lucide-react';
+import { Building2, Calendar, BarChart3, FileText } from 'lucide-react';
 import { AppRoute } from '../../../types';
 
 const SuperAdminMobileDashboard: React.FC = () => {
