@@ -150,6 +150,12 @@ const SuperAdminMobileDashboard: React.FC = () => {
                         color: 'secondary'
                     },
                     {
+                        icon: 'admin',
+                        label: 'Manage Users',
+                        onClick: () => navigate('/admin/super-admin/clients'),
+                        color: 'purple'
+                    },
+                    {
                         icon: 'visualize',
                         label: 'Data Visualization',
                         onClick: () => navigate(AppRoute.DataVisualization),
