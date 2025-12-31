@@ -27,6 +27,7 @@ import AccessControlCard from '../../components/admin/attendee/AccessControlCard
 import Tabs from '../../components/ui/Tabs';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import { MobileFAB } from '../../components/mobile';
+import { haptics } from '../../utils/haptics';
 
 type AttendeeAgendaItem = SessionRegistration & {
   sessionName: string;
@@ -246,6 +247,7 @@ export default function AttendeeProfileDetailPage() {
 
     const result = await updateAttendee(attendeeId, updates);
     if (result.success) {
+      haptics.success(); // Tactile feedback on save
       toast.success("Profile updated successfully!");
       if (result.updatedAttendee) {
         setAttendee(result.updatedAttendee);
@@ -260,6 +262,7 @@ export default function AttendeeProfileDetailPage() {
   const handleDeleteConfirmed = async () => {
     if (!attendee) return;
     setIsSaving(true);
+    haptics.error(); // Warning vibration on delete
     const result = await deleteAttendee(attendee.id);
     if (result.success) {
       toast.success(result.message);
