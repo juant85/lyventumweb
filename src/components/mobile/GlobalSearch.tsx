@@ -338,3 +338,4 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ isOpen, onClose }) => {
     );
 };
 
+export default GlobalSearch;
