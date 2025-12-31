@@ -302,28 +302,6 @@ const DashboardPage: React.FC = () => {
     );
   }
 
-  // ✨ MOBILE VIEW - Event-Based Dashboards
-  if (isMobile) {
-    const { currentUser } = useAuth();
-    const { selectedEventId } = useSelectedEvent();
-    const EventManagementDashboard = React.lazy(() => import('../../components/mobile/dashboard/EventManagementDashboard'));
-
-    // No event selected → Show appropriate list
-    if (!selectedEventId) {
-      if (currentUser?.role === 'superadmin') {
-        return <SuperAdminMobileDashboard />; // List all events
-      }
-      // Organizer must have event (auto-selected on login)
-      return <OrganizerMobileDashboard />;
-    }
-
-    // Event IS selected → Show event management for ALL roles
-    return (
-      <React.Suspense fallback={<div className="p-4 text-center text-slate-500">Loading event...</div>}>
-        <EventManagementDashboard />
-      </React.Suspense>
-    );
-  }
 
   // DESKTOP VIEW - No Live Session
   if (!liveSession) {
