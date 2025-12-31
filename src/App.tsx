@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { EventDataProvider } from './contexts/EventDataContext';
 import { SelectedEventProvider } from './contexts/SelectedEventContext';
-import { EventTypeConfigProvider } from './contexts/EventTypeConfigContext'; // NEW
+import { EventTypeConfigProvider } from './contexts/EventTypeConfigContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { ChatProvider } from './contexts/ChatContext';
 import { FeatureFlagProvider } from './contexts/FeatureFlagContext';
@@ -15,12 +15,14 @@ import { ScanProvider } from './contexts/scans';
 import Layout, { getHomePathForRole } from './components/Layout';
 import ErrorBoundary from './components/ErrorBoundary';
 import MobileErrorFallback from './components/mobile/MobileErrorFallback';
+import MobileLoadingSkeleton from './components/mobile/MobileLoadingSkeleton';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AppRoute, User } from './types';
 import FeatureGuard from './components/FeatureGuard';
 import { Feature } from './features';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useIsMobile } from './hooks/useIsMobile';
 
 // DatePicker Styles - Global import for premium design
 import 'react-datepicker/dist/react-datepicker.css';
@@ -83,18 +85,26 @@ const IconTestPage = lazy(() => import('./pages/IconTestPage'));
 
 const queryClient = new QueryClient();
 
-// A fallback component to show while a page is loading
-const LoadingFallback = () => (
-  <div className="flex justify-center items-center min-h-[calc(100vh-200px)] bg-slate-100 dark:bg-slate-900">
-    <div className="p-8 bg-white dark:bg-slate-800 rounded-lg shadow-md text-center">
-      <svg className="animate-spin h-8 w-8 text-brandBlue mx-auto mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-      </svg>
-      <p className="text-lg font-montserrat text-slate-600 dark:text-slate-300">Loading Page...</p>
+// Smart loading fallback - uses skeleton on mobile, spinner on desktop
+const LoadingFallback = () => {
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
+  if (isMobile) {
+    return <MobileLoadingSkeleton />;
+  }
+
+  return (
+    <div className="flex justify-center items-center min-h-[calc(100vh-200px)] bg-slate-100 dark:bg-slate-900">
+      <div className="p-8 bg-white dark:bg-slate-800 rounded-lg shadow-md text-center">
+        <svg className="animate-spin h-8 w-8 text-brandBlue mx-auto mb-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <p className="text-lg font-montserrat text-slate-600 dark:text-slate-300">Loading Page...</p>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 
 const AppRoutes: React.FC = () => {
