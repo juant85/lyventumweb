@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEventData } from '../../contexts/EventDataContext';
 import { Attendee, Booth, Session } from '../../types';
-import { UserIcon, MagnifyingGlassIcon, XMarkIcon, CheckCircleIcon, ClockIcon, BuildingStorefrontIcon, CalendarDaysIcon } from '../Icons';
+import { UserIcon, MagnifyingGlassIcon, XMarkIcon, CheckCircleIcon, ClockIcon, BuildingStorefrontIcon } from '../Icons';
 import { useNavigate } from 'react-router-dom';
 
 interface GlobalSearchProps {
@@ -133,7 +133,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ isOpen, onClose }) => {
                     type: 'session' as const,
                     name: highlightMatch(s.name, searchTerm),
                     subtitle: new Date(s.startTime).toLocaleDateString(),
-                    icon: <CalendarDaysIcon className="w-5 h-5" />,
+                    icon: <ClockIcon className="w-5 h-5" />,
                     status: 'Scheduled',
                     data: s
                 }));
