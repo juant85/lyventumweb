@@ -150,6 +150,18 @@ const SuperAdminMobileDashboard: React.FC = () => {
                         color: 'secondary'
                     },
                     {
+                        icon: 'chart',
+                        label: 'Data Visualization',
+                        onClick: () => navigate(AppRoute.DataVisualization),
+                        color: 'info'
+                    },
+                    {
+                        icon: 'document',
+                        label: 'Reports',
+                        onClick: () => navigate(AppRoute.Reports),
+                        color: 'amber'
+                    },
+                    {
                         icon: 'calendar',
                         label: 'Manage Events',
                         onClick: () => navigate(AppRoute.SuperAdminEvents),
