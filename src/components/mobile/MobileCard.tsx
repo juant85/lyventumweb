@@ -56,4 +56,6 @@ const MobileCard: React.FC<MobileCardProps> = ({
     );
 };
 
-export default MobileCard;
+// Memoize to prevent unnecessary re-renders in lists
+export default React.memo(MobileCard);
+

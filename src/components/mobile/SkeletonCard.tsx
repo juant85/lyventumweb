@@ -39,4 +39,6 @@ const SkeletonCard: React.FC<SkeletonCardProps> = ({ count = 3 }) => {
     );
 };
 
-export default SkeletonCard;
+// Memoize skeleton component (pure, no dependencies)
+export default React.memo(SkeletonCard);
+
