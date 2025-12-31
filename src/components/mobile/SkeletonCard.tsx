@@ -16,18 +16,18 @@ const SkeletonCard: React.FC<SkeletonCardProps> = ({ count = 3 }) => {
                     <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/10 dark:via-white/5 to-transparent" />
                     <div className="flex items-center gap-3">
                         {/* Icon skeleton */}
-                        <div className="w-10 h-10 bg-slate-200 dark:bg-slate-700 rounded-lg flex-shrink-0" />
+                        <div className="w-10 h-10 bg-slate-200 dark:bg-slate-600 rounded-lg flex-shrink-0" />
 
                         <div className="flex-1 space-y-2">
                             {/* Title skeleton */}
-                            <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4" />
+                            <div className="h-4 bg-slate-200 dark:bg-slate-600 rounded w-3/4" />
                             {/* Subtitle skeleton */}
                             <div className="h-3 bg-slate-200 dark:bg-slate-700 rounded w-1/2" />
                         </div>
 
                         {/* Badge skeleton (optional) */}
                         {index % 2 === 0 && (
-                            <div className="h-5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full" />
+                            <div className="h-5 w-16 bg-slate-200 dark:bg-slate-600 rounded-full" />
                         )}
                     </div>
 

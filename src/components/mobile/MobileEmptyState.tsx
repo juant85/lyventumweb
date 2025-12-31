@@ -27,10 +27,10 @@ const MobileEmptyState: React.FC<MobileEmptyStateProps> = ({
             transition={{ duration: 0.4 }}
             className="flex flex-col items-center justify-center py-12 px-4 text-center"
         >
-            {/*Icon with gradient background */}
+            {/* Icon with gradient background */}
             <div className="relative mb-6">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary-500/20 to-secondary-500/20 blur-2xl"></div>
-                <div className="relative bg-gradient-to-br from-primary-500/10 to-secondary-500/10 dark:from-primary-500/20 dark:to-secondary-500/20 p-6 rounded-3xl border border-primary-200 dark:border-primary-800 flex items-center justify-center">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary-500/30 to-secondary-500/30 dark:from-primary-400/40 dark:to-secondary-400/40 blur-2xl"></div>
+                <div className="relative bg-gradient-to-br from-primary-500/10 to-secondary-500/10 dark:from-primary-400/30 dark:to-secondary-400/30 p-6 rounded-3xl border border-primary-200 dark:border-primary-700 shadow-lg dark:shadow-primary-900/20 flex items-center justify-center">
                     {icon}
                 </div>
             </div>
