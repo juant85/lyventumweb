@@ -23,6 +23,7 @@ import QuickStatCard from '../../components/dashboard/QuickStatCard';
 import { Calendar, Users } from 'lucide-react';
 import OrganizerMobileDashboard from '../../components/mobile/dashboard/OrganizerMobileDashboard';
 import SuperAdminMobileDashboard from '../../components/mobile/dashboard/SuperAdminMobileDashboard';
+import EventManagementDashboard from '../../components/mobile/dashboard/EventManagementDashboard';
 import { useAuth } from '../../contexts/AuthContext';
 
 // --- Reusable Components for the new Dashboard ---
@@ -302,6 +303,12 @@ const DashboardPage: React.FC = () => {
     );
   }
 
+
+  // MOBILE VIEW - Use EventManagementDashboard (has all features)
+  // This component handles both live and non-live sessions gracefully
+  if (isMobile) {
+    return <EventManagementDashboard />;
+  }
 
   // DESKTOP VIEW - No Live Session
   if (!liveSession) {

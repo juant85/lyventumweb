@@ -1,0 +1,352 @@
+/**
+ * LyVenTum Mobile Design Tokens
+ * Premium design system for modern, professional mobile experience
+ */
+
+:root {
+    /* ============================================
+     TYPOGRAPHY SCALE (1.250 - Major Third)
+     ============================================ */
+
+    /* Font Sizes */
+    --text-xs: 0.64rem;
+    /* 10.24px - Micro labels */
+    --text-sm: 0.8rem;
+    /* 12.8px - Small text */
+    --text-base: 1rem;
+    /* 16px - Body text */
+    --text-lg: 1.25rem;
+    /* 20px - Subheadings */
+    --text-xl: 1.563rem;
+    /* 25px - Section titles */
+    --text-2xl: 1.953rem;
+    /* 31.25px - Page headers */
+
+    /* Font Weights */
+    --font-normal: 400;
+    --font-medium: 500;
+    --font-semibold: 600;
+    --font-bold: 700;
+
+    /* Line Heights */
+    --leading-tight: 1.25;
+    --leading-snug: 1.375;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.625;
+    --leading-loose: 1.75;
+
+    /* Letter Spacing */
+    --tracking-tighter: -0.05em;
+    --tracking-tight: -0.025em;
+    --tracking-normal: 0;
+    --tracking-wide: 0.025em;
+    --tracking-wider: 0.05em;
+    --tracking-widest: 0.1em;
+
+    /* ============================================
+     SPACING SYSTEM (4px base unit)
+     ============================================ */
+
+    --space-0: 0;
+    --space-px: 1px;
+    --space-0-5: 0.125rem;
+    /* 2px */
+    --space-1: 0.25rem;
+    /* 4px */
+    --space-1-5: 0.375rem;
+    /* 6px */
+    --space-2: 0.5rem;
+    /* 8px */
+    --space-2-5: 0.625rem;
+    /* 10px */
+    --space-3: 0.75rem;
+    /* 12px */
+    --space-3-5: 0.875rem;
+    /* 14px */
+    --space-4: 1rem;
+    /* 16px */
+    --space-5: 1.25rem;
+    /* 20px */
+    --space-6: 1.5rem;
+    /* 24px */
+    --space-7: 1.75rem;
+    /* 28px */
+    --space-8: 2rem;
+    /* 32px */
+    --space-9: 2.25rem;
+    /* 36px */
+    --space-10: 2.5rem;
+    /* 40px */
+    --space-11: 2.75rem;
+    /* 44px */
+    --space-12: 3rem;
+    /* 48px */
+    --space-14: 3.5rem;
+    /* 56px */
+    --space-16: 4rem;
+    /* 64px */
+    --space-20: 5rem;
+    /* 80px */
+
+    /* ============================================
+     PREMIUM COLOR PALETTE
+     ============================================ */
+
+    /* Primary - Elevated Blue (Professional & Modern) */
+    --primary-50: #eff6ff;
+    --primary-100: #dbeafe;
+    --primary-200: #bfdbfe;
+    --primary-300: #93c5fd;
+    --primary-400: #60a5fa;
+    --primary-500: #3b82f6;
+    /* Core brand color */
+    --primary-600: #2563eb;
+    --primary-700: #1d4ed8;
+    --primary-800: #1e40af;
+    --primary-900: #1e3a8a;
+    --primary-950: #172554;
+
+    /* Accent - Vibrant Purple (Energy & Innovation) */
+    --accent-50: #faf5ff;
+    --accent-100: #f3e8ff;
+    --accent-200: #e9d5ff;
+    --accent-300: #d8b4fe;
+    --accent-400: #c084fc;
+    --accent-500: #a855f7;
+    --accent-600: #9333ea;
+    --accent-700: #7e22ce;
+    --accent-800: #6b21a8;
+    --accent-900: #581c87;
+
+    /* Neutrals - Refined Grays (Clean & Sophisticated) */
+    --gray-50: #fafafa;
+    --gray-100: #f5f5f5;
+    --gray-200: #e5e5e5;
+    --gray-300: #d4d4d4;
+    --gray-400: #a3a3a3;
+    --gray-500: #737373;
+    --gray-600: #525252;
+    --gray-700: #404040;
+    --gray-800: #262626;
+    --gray-900: #171717;
+    --gray-950: #0a0a0a;
+
+    /* Semantic Colors */
+    --success-50: #ecfdf5;
+    --success-500: #10b981;
+    --success-600: #059669;
+    --success-700: #047857;
+
+    --warning-50: #fffbeb;
+    --warning-500: #f59e0b;
+    --warning-600: #d97706;
+    --warning-700: #b45309;
+
+    --error-50: #fef2f2;
+    --error-500: #ef4444;
+    --error-600: #dc2626;
+    --error-700: #b91c1c;
+
+    --info-50: #f0f9ff;
+    --info-500: #06b6d4;
+    --info-600: #0891b2;
+    --info-700: #0e7490;
+
+    /* ============================================
+     ELEVATION SYSTEM (Subtle Shadows)
+     ============================================ */
+
+    /* Standard Shadows */
+    --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+
+    /* Mobile-Optimized Shadows (Softer) */
+    --shadow-mobile-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
+    --shadow-mobile-md: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-mobile-lg: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --shadow-mobile-xl: 0 8px 16px rgba(0, 0, 0, 0.12);
+
+    /* Interactive States */
+    --shadow-mobile-hover: 0 4px 12px rgba(59, 130, 246, 0.15);
+    --shadow-mobile-active: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    /* Inner Shadows */
+    --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+
+    /* ============================================
+     BORDER RADIUS (Modern, Soft Corners)
+     ============================================ */
+
+    --radius-none: 0;
+    --radius-sm: 0.375rem;
+    /* 6px - Small elements, badges */
+    --radius-md: 0.5rem;
+    /* 8px - Buttons, inputs */
+    --radius-lg: 0.75rem;
+    /* 12px - Cards, small modals */
+    --radius-xl: 1rem;
+    /* 16px - Large cards */
+    --radius-2xl: 1.5rem;
+    /* 24px - Hero sections */
+    --radius-3xl: 2rem;
+    /* 32px - Special elements */
+    --radius-full: 9999px;
+    /* Pills, badges, avatars */
+
+    /* ============================================
+     TRANSITIONS & ANIMATIONS
+     ============================================ */
+
+    /* Duration */
+    --duration-fast: 150ms;
+    --duration-normal: 200ms;
+    --duration-slow: 300ms;
+    --duration-slower: 500ms;
+
+    /* Easing Functions */
+    --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    /* Common Transitions */
+    --transition-colors: color var(--duration-normal) var(--ease-default),
+        background-color var(--duration-normal) var(--ease-default),
+        border-color var(--duration-normal) var(--ease-default);
+    --transition-transform: transform var(--duration-normal) var(--ease-default);
+    --transition-shadow: box-shadow var(--duration-normal) var(--ease-default);
+    --transition-all: all var(--duration-normal) var(--ease-default);
+
+    /* ============================================
+     Z-INDEX SCALE
+     ============================================ */
+
+    --z-base: 0;
+    --z-dropdown: 10;
+    --z-sticky: 20;
+    --z-fixed: 30;
+    --z-modal-backdrop: 40;
+    --z-modal: 50;
+    --z-popover: 60;
+    --z-tooltip: 70;
+    --z-notification: 80;
+    --z-max: 9999;
+
+    /* ============================================
+     MOBILE-SPECIFIC UTILITIES
+     ============================================ */
+
+    /* Safe Areas (iOS notch, etc.) */
+    --safe-area-top: env(safe-area-inset-top);
+    --safe-area-right: env(safe-area-inset-right);
+    --safe-area-bottom: env(safe-area-inset-bottom);
+    --safe-area-left: env(safe-area-inset-left);
+
+    /* Touch Target Minimum */
+    --touch-target: 44px;
+    /* iOS minimum */
+
+    /* Mobile Breakpoints */
+    --mobile-sm: 375px;
+    --mobile-md: 414px;
+    --mobile-lg: 480px;
+
+    /* Glassmorphism Effects */
+    --glass-bg: rgba(255, 255, 255, 0.8);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-blur: 12px;
+
+    --glass-bg-dark: rgba(15, 23, 42, 0.8);
+    --glass-border-dark: rgba(148, 163, 184, 0.1);
+}
+
+/* ============================================
+   DARK MODE OVERRIDES
+   ============================================ */
+
+.dark,
+[data-theme="dark"] {
+    /* Adjust shadows for dark mode */
+    --shadow-mobile-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+    --shadow-mobile-md: 0 2px 8px rgba(0, 0, 0, 0.4);
+    --shadow-mobile-lg: 0 4px 12px rgba(0, 0, 0, 0.5);
+    --shadow-mobile-xl: 0 8px 16px rgba(0, 0, 0, 0.6);
+
+    /* Glassmorphism for dark mode */
+    --glass-bg: var(--glass-bg-dark);
+    --glass-border: var(--glass-border-dark);
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+/* Premium Card Base */
+.card-premium {
+    background: white;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-mobile-md);
+    padding: var(--space-5);
+    transition: var(--transition-shadow);
+}
+
+.card-premium:active {
+    box-shadow: var(--shadow-mobile-active);
+}
+
+.dark .card-premium {
+    background: var(--gray-900);
+}
+
+/* Glassmorphism Card */
+.card-glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-mobile-sm);
+}
+
+/* Touch Feedback */
+.touch-feedback {
+    -webkit-tap-highlight-color: transparent;
+    transition: var(--transition-transform), var(--transition-colors);
+}
+
+.touch-feedback:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+}
+
+/* Safe Area Padding */
+.safe-top {
+    padding-top: max(var(--space-4), var(--safe-area-top));
+}
+
+.safe-bottom {
+    padding-bottom: max(var(--space-4), var(--safe-area-bottom));
+}
+
+/* Smooth Scroll */
+.smooth-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+}
+
+/* Text Utilities */
+.text-balance {
+    text-wrap: balance;
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, var(--primary-500), var(--accent-500));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}

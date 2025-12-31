@@ -1,14 +1,16 @@
 
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useLanguage } from '../../contexts/LanguageContext';
-import { useSelectedEvent } from '../../contexts/SelectedEventContext'; // NEW
+import { useSelectedEvent } from '../../contexts/SelectedEventContext';
+import { useFeatureFlags } from '../../contexts/FeatureFlagContext';
 import { Icon } from '../ui/Icon';
 import ThemeSwitcher from '../ThemeSwitcher';
 import LanguageSwitcher from '../LanguageSwitcher';
 import { AppRoute } from '../../types';
+import { NAVIGATION_LINKS } from '../../constants';
 
 interface MobileMenuProps {
     isOpen: boolean;
@@ -18,62 +20,48 @@ interface MobileMenuProps {
 const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
     const { currentUser, logout } = useAuth();
     const { t } = useLanguage();
-    const { currentEvent } = useSelectedEvent(); // NEW
+    const { currentEvent } = useSelectedEvent();
+    const { isFeatureEnabled, isLoading } = useFeatureFlags();
     const navigate = useNavigate();
+    const location = useLocation();
+    const [openSections, setOpenSections] = useState<Set<string>>(new Set());
 
     const handleLogout = async () => {
         await logout();
         navigate(AppRoute.Login);
     };
 
-    const commonItems = [
-        {
-            label: 'Analytics',
-            icon: 'chart',
-            path: '/admin/analytics',
-            color: 'text-blue-500'
-        },
-        {
-            label: 'Real-time',
-            icon: 'activity',
-            path: '/admin/analytics/realtime',
-            color: 'text-green-500'
-        },
-        {
-            label: 'My Profile',
-            icon: 'user',
-            path: '/admin/profile',
-            color: 'text-purple-500'
-        }
-    ];
+    // Same logic as desktop Sidebar - filter by feature flags and role
+    const visibleNavigationLinks = useMemo(() => {
+        if (isLoading) return [];
 
-    // NEW: Event specific items
-    const eventItems = currentEvent ? [
-        {
-            label: 'Sessions',
-            icon: 'calendar', // reusable icon, need to check if 'calendar' exists in Icon map or use 'clock'
-            path: AppRoute.SessionSettings,
-            color: 'text-orange-500'
-        },
-        {
-            label: 'Booths / Sponsors',
-            icon: 'store', // Need to check if 'store' exists in Icon map
-            path: AppRoute.BoothSetup,
-            color: 'text-pink-500'
-        },
-        {
-            label: 'Check-in Desk',
-            icon: 'checkCircle',
-            path: AppRoute.CheckInDesk,
-            color: 'text-teal-500'
-        },
-        {
-            label: 'Attendees',
-            icon: 'users',
-            path: AppRoute.AttendeeProfiles,
-            color: 'text-indigo-500'
-        }
-    ] : [];
+        return NAVIGATION_LINKS
+            .filter(group => {
+                const categoryName = group.category;
+                const isSuperAdminCategory = categoryName === 'navCategorySuperAdmin';
+                if (isSuperAdminCategory) {
+                    return currentUser?.role === 'superadmin';
+                }
+                return true;
+            })
+            .map(group => ({
+                ...group,
+                links: group.links.filter(link => 'featureKey' in link ? isFeatureEnabled(link.featureKey) : true)
+            }))
+            .filter(group => group.links.length > 0);
+    }, [isFeatureEnabled, isLoading, currentUser]);
+
+    const toggleSection = (category: string) => {
+        setOpenSections(prevSections => {
+            const newSections = new Set(prevSections);
+            if (newSections.has(category)) {
+                newSections.delete(category);
+            } else {
+                newSections.add(category);
+            }
+            return newSections;
+        });
+    };
 
     return (
         <AnimatePresence>
@@ -94,115 +82,171 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
                         animate={{ x: 0 }}
                         exit={{ x: '100%' }}
                         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                        className="fixed right-0 top-0 bottom-0 w-[280px] bg-white dark:bg-slate-900 z-50 shadow-2xl flex flex-col"
+                        className="fixed right-0 top-0 bottom-0 w-[300px] bg-white dark:bg-slate-900 z-50 shadow-2xl flex flex-col"
                     >
                         {/* Header */}
-                        <div className="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
+                        <div className="p-5 border-b border-slate-100 dark:border-slate-800 bg-gradient-to-br from-slate-50/50 to-primary-50/30 dark:from-slate-800/50 dark:to-primary-900/20">
                             <div className="flex items-center gap-3 mb-4">
-                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-500 to-indigo-600 flex items-center justify-center text-white text-xl font-bold shadow-lg">
+                                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-primary-500 to-indigo-600 flex items-center justify-center text-white text-lg font-bold shadow-lg ring-2 ring-white dark:ring-slate-800">
                                     {currentUser?.email?.[0].toUpperCase() || 'U'}
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                    <h3 className="font-bold text-slate-800 dark:text-white truncate">
+                                    <h3 className="font-bold text-slate-800 dark:text-white truncate text-sm">
                                         {currentUser?.email?.split('@')[0]}
                                     </h3>
-                                    <p className="text-xs text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider">
+                                    <p className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-widest">
                                         {currentUser?.role}
                                     </p>
                                 </div>
                                 <button
                                     onClick={onClose}
-                                    className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1"
+                                    className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1.5 rounded-lg hover:bg-white/50 dark:hover:bg-slate-800/50 transition-colors"
                                 >
-                                    <Icon name="close" className="w-6 h-6" />
+                                    <Icon name="close" className="w-5 h-5" />
                                 </button>
                             </div>
 
-                            {/* Current Event Context Indicator */}
+                            {/* Current Event Indicator */}
                             {currentEvent && (
-                                <div className="mb-4 bg-primary-50 dark:bg-primary-900/20 border border-primary-100 dark:border-primary-800 rounded-lg p-2.5 flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                                    <span className="text-xs font-bold text-primary-700 dark:text-primary-300 truncate sticky top-0">
+                                <div className="mb-3 bg-white/80 dark:bg-slate-950/40 backdrop-blur-sm border border-primary-200 dark:border-primary-800/50 rounded-xl p-2.5 flex items-center gap-2 shadow-sm">
+                                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-lg shadow-green-500/50" />
+                                    <span className="text-xs font-bold text-primary-700 dark:text-primary-300 truncate flex-1">
                                         {currentEvent.name}
                                     </span>
                                 </div>
                             )}
 
                             <div className="flex gap-2">
-                                <div className="flex-1 bg-white dark:bg-slate-950 rounded-lg p-2 border border-slate-200 dark:border-slate-700 flex justify-center">
+                                <div className="flex-1 bg-white/70 dark:bg-slate-950/30 backdrop-blur-sm rounded-lg p-1.5 border border-slate-200 dark:border-slate-700/50 flex justify-center">
                                     <ThemeSwitcher />
                                 </div>
-                                <div className="flex-1 bg-white dark:bg-slate-950 rounded-lg p-2 border border-slate-200 dark:border-slate-700 flex justify-center">
+                                <div className="flex-1 bg-white/70 dark:bg-slate-950/30 backdrop-blur-sm rounded-lg p-1.5 border border-slate-200 dark:border-slate-700/50 flex justify-center">
                                     <LanguageSwitcher />
                                 </div>
                             </div>
                         </div>
 
-                        {/* Menu Items */}
-                        <div className="flex-1 overflow-y-auto p-4 space-y-2">
-                            {/* Event Section */}
-                            {currentEvent && (
-                                <div className="mb-6">
-                                    <p className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Event Management</p>
-                                    <div className="space-y-1">
-                                        {eventItems.map((item) => (
-                                            <button
-                                                key={item.path}
-                                                onClick={() => {
-                                                    navigate(item.path);
-                                                    onClose();
-                                                }}
-                                                className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group"
-                                            >
-                                                <div className={`p-2 rounded-lg bg-slate-100 dark:bg-slate-800 group-hover:bg-white dark:group-hover:bg-slate-700 transition-colors ${item.color}`}>
-                                                    {/* Use fallback icons if strict mapping fails, but generic Icon component usually handles matches */}
-                                                    <Icon name={item.icon as any} className="w-5 h-5" />
-                                                </div>
-                                                <span className="font-medium text-slate-700 dark:text-slate-200 text-sm">
-                                                    {item.label}
-                                                </span>
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Common Section */}
-                            <div>
-                                <p className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">System</p>
-                                <div className="space-y-1">
-                                    {commonItems.map((item) => (
-                                        <button
-                                            key={item.path}
-                                            onClick={() => {
-                                                navigate(item.path);
-                                                onClose();
-                                            }}
-                                            className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group"
-                                        >
-                                            <div className={`p-2 rounded-lg bg-slate-100 dark:bg-slate-800 group-hover:bg-white dark:group-hover:bg-slate-700 transition-colors ${item.color}`}>
-                                                <Icon name={item.icon as any} className="w-5 h-5" />
-                                            </div>
-                                            <span className="font-medium text-slate-700 dark:text-slate-200 text-sm">
-                                                {item.label}
-                                            </span>
-                                        </button>
+                        {/* Menu Items - Desktop Sidebar Structure */}
+                        <div className="flex-1 overflow-y-auto p-3 space-y-4 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-700 scrollbar-track-transparent">
+                            {isLoading ? (
+                                <div className="space-y-3">
+                                    {[1, 2, 3, 4].map(i => (
+                                        <div key={i} className="h-10 bg-slate-200 dark:bg-slate-700 rounded-lg animate-pulse" />
                                     ))}
                                 </div>
-                            </div>
+                            ) : (
+                                visibleNavigationLinks.map(group => {
+                                    const categoryName = t(group.category);
+                                    const isSingleLink = group.links.length === 1;
+
+                                    if (isSingleLink) {
+                                        const link = group.links[0];
+                                        const isActive = location.pathname === link.path || (link.path !== '/' && location.pathname.startsWith(link.path));
+
+                                        return (
+                                            <div key={link.path} className="space-y-1">
+                                                <p className="px-3 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+                                                    {categoryName}
+                                                </p>
+                                                <button
+                                                    onClick={() => {
+                                                        navigate(link.path);
+                                                        onClose();
+                                                    }}
+                                                    className={`
+                                                        relative w-full flex items-center gap-2.5 p-2.5 rounded-lg transition-all
+                                                        ${isActive
+                                                            ? 'bg-gradient-to-r from-primary-500/20 to-primary-600/10 text-primary-700 dark:text-primary-300 shadow-sm'
+                                                            : 'hover:bg-slate-100 dark:hover:bg-slate-800/50 text-slate-700 dark:text-slate-300'
+                                                        }
+                                                    `}
+                                                >
+                                                    {isActive && (
+                                                        <div className="absolute left-0 h-8 w-1 bg-primary-500 rounded-r-full" />
+                                                    )}
+                                                    <div className={`p-1.5 rounded-lg ${isActive ? 'bg-primary-100 dark:bg-primary-900/40' : 'bg-slate-100 dark:bg-slate-800'}`}>
+                                                        <Icon name={link.icon} className={`w-4 h-4 ${isActive ? 'text-primary-600 dark:text-primary-400' : 'text-slate-500'}`} />
+                                                    </div>
+                                                    <span className="font-medium text-sm">{t(link.labelKey)}</span>
+                                                </button>
+                                            </div>
+                                        );
+                                    }
+
+                                    const isOpen = openSections.has(categoryName);
+
+                                    return (
+                                        <div key={categoryName} className="space-y-1">
+                                            <button
+                                                onClick={() => toggleSection(categoryName)}
+                                                className="w-full flex items-center justify-between px-3 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
+                                            >
+                                                <span>{categoryName}</span>
+                                                <motion.div
+                                                    animate={{ rotate: isOpen ? 180 : 0 }}
+                                                    transition={{ duration: 0.2 }}
+                                                >
+                                                    <Icon name="chevronDown" className="w-3 h-3" />
+                                                </motion.div>
+                                            </button>
+
+                                            <AnimatePresence>
+                                                {isOpen && (
+                                                    <motion.div
+                                                        initial={{ height: 0, opacity: 0 }}
+                                                        animate={{ height: 'auto', opacity: 1 }}
+                                                        exit={{ height: 0, opacity: 0 }}
+                                                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                                                        className="space-y-0.5 overflow-hidden"
+                                                    >
+                                                        {group.links.map(link => {
+                                                            const isActive = (link.path === '/dashboard' ? location.pathname === link.path : location.pathname.startsWith(link.path));
+
+                                                            return (
+                                                                <button
+                                                                    key={link.path}
+                                                                    onClick={() => {
+                                                                        navigate(link.path);
+                                                                        onClose();
+                                                                    }}
+                                                                    className={`
+                                                                        relative w-full flex items-center gap-2.5 p-2.5 ml-2 rounded-lg transition-all
+                                                                        ${isActive
+                                                                            ? 'bg-gradient-to-r from-primary-500/20 to-primary-600/10 text-primary-700 dark:text-primary-300 shadow-sm'
+                                                                            : 'hover:bg-slate-100 dark:hover:bg-slate-800/50 text-slate-700 dark:text-slate-300'
+                                                                        }
+                                                                    `}
+                                                                >
+                                                                    {isActive && (
+                                                                        <div className="absolute left-0 h-6 w-0.5 bg-primary-500 rounded-r-full" />
+                                                                    )}
+                                                                    <div className={`p-1.5 rounded-lg ${isActive ? 'bg-primary-100 dark:bg-primary-900/40' : 'bg-slate-100 dark:bg-slate-800'}`}>
+                                                                        <Icon name={link.icon} className={`w-3.5 h-3.5 ${isActive ? 'text-primary-600 dark:text-primary-400' : 'text-slate-500'}`} />
+                                                                    </div>
+                                                                    <span className="font-medium text-sm truncate">{t(link.labelKey)}</span>
+                                                                </button>
+                                                            );
+                                                        })}
+                                                    </motion.div>
+                                                )}
+                                            </AnimatePresence>
+                                        </div>
+                                    );
+                                })
+                            )}
                         </div>
 
                         {/* Footer / Logout */}
-                        <div className="p-4 border-t border-slate-100 dark:border-slate-800 pb-safe">
+                        <div className="p-4 border-t border-slate-100 dark:border-slate-800 bg-gradient-to-t from-slate-50/30 to-transparent dark:from-slate-800/30 pb-safe">
                             <button
                                 onClick={handleLogout}
-                                className="w-full flex items-center justify-center gap-2 p-3 rounded-xl bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/20 transition-colors font-semibold"
+                                className="w-full flex items-center justify-center gap-2 p-3 rounded-xl bg-gradient-to-r from-red-50 to-red-100/50 dark:from-red-900/10 dark:to-red-900/5 text-red-600 dark:text-red-400 hover:from-red-100 hover:to-red-200/50 dark:hover:from-red-900/20 dark:hover:to-red-900/10 transition-all font-semibold text-sm shadow-sm border border-red-100 dark:border-red-900/20"
                             >
-                                <Icon name="logout" className="w-5 h-5" />
+                                <Icon name="logout" className="w-4 h-4" />
                                 Sign Out
                             </button>
-                            <p className="text-center text-[10px] text-slate-400 mt-4">
-                                LyVenTum &copy; {new Date().getFullYear()}
+                            <p className="text-center text-[10px] text-slate-400 dark:text-slate-500 mt-3 font-medium">
+                                LyVenTum © {new Date().getFullYear()}
                             </p>
                         </div>
                     </motion.div>

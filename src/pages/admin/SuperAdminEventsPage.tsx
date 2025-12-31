@@ -688,20 +688,31 @@ const SuperAdminEventsPage: React.FC = () => {
                             e.stopPropagation();
                             setManagingOrganizersFor(event);
                           }}
-                          className="flex items-center gap-1 px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-lg text-xs font-semibold hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors"
+                          className="
+                            flex items-center gap-1.5 
+                            px-3 py-1.5 
+                            bg-green-50 dark:bg-green-900/20 
+                            text-green-700 dark:text-green-300 
+                            rounded-lg 
+                            text-xs font-semibold 
+                            shadow-sm
+                            hover:bg-green-100 dark:hover:bg-green-900/30 
+                            active:scale-98
+                            transition-all duration-150
+                          "
                         >
                           <UsersGroupIcon className="w-3 h-3" />
                           <span>Organizers</span>
                         </button>
 
                         {/* Stats */}
-                        <span className="text-xs text-slate-500 dark:text-slate-400">📊 {event.booth_count || 0} booths</span>
+                        <span className="text-xs font-medium leading-tight text-slate-600 dark:text-slate-400">📊 {event.booth_count || 0} booths</span>
                         <span className="text-xs text-slate-400">•</span>
-                        <span className="text-xs text-slate-500 dark:text-slate-400">👥 {event.attendee_count || 0} attendees</span>
+                        <span className="text-xs font-medium leading-tight text-slate-600 dark:text-slate-400">👥 {event.attendee_count || 0} attendees</span>
                         {event.plan_name && (
                           <>
                             <span className="text-xs text-slate-400">•</span>
-                            <span className="text-xs text-primary-600 dark:text-primary-400 font-semibold">
+                            <span className="px-2 py-0.5 text-xs font-semibold bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 rounded-md shadow-sm">
                               {event.plan_name}
                             </span>
                           </>
