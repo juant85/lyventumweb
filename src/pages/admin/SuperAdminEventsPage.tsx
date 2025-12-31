@@ -28,6 +28,7 @@ import { useIsMobile } from '../../hooks/useIsMobile';
 import { MobileCard, MobileFAB, MobileSearchBar, MobileEmptyState, SpeedDialFAB } from '../../components/mobile';
 import SwipeableCard from '../../components/ui/SwipeableCard';
 import { Building2, Calendar, Edit2, Trash2 } from 'lucide-react';
+import { haptics } from '../../utils/haptics';
 
 type PlanRow = Database['public']['Tables']['plans']['Row'];
 type CompanyRow = Database['public']['Tables']['companies']['Row'];
@@ -289,6 +290,10 @@ const SuperAdminEventsPage: React.FC = () => {
   const handleDeleteEvent = async () => {
     if (!deletingEvent) return;
     setIsSubmitting(true);
+
+    // Haptic feedback for deletion
+    haptics.error();
+
     const result = await deleteEvent(deletingEvent.id);
     if (result.success) {
       toast.success(result.message);
