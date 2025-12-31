@@ -747,6 +747,14 @@ const SuperAdminEventsPage: React.FC = () => {
           ]}
         />
 
+        {/* Event Organizers Modal - Mobile too! */}
+        <EventOrganizersModal
+          isOpen={!!managingOrganizersFor}
+          onClose={() => setManagingOrganizersFor(null)}
+          eventId={managingOrganizersFor?.id || ''}
+          eventName={managingOrganizersFor?.name || ''}
+        />
+
         {/* Modals */}
         {/* Modals */}
         {createEventModalContent}

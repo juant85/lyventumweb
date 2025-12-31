@@ -199,8 +199,11 @@ const EventOrganizersModal: React.FC<EventOrganizersModalProps> = ({
         }
     };
 
+    // Use BottomSheet on mobile, Modal on desktop
+    const ModalWrapper = isMobile ? BottomSheet : Modal;
+
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title={`Manage Organizers: ${eventName}`}>
+        <ModalWrapper isOpen={isOpen} onClose={onClose} title={`Manage Organizers: ${eventName}`}>
             <div className="space-y-6">
                 {error && <Alert type="error" message={error} />}
 
@@ -463,7 +466,7 @@ const EventOrganizersModal: React.FC<EventOrganizersModalProps> = ({
                     </Button>
                 </div>
             </div>
-        </Modal >
+        </ModalWrapper>
     );
 };
 
