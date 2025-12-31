@@ -80,9 +80,14 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ isOpen, onClose }) => {
         const searchLower = searchTerm.toLowerCase();
         const allResults: SearchResult[] = [];
 
+        // Defensive null checks for all data sources
+        const safeAttendees = attendees || [];
+        const safeBooths = booths || [];
+        const safeSessions = sessions || [];
+
         // Search Attendees
         if (filter === 'all' || filter === 'attendees') {
-            const attendeeResults = attendees
+            const attendeeResults = safeAttendees
                 .filter(a =>
                     a.name.toLowerCase().includes(searchLower) ||
                     a.organization.toLowerCase().includes(searchLower) ||
@@ -104,7 +109,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ isOpen, onClose }) => {
 
         // Search Booths
         if (filter === 'all' || filter === 'booths') {
-            const boothResults = booths
+            const boothResults = safeBooths
                 .filter(b =>
                     b.companyName.toLowerCase().includes(searchLower) ||
                     b.physicalId.toLowerCase().includes(searchLower)
@@ -123,7 +128,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ isOpen, onClose }) => {
 
         // Search Sessions
         if (filter === 'all' || filter === 'sessions') {
-            const sessionResults = sessions
+            const sessionResults = safeSessions
                 .filter(s =>
                     s.name.toLowerCase().includes(searchLower)
                 )
