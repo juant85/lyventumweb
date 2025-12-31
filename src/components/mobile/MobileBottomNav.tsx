@@ -47,7 +47,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
             {active && (
                 <motion.div
                     layoutId="activeTab"
-                    className="absolute -top-[2px] left-1/2 -translate-x-1/2 w-12 h-1 bg-primary-600 dark:bg-primary-400 rounded-full"
+                    className="absolute -top-[2px] left-1/2 -translate-x-1/2 w-12 h-1 bg-gradient-to-r from-primary-500 to-accent-500 rounded-full shadow-sm"
                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                 />
             )}
@@ -85,7 +85,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
     );
 
     return (
-        <nav className="fixed bottom-0 left-0 right-0 h-16 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-t border-slate-200 dark:border-slate-800 flex justify-around items-center px-2 z-50 shadow-[0_-4px_24px_rgba(0,0,0,0.08)] dark:shadow-[0_-4px_24px_rgba(0,0,0,0.24)] safe-area-bottom">
+        <nav className="fixed bottom-0 left-0 right-0 h-16 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-t border-slate-200/50 dark:border-slate-800/50 flex justify-around items-center px-2 z-50 shadow-[0_-4px_24px_rgba(0,0,0,0.08)] dark:shadow-[0_-4px_24px_rgba(0,0,0,0.3)] safe-area-bottom">
 
             {/* Home / Dashboard */}
             <NavButton

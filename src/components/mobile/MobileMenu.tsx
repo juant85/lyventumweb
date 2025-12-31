@@ -179,7 +179,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
                                         <div key={categoryName} className="space-y-1">
                                             <button
                                                 onClick={() => toggleSection(categoryName)}
-                                                className="w-full flex items-center justify-between px-3 py-2 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
+                                                className="w-full flex items-center justify-between px-3 py-2.5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
                                             >
                                                 <span>{categoryName}</span>
                                                 <motion.div
@@ -210,7 +210,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
                                                                         onClose();
                                                                     }}
                                                                     className={`
-                                                                        relative w-full flex items-center gap-2.5 p-2.5 ml-2 rounded-lg transition-all
+                                                                        relative w-full flex items-center gap-2.5 px-4 py-3 ml-2 rounded-lg transition-all min-h-[44px]
                                                                         ${isActive
                                                                             ? 'bg-gradient-to-r from-primary-500/20 to-primary-600/10 text-primary-700 dark:text-primary-300 shadow-sm'
                                                                             : 'hover:bg-slate-100 dark:hover:bg-slate-800/50 text-slate-700 dark:text-slate-300'
@@ -220,8 +220,8 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
                                                                     {isActive && (
                                                                         <div className="absolute left-0 h-6 w-0.5 bg-primary-500 rounded-r-full" />
                                                                     )}
-                                                                    <div className={`p-1.5 rounded-lg ${isActive ? 'bg-primary-100 dark:bg-primary-900/40' : 'bg-slate-100 dark:bg-slate-800'}`}>
-                                                                        <Icon name={link.icon} className={`w-3.5 h-3.5 ${isActive ? 'text-primary-600 dark:text-primary-400' : 'text-slate-500'}`} />
+                                                                    <div className={`w-10 h-10 flex items-center justify-center rounded-lg ${isActive ? 'bg-primary-100 dark:bg-primary-900/40' : 'bg-slate-100 dark:bg-slate-800'}`}>
+                                                                        <Icon name={link.icon} className={`w-5 h-5 ${isActive ? 'text-primary-600 dark:text-primary-400' : 'text-slate-500'}`} />
                                                                     </div>
                                                                     <span className="font-medium text-sm truncate">{t(link.labelKey)}</span>
                                                                 </button>
