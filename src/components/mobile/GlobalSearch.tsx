@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEventData } from '../../contexts/EventDataContext';
 import { Attendee, Booth, Session } from '../../types';
-import { UserIcon, MagnifyingGlassIcon, XMarkIcon, CheckCircleIcon, ClockIcon, BuildingStorefrontIcon, CalendarIcon } from '../Icons';
+import { UserIcon, MagnifyingGlassIcon, XMarkIcon, CheckCircleIcon, ClockIcon, BuildingStorefrontIcon, CalendarDaysIcon } from '../Icons';
 import { useNavigate } from 'react-router-dom';
 
 interface GlobalSearchProps {
@@ -133,8 +133,8 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ isOpen, onClose }) => {
                     type: 'session' as const,
                     name: highlightMatch(s.name, searchTerm),
                     subtitle: new Date(s.startTime).toLocaleDateString(),
-                    icon: <CalendarIcon className="w-5 h-5" />,
-                    status: s.isOperational ? 'Live' : 'Scheduled',
+                    icon: <CalendarDaysIcon className="w-5 h-5" />,
+                    status: 'Scheduled',
                     data: s
                 }));
             allResults.push(...sessionResults);
@@ -240,8 +240,8 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ isOpen, onClose }) => {
                                             key={f}
                                             onClick={() => setFilter(f)}
                                             className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${filter === f
-                                                    ? 'bg-primary-600 text-white'
-                                                    : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
+                                                ? 'bg-primary-600 text-white'
+                                                : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
                                                 }`}
                                         >
                                             {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -312,8 +312,8 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ isOpen, onClose }) => {
                                                     </div>
                                                     {result.status && (
                                                         <span className={`text-xs font-semibold ${result.status === 'Checked In' || result.status === 'Live'
-                                                                ? 'text-green-600 dark:text-green-400'
-                                                                : 'text-amber-600 dark:text-amber-400'
+                                                            ? 'text-green-600 dark:text-green-400'
+                                                            : 'text-amber-600 dark:text-amber-400'
                                                             }`}>
                                                             {result.status}
                                                         </span>
@@ -338,13 +338,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ isOpen, onClose }) => {
     );
 };
 
-export default GlobalSearch;
 
-
-interface GlobalSearchProps {
-    isOpen: boolean;
-    onClose: () => void;
-}
 
 const GlobalSearch: React.FC<GlobalSearchProps> = ({ isOpen, onClose }) => {
     const { attendees, scans } = useEventData();
