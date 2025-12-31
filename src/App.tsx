@@ -14,6 +14,7 @@ import { AttendeeProvider } from './contexts/attendees';
 import { ScanProvider } from './contexts/scans';
 import Layout, { getHomePathForRole } from './components/Layout';
 import ErrorBoundary from './components/ErrorBoundary';
+import MobileErrorFallback from './components/mobile/MobileErrorFallback';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AppRoute, User } from './types';
 import FeatureGuard from './components/FeatureGuard';
