@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ExclamationTriangleIcon, ArrowPathIcon } from './Icons';
+import { ExclamationTriangleIcon, ArrowPathIcon } from '../Icons';
 
 const MobileErrorFallback: React.FC<{ error?: Error; resetError?: () => void }> = ({ error, resetError }) => {
     const handleReload = () => {
