@@ -181,10 +181,10 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
                                     return (
                                         <div key={categoryName} className="space-y-1">
                                             <button
-                                                onClick={() => toggleSection(group.category)}
+                                                onClick={() => toggleSection(categoryName)}
                                                 className="w-full flex items-center justify-between py-2.5 px-4 text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
-                                                aria-expanded={openSections.has(group.category)}
-                                                aria-controls={`menu-section-${group.category}`}
+                                                aria-expanded={openSections.has(categoryName)}
+                                                aria-controls={`menu-section-${categoryName}`}
                                             >
                                                 <span>{categoryName}</span>
                                                 <motion.div

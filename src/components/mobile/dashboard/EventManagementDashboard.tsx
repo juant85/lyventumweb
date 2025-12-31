@@ -254,7 +254,7 @@ const EventManagementDashboard: React.FC = () => {
 
             {/* Quick Stats */}
             <div>
-                <h2 className="text-lg font-bold mb-3 px-4 text-slate-900 dark:text-white">Event Overview</h2>
+                <h2 className="text-lg font-bold mb-3 px-5 text-slate-900 dark:text-white">Event Overview</h2>
                 <SwipeableCarousel>
                     <QuickStatCard label="Sessions" value={eventStats.sessions} icon="calendar" color="blue" />
                     <QuickStatCard label="Booths" value={eventStats.booths} icon="store" color="purple" />
@@ -381,7 +381,7 @@ const EventManagementDashboard: React.FC = () => {
 
             {/* Quick Actions - Modern Premium Design */}
             <div className="px-4">
-                <h2 className="text-lg font-bold mb-4 text-slate-900 dark:text-white">Quick Actions</h2>
+                <h2 className="text-lg font-bold mb-4 px-1 text-slate-900 dark:text-white">Quick Actions</h2>
                 <div className="grid grid-cols-2 gap-4">
                     {/* Sessions */}
                     <motion.div
@@ -486,7 +486,7 @@ const EventManagementDashboard: React.FC = () => {
                         drag={false}
                         whileHover={{ y: -2 }}
                         whileTap={{ scale: 0.98 }}
-                        onClick={() => navigate(AppRoute.DataVisualization)}
+                        onClick={() => navigate(AppRoute.Reports)}
                         className="relative group cursor-pointer"
                     >
                         <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-violet-500 rounded-2xl opacity-0 group-hover:opacity-30 blur transition-opacity" />
