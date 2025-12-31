@@ -385,6 +385,7 @@ const EventManagementDashboard: React.FC = () => {
                 <div className="grid grid-cols-2 gap-4">
                     {/* Sessions */}
                     <motion.div
+                        drag={false}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.05, duration: 0.3 }}
@@ -405,6 +406,7 @@ const EventManagementDashboard: React.FC = () => {
 
                     {/* Booths Setup */}
                     <motion.div
+                        drag={false}
                         whileHover={{ y: -2 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => navigate(AppRoute.BoothSetup)}
@@ -422,6 +424,7 @@ const EventManagementDashboard: React.FC = () => {
 
                     {/* Check-In */}
                     <motion.div
+                        drag={false}
                         whileHover={{ y: -2 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => navigate(AppRoute.CheckInDesk)}
@@ -439,6 +442,7 @@ const EventManagementDashboard: React.FC = () => {
 
                     {/* Attendees */}
                     <motion.div
+                        drag={false}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.10, duration: 0.3 }}
@@ -459,6 +463,7 @@ const EventManagementDashboard: React.FC = () => {
 
                     {/* Live Monitor */}
                     <motion.div
+                        drag={false}
                         whileHover={{ y: -2 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => navigate(AppRoute.RealTimeAnalytics)}
@@ -478,6 +483,7 @@ const EventManagementDashboard: React.FC = () => {
 
                     {/* Session Reports */}
                     <motion.div
+                        drag={false}
                         whileHover={{ y: -2 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => navigate(AppRoute.DataVisualization)}

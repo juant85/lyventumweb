@@ -144,6 +144,15 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
                 }}
                 className="fixed top-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-b border-slate-200 dark:border-slate-800 shadow-sm px-4 flex items-center safe-area-top overflow-hidden"
             >
+                {/* Menu Button - LEFT SIDE */}
+                <button
+                    onClick={() => setIsMenuOpen(true)}
+                    className="p-2 hover:bg-white/10 rounded-lg transition-colors text-slate-600 dark:text-slate-300 mr-3"
+                    aria-label="Open menu"
+                >
+                    <Icon name="menu" className="w-6 h-6" />
+                </button>
+
                 <AnimatePresence mode="wait">
                     {headerMode === 'expanded' && (
                         <ExpandedHeader
@@ -161,25 +170,15 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
                         />
                     )}
                 </AnimatePresence>
-                <div className="flex items-center gap-2 ml-auto">
-                    {/* Global Search Button */}
-                    <button
-                        onClick={() => setIsSearchOpen(true)}
-                        className="p-2 hover:bg-white/10 rounded-lg transition-colors text-slate-600 dark:text-slate-300"
-                        aria-label="Search attendees"
-                    >
-                        <Icon name="search" className="w-5 h-5" />
-                    </button>
 
-                    {/* Menu Button */}
-                    <button
-                        onClick={() => setIsMenuOpen(true)}
-                        className="p-2 hover:bg-white/10 rounded-lg transition-colors text-slate-600 dark:text-slate-300"
-                        aria-label="Open menu"
-                    >
-                        <Icon name="menu" className="w-6 h-6" />
-                    </button>
-                </div>
+                {/* Search Button - RIGHT SIDE */}
+                <button
+                    onClick={() => setIsSearchOpen(true)}
+                    className="p-2 hover:bg-white/10 rounded-lg transition-colors text-slate-600 dark:text-slate-300 ml-auto"
+                    aria-label="Search attendees"
+                >
+                    <Icon name="search" className="w-5 h-5" />
+                </button>
             </motion.header>
 
             <AnimatePresence mode="wait">

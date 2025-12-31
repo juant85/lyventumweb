@@ -39,15 +39,16 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
     }) => (
         <button
             onClick={onClick}
-            className="flex flex-col items-center justify-center w-16 h-full relative group"
+            className={`flex flex-col items-center justify-center w-16 h-full relative group transition-all ${active ? 'bg-primary-50/50 dark:bg-primary-950/30' : ''
+                }`}
             aria-label={label}
             aria-current={active ? 'page' : undefined}
         >
-            {/* Active Indicator */}
+            {/* Active Indicator - Top Bar */}
             {active && (
                 <motion.div
                     layoutId="activeTab"
-                    className="absolute -top-[2px] left-1/2 -translate-x-1/2 w-12 h-1 bg-gradient-to-r from-primary-500 to-accent-500 rounded-full shadow-sm"
+                    className="absolute -top-[2px] left-1/2 -translate-x-1/2 w-12 h-1 bg-gradient-to-r from-primary-500 to-accent-500 rounded-full shadow-lg shadow-primary-500/50"
                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                 />
             )}
@@ -57,8 +58,8 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
                 <Icon
                     name={icon as any}
                     className={`w-6 h-6 transition-all duration-200 ${active
-                        ? 'text-primary-600 dark:text-primary-400 scale-110'
-                        : 'text-slate-500 dark:text-slate-400 group-active:scale-95'
+                            ? 'text-primary-600 dark:text-primary-400 scale-110'
+                            : 'text-slate-500 dark:text-slate-400 group-active:scale-95'
                         }`}
                 />
 
@@ -75,10 +76,12 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
             </div>
 
             {/* Label */}
-            <span className={`text-[10px] font-medium mt-0.5 transition-colors ${active
-                ? 'text-primary-600 dark:text-primary-400'
-                : 'text-slate-500 dark:text-slate-400'
-                }`}>
+            <span
+                className={`text-[10px] font-medium mt-0.5 transition-colors ${active
+                        ? 'text-primary-600 dark:text-primary-400 font-semibold'
+                        : 'text-slate-500 dark:text-slate-400'
+                    }`}
+            >
                 {label}
             </span>
         </button>
