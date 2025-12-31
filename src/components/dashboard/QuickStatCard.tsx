@@ -36,17 +36,17 @@ const QuickStatCard: React.FC<QuickStatCardProps> = ({ label, value, icon, color
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             whileTap={{ scale: 0.97 }}
-            className={`relative p-4 rounded-2xl bg-gradient-to-br ${colorMap[color]} text-white shadow-lg overflow-hidden`}
+            className={`relative p-3 rounded-2xl bg-gradient-to-br ${colorMap[color]} text-white shadow-lg overflow-hidden`}
         >
             {/* Decorative Background Circle */}
-            <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/4" />
+            <div className="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/4" />
 
             <div className="relative z-10 flex flex-col items-center text-center">
-                <IconComponent className="w-7 h-7 mb-1.5 opacity-90" />
-                <p className="text-2xl font-bold font-montserrat mb-0.5">
+                <IconComponent className="w-6 h-6 mb-1 opacity-90" />
+                <p className="text-xl font-bold font-montserrat leading-none">
                     {value}
                 </p>
-                <p className="text-[11px] font-medium opacity-90 uppercase tracking-wide">
+                <p className="text-[10px] font-medium opacity-90 uppercase tracking-wide mt-0.5">
                     {label}
                 </p>
             </div>
