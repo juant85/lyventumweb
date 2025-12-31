@@ -25,6 +25,7 @@ import SkeletonScanner from '../../components/scanner/SkeletonScanner';
 import ScanResultCard from '../../components/scanner/ScanResultCard';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import MobileBoothSelector from '../../components/mobile/MobileBoothSelector';
+import { haptics } from '../../utils/haptics';
 
 declare var Html5QrcodeScanner: any;
 declare var Html5QrcodeScanType: any;
@@ -257,10 +258,15 @@ const QRScannerPage: React.FC = () => {
         toast.error(result.message, { duration: 5000 });
       }
 
-      // Update stats
+      // Update stats and haptic feedback
       if (result.success) {
         setTodayScans(prev => prev + 1);
         setSessionScans(prev => prev + 1);
+        haptics.light(); // Quick tap on successful scan
+        playSound(true); // Audio feedback
+      } else {
+        haptics.error(); // Error vibration on failed scan
+        playSound(false); // Error audio
       }
 
     } catch (error) {
