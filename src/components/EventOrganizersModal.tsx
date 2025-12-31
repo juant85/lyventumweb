@@ -3,12 +3,14 @@
 
 import React, { useState, useEffect } from 'react';
 import Modal from './ui/Modal';
+import BottomSheet from './ui/BottomSheet';
 import Button from './ui/Button';
 import Alert from './ui/Alert';
 import { eventAccessService } from '../services/eventAccessService';
 import { useAuth } from '../contexts/AuthContext';
 import { UsersGroupIcon, MagnifyingGlassIcon, TrashIcon, UserPlusIcon, CheckCircleIcon } from './Icons';
 import toast from 'react-hot-toast';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 interface EventOrganizersModalProps {
     isOpen: boolean;
@@ -38,6 +40,7 @@ const EventOrganizersModal: React.FC<EventOrganizersModalProps> = ({
     eventName,
 }) => {
     const { currentUser } = useAuth();
+    const isMobile = useIsMobile();
     const [loading, setLoading] = useState(false);
     const [eventUsers, setEventUsers] = useState<EventUser[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
