@@ -5,7 +5,7 @@ import Input from '../../ui/Input';
 import MobileCard from '../MobileCard';
 import { UserIcon, UserPlusIcon, MagnifyingGlassIcon } from '../../Icons';
 import MobileEmptyState from '../MobileEmptyState';
-import SkeletonCard from '../SkeletonCard';
+import ListSkeleton from '../ListSkeleton';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import Button from '../../ui/Button';
 
@@ -110,10 +110,9 @@ const MobileAttendeeList: React.FC<MobileAttendeeListProps> = ({ onAddClick, onE
                 </div>
             </div>
 
-            {/* List */}
             <div className="space-y-3 px-1">
                 {loadingData ? (
-                    <SkeletonCard count={5} />
+                    <ListSkeleton count={5} type="card" />
                 ) : filteredAttendees.length > 0 ? (
                     filteredAttendees.map(attendee => (
                         <MobileCard
