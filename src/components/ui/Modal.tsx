@@ -58,12 +58,12 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, size = 
       {/* Modal Panel - Apply flexbox layout and max-height */}
       <div
         className={`relative flex flex-col bg-white dark:bg-slate-800 rounded-xl shadow-2xl transform transition-all sm:my-8 sm:w-full ${sizeClasses[size]} mx-auto max-h-[90vh]`}
+        role="document" // Added for accessibility, indicating it's a document within the dialog
       >
-        {/* Header - Make it non-shrinkable */}
-        <div className="flex-shrink-0 flex items-start justify-between p-5 border-b border-slate-200 dark:border-slate-700 rounded-t print-hide">
-          <h3 id="modal-title" className="text-xl font-semibold text-gray-800 dark:text-slate-100 font-montserrat">
-            {title}
-          </h3>
+        {/* Header - Make it non-shrinkable            <div className="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-700">
+              <h2 id="modal-title" className="text-xl font-semibold text-gray-800 dark:text-white font-montserrat">
+                {title}
+              </h2>
           <button
             type="button"
             className="text-gray-400 bg-transparent hover:bg-slate-200 dark:hover:bg-slate-600 hover:text-gray-900 dark:hover:text-white rounded-lg text-sm p-1.5 ml-auto inline-flex items-center transition-colors"
@@ -73,14 +73,14 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, size = 
             <XMarkIcon className="w-5 h-5" />
           </button>
         </div>
-        
+
         {/* Content - Make it grow and scrollable */}
         <div className="flex-grow overflow-y-auto">
           <div className="p-6 space-y-4">
             {children}
           </div>
         </div>
-        
+
         {/* Footer - Make it non-shrinkable */}
         {footerContent !== undefined && (
           <div className="flex-shrink-0 flex items-center justify-end p-4 border-t border-slate-200 dark:border-slate-700 rounded-b print-hide">

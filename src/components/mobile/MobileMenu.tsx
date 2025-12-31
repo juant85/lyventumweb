@@ -78,11 +78,13 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
 
                     {/* Drawer */}
                     <motion.div
-                        initial={{ x: '100%' }}
+                        initial={{ x: '-100%' }}
                         animate={{ x: 0 }}
-                        exit={{ x: '100%' }}
+                        exit={{ x: '-100%' }}
                         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                        className="fixed right-0 top-0 bottom-0 w-[300px] bg-white dark:bg-slate-900 z-50 shadow-2xl flex flex-col"
+                        className="fixed top-0 left-0 bottom-0 w-80 bg-white dark:bg-slate-900 shadow-2xl z-50 flex flex-col"
+                        role="navigation"
+                        aria-label="Main navigation menu"
                     >
                         {/* Header */}
                         <div className="p-5 border-b border-slate-100 dark:border-slate-800 bg-gradient-to-br from-slate-50/50 to-primary-50/30 dark:from-slate-800/50 dark:to-primary-900/20">
@@ -100,9 +102,10 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
                                 </div>
                                 <button
                                     onClick={onClose}
-                                    className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1.5 rounded-lg hover:bg-white/50 dark:hover:bg-slate-800/50 transition-colors"
+                                    className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                                    aria-label="Close menu"
                                 >
-                                    <Icon name="close" className="w-5 h-5" />
+                                    <Icon name="close" size={24} className="text-slate-600 dark:text-slate-300" />
                                 </button>
                             </div>
 
@@ -178,8 +181,10 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
                                     return (
                                         <div key={categoryName} className="space-y-1">
                                             <button
-                                                onClick={() => toggleSection(categoryName)}
-                                                className="w-full flex items-center justify-between px-3 py-2.5 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
+                                                onClick={() => toggleSection(group.category)}
+                                                className="w-full flex items-center justify-between py-2.5 px-4 text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
+                                                aria-expanded={openSections.has(group.category)}
+                                                aria-controls={`menu-section-${group.category}`}
                                             >
                                                 <span>{categoryName}</span>
                                                 <motion.div
