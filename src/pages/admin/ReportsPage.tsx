@@ -265,7 +265,7 @@ const ReportsPage: React.FC = () => {
 
         return (
             <div className="space-y-6">
-                <div>
+                <div className="px-5">
                     <h1 className="text-3xl font-bold flex items-center font-montserrat text-slate-800 dark:text-slate-100">
                         <Icon name="reports" className="w-8 h-8 mr-3 text-primary-600" />
                         {t(localeKeys.reportsTitle)}
@@ -295,7 +295,7 @@ const ReportsPage: React.FC = () => {
             )}
 
             <div className={`space-y-8 ${isMobile ? 'pb-28' : ''}`}>
-                <div>
+                <div className="px-5">
                     <h1 className="text-3xl font-bold flex items-center font-montserrat text-slate-800 dark:text-slate-100">
                         <Icon name="reports" className="w-8 h-8 mr-3 text-primary-600" />
                         {t(localeKeys.reportsTitle)}
