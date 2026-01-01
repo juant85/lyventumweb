@@ -1,54 +1,122 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Users, Store, CheckCircle, Percent, Calendar, Clock } from 'lucide-react';
+import { Icon } from '../ui/Icon';
+import { SparklineChart } from '../charts/SparklineChart';
+import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
 interface QuickStatCardProps {
     label: string;
-    value: string | number;
-    icon: 'users' | 'store' | 'checkCircle' | 'percent' | 'calendar' | 'clock';
-    color: 'blue' | 'green' | 'amber' | 'purple' | 'orange' | 'pink';
+    value: number | string;
+    icon?: string;
+    color?: 'blue' | 'green' | 'purple' | 'orange' | 'red' | 'teal';
+    // Premium features
+    trend?: number; // % change (positive or negative)
+    sparklineData?: number[]; // Array of historical values
+    trendDirection?: 'up' | 'down' | 'neutral';
 }
 
-const QuickStatCard: React.FC<QuickStatCardProps> = ({ label, value, icon, color }) => {
+const QuickStatCard: React.FC<QuickStatCardProps> = ({
+    label,
+    value,
+    icon = 'activity',
+    color = 'blue',
+    trend,
+    sparklineData,
+    trendDirection
+}) => {
     const colorMap = {
-        blue: 'from-blue-500 to-blue-600',
-        green: 'from-green-500 to-green-600',
-        amber: 'from-amber-500 to-amber-600',
-        purple: 'from-purple-500 to-purple-600',
-        orange: 'from-orange-500 to-orange-600',
-        pink: 'from-pink-500 to-pink-600',
+        blue: '#3b82f6',
+        green: '#10b981',
+        purple: '#a855f7',
+        orange: '#f97316',
+        red: '#ef4444',
+        teal: '#14b8a6',
     };
 
-    const iconMap = {
-        users: Users,
-        store: Store,
-        checkCircle: CheckCircle,
-        percent: Percent,
-        calendar: Calendar,
-        clock: Clock,
+    // Define colors for the new layout
+    const iconBgColorMap = {
+        blue: 'bg-blue-100 dark:bg-blue-900',
+        green: 'bg-green-100 dark:bg-green-900',
+        purple: 'bg-purple-100 dark:bg-purple-900',
+        orange: 'bg-orange-100 dark:bg-orange-900',
+        red: 'bg-red-100 dark:bg-red-900',
+        teal: 'bg-teal-100 dark:bg-teal-900',
     };
 
-    const IconComponent = iconMap[icon];
+    const iconTextColorMap = {
+        blue: 'text-blue-600 dark:text-blue-400',
+        green: 'text-green-600 dark:text-green-400',
+        purple: 'text-purple-600 dark:text-purple-400',
+        orange: 'text-orange-600 dark:text-orange-400',
+        red: 'text-red-600 dark:text-red-400',
+        teal: 'text-teal-600 dark:text-teal-400',
+    };
+
+    const iconShadowColorMap = {
+        blue: 'shadow-blue-500/20',
+        green: 'shadow-green-500/20',
+        purple: 'shadow-purple-500/20',
+        orange: 'shadow-orange-500/20',
+        red: 'shadow-red-500/20',
+        teal: 'shadow-teal-500/20',
+    };
+
+    const bgColor = iconBgColorMap[color] || iconBgColorMap.blue;
+    const textColor = iconTextColorMap[color] || iconTextColorMap.blue;
+    const shadowColor = iconShadowColorMap[color] || iconShadowColorMap.blue;
 
     return (
         <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             whileTap={{ scale: 0.97 }}
-            className={`relative p-3 rounded-2xl bg-gradient-to-br ${colorMap[color]} text-white shadow-lg overflow-hidden`}
+            className="relative p-4 rounded-2xl bg-white dark:bg-slate-800 shadow-lg overflow-hidden border border-slate-200 dark:border-slate-700"
         >
-            {/* Decorative Background Circle */}
-            <div className="absolute top-0 right-0 w-16 h-16 bg-white/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/4" />
+            <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                    <div className={`p-3 rounded-xl ${bgColor} ${shadowColor}`}>
+                        <Icon name={icon as any} className={`w-6 h-6 ${textColor}`} />
+                    </div>
+                    <div className="text-right flex-1 ml-3">
+                        <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mb-1">
+                            {label}
+                        </p>
+                        <div className="flex items-center justify-end gap-2">
+                            <p className="text-2xl font-bold text-slate-900 dark:text-white">
+                                {value}
+                            </p>
+                            {/* Trend Indicator */}
+                            {trend !== undefined && (
+                                <div className={`flex items-center gap-0.5 text-xs font-semibold ${trend > 0 ? 'text-green-600 dark:text-green-400' :
+                                        trend < 0 ? 'text-red-600 dark:text-red-400' :
+                                            'text-slate-500 dark:text-slate-400'
+                                    }`}>
+                                    {trend > 0 && <TrendingUp className="w-3 h-3" />}
+                                    {trend < 0 && <TrendingDown className="w-3 h-3" />}
+                                    {trend === 0 && <Minus className="w-3 h-3" />}
+                                    <span>{trend > 0 ? '+' : ''}{trend}%</span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
 
-            <div className="relative z-10 flex flex-col items-center text-center">
-                <IconComponent className="w-6 h-6 mb-1 opacity-90" />
-                <p className="text-xl font-bold font-montserrat leading-none">
-                    {value}
-                </p>
-                <p className="text-[10px] font-medium opacity-90 uppercase tracking-wide mt-0.5">
-                    {label}
-                </p>
+                {/* Sparkline */}
+                {sparklineData && sparklineData.length > 0 && (
+                    <div className="flex items-center justify-end gap-2 pt-1 border-t border-slate-100 dark:border-slate-700">
+                        <span className="text-[10px] text-slate-400 dark:text-slate-500">Last 7 days</span>
+                        <SparklineChart
+                            data={sparklineData}
+                            color={
+                                trend && trend > 0 ? '#10b981' :
+                                    trend && trend < 0 ? '#ef4444' :
+                                        colorMap[color]
+                            }
+                            width={80}
+                            height={24}
+                        />
+                    </div>
+                )}
             </div>
         </motion.div>
     );
