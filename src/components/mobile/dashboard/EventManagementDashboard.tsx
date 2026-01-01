@@ -13,6 +13,8 @@ import MobileContentContainer from '../MobileContentContainer';
 import Button from '../../ui/Button';
 import { useBoothCapacity } from '../../../hooks/useBoothCapacity';
 import { useAutoRefresh } from '../../../hooks/useAutoRefresh';
+import { useLanguage } from '../../../contexts/LanguageContext';
+import { localeKeys } from '../../../i18n/locales';
 
 /**
  * Universal Event Management Dashboard for Mobile
@@ -20,6 +22,7 @@ import { useAutoRefresh } from '../../../hooks/useAutoRefresh';
  * Provides access to all core event management features
  */
 const EventManagementDashboard: React.FC = () => {
+    const { t } = useLanguage();
     const navigate = useNavigate();
     const { currentEvent } = useSelectedEvent();
     const { sessions, booths, attendees, scans, getOperationalSessionDetails, getSessionRegistrationsForSession, getBoothById } = useEventData();
@@ -255,7 +258,7 @@ const EventManagementDashboard: React.FC = () => {
 
             {/* Quick Stats */}
             <MobileContentContainer className="mb-6">
-                <h2 className="text-lg font-bold mb-3 text-slate-900 dark:text-white">Event Overview</h2>
+                <h2 className="text-lg font-bold mb-3 text-slate-900 dark:text-white">{t(localeKeys.eventOverview)}</h2>
                 <SwipeableCarousel>
                     <QuickStatCard label="Sessions" value={eventStats.sessions} icon="calendar" color="blue" />
                     <QuickStatCard label="Booths" value={eventStats.booths} icon="store" color="purple" />
@@ -382,7 +385,7 @@ const EventManagementDashboard: React.FC = () => {
 
             {/* Quick Actions - Modern Premium Design */}
             <MobileContentContainer className="mb-6">
-                <h2 className="text-lg font-bold mb-4 text-slate-900 dark:text-white">Quick Actions</h2>
+                <h2 className="text-lg font-bold mb-4 text-slate-900 dark:text-white">{t(localeKeys.quickActions)}</h2>
                 <div className="grid grid-cols-2 gap-4">
                     {/* Sessions */}
                     <motion.div

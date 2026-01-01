@@ -13,6 +13,8 @@ import { AppRoute } from '../../types';
 import MobileMenu from './MobileMenu';
 import MobileErrorBoundary from './MobileErrorBoundary';
 import GlobalSearch from './GlobalSearch';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { localeKeys } from '../../i18n/locales';
 import { MobileEventSwitcher } from './navigation';
 import BottomSheet from '../ui/BottomSheet';
 
@@ -178,7 +180,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
                 {currentUser && (
                     <div className="flex items-center gap-2 ml-auto">
                         <Avatar
-                            name={currentUser.name || currentUser.email || 'User'}
+                            name={currentUser.username || currentUser.email || 'User'}
                             size="sm"
                         />
                         <div className="hidden xs:flex flex-col">
