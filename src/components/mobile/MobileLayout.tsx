@@ -5,6 +5,7 @@ import { useScrollY } from '../../hooks/useScrollY';
 import MobileBottomNav from './MobileBottomNav';
 import { Icon } from '../ui/Icon';
 import { useAuth } from '../../contexts/AuthContext';
+import Avatar from '../ui/Avatar';
 import { useSelectedEvent } from '../../contexts/SelectedEventContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -173,14 +174,20 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
                     )}
                 </AnimatePresence>
 
-                {/* Search Button - RIGHT SIDE */}
-                <button
-                    onClick={() => setIsSearchOpen(true)}
-                    className="p-2 hover:bg-white/10 rounded-lg transition-colors text-slate-600 dark:text-slate-300 ml-auto"
-                    aria-label="Search attendees"
-                >
-                    <Icon name="search" className="w-5 h-5" />
-                </button>
+                {/* User Display - RIGHT SIDE */}
+                {currentUser && (
+                    <div className="flex items-center gap-2 ml-auto">
+                        <Avatar
+                            name={currentUser.name || currentUser.email || 'User'}
+                            size="sm"
+                        />
+                        <div className="hidden xs:flex flex-col">
+                            <span className="text-xs font-semibold text-slate-800 dark:text-white leading-tight truncate max-w-[80px]">
+                                {currentUser.username?.split(' ')[0] || currentUser.username || 'User'}
+                            </span>
+                        </div>
+                    </div>
+                )}
             </motion.header>
 
             <AnimatePresence mode="wait">
