@@ -9,6 +9,7 @@ import SpeedDialFAB from '../SpeedDialFAB';
 import SwipeableCarousel from '../../ui/SwipeableCarousel';
 import QuickStatCard from '../../dashboard/QuickStatCard';
 import MobileCard from '../MobileCard';
+import MobileContentContainer from '../MobileContentContainer';
 import Button from '../../ui/Button';
 import { useBoothCapacity } from '../../../hooks/useBoothCapacity';
 import { useAutoRefresh } from '../../../hooks/useAutoRefresh';
@@ -253,8 +254,8 @@ const EventManagementDashboard: React.FC = () => {
             )}
 
             {/* Quick Stats */}
-            <div>
-                <h2 className="text-lg font-bold mb-3 px-5 text-slate-900 dark:text-white">Event Overview</h2>
+            <MobileContentContainer className="mb-6">
+                <h2 className="text-lg font-bold mb-3 text-slate-900 dark:text-white">Event Overview</h2>
                 <SwipeableCarousel>
                     <QuickStatCard label="Sessions" value={eventStats.sessions} icon="calendar" color="blue" />
                     <QuickStatCard label="Booths" value={eventStats.booths} icon="store" color="purple" />
@@ -262,7 +263,7 @@ const EventManagementDashboard: React.FC = () => {
                     <QuickStatCard label="Scans" value={eventStats.scans} icon="checkCircle" color="amber" />
                     <QuickStatCard label="Checked In" value={eventStats.checkedIn} icon="checkCircle" color="pink" />
                 </SwipeableCarousel>
-            </div>
+            </MobileContentContainer>
 
             {/* Desktop Parity Features - Only show when live session active */}
             {liveSession && sessionRegistrations.length > 0 && (
@@ -380,8 +381,8 @@ const EventManagementDashboard: React.FC = () => {
             )}
 
             {/* Quick Actions - Modern Premium Design */}
-            <div className="px-4">
-                <h2 className="text-lg font-bold mb-4 px-1 text-slate-900 dark:text-white">Quick Actions</h2>
+            <MobileContentContainer className="mb-6">
+                <h2 className="text-lg font-bold mb-4 text-slate-900 dark:text-white">Quick Actions</h2>
                 <div className="grid grid-cols-2 gap-4">
                     {/* Sessions */}
                     <motion.div
@@ -499,17 +500,17 @@ const EventManagementDashboard: React.FC = () => {
                         </div>
                     </motion.div>
                 </div>
-            </div>
-
-            {/* Speed Dial FAB */}
-            <SpeedDialFAB
-                actions={[
-                    { icon: 'calendar', label: 'New Session', onClick: () => navigate('/sessions/new') },
-                    { icon: 'users', label: 'Add Attendee', onClick: () => navigate('/attendees/add') },
-                    { icon: 'scan', label: 'Quick Scan', onClick: () => navigate(AppRoute.QRScanner) }
-                ]}
-            />
         </div>
+
+            {/* Speed Dial FAB */ }
+    <SpeedDialFAB
+        actions={[
+            { icon: 'calendar', label: 'New Session', onClick: () => navigate('/sessions/new') },
+            { icon: 'users', label: 'Add Attendee', onClick: () => navigate('/attendees/add') },
+            { icon: 'scan', label: 'Quick Scan', onClick: () => navigate(AppRoute.QRScanner) }
+        ]}
+    />
+        </div >
     );
 };
 
