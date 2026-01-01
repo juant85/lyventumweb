@@ -500,16 +500,16 @@ const EventManagementDashboard: React.FC = () => {
                         </div>
                     </motion.div>
                 </div>
-        </div>
+            </MobileContentContainer>
 
-            {/* Speed Dial FAB */ }
-    <SpeedDialFAB
-        actions={[
-            { icon: 'calendar', label: 'New Session', onClick: () => navigate('/sessions/new') },
-            { icon: 'users', label: 'Add Attendee', onClick: () => navigate('/attendees/add') },
-            { icon: 'scan', label: 'Quick Scan', onClick: () => navigate(AppRoute.QRScanner) }
-        ]}
-    />
+            {/* Speed Dial FAB */}
+            <SpeedDialFAB
+                actions={[
+                    { icon: 'calendar', label: 'New Session', onClick: () => navigate('/sessions/new') },
+                    { icon: 'users', label: 'Add Attendee', onClick: () => navigate('/attendees/add') },
+                    { icon: 'scan', label: 'Quick Scan', onClick: () => navigate(AppRoute.QRScanner) }
+                ]}
+            />
         </div >
     );
 };
