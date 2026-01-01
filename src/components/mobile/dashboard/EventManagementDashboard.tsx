@@ -502,6 +502,27 @@ const EventManagementDashboard: React.FC = () => {
                             <p className="text-xs text-slate-500 dark:text-slate-400">Session analysis</p>
                         </div>
                     </motion.div>
+
+                    {/* Data Visualization - NEW! */}
+                    <motion.div
+                        drag={false}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.15, duration: 0.3 }}
+                        whileHover={{ y: -2 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => navigate(AppRoute.DataVisualization)}
+                        className="relative group cursor-pointer"
+                    >
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-rose-500 to-pink-500 rounded-2xl opacity-0 group-hover:opacity-30 blur transition-opacity" />
+                        <div className="relative bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-md hover:shadow-xl transition-all border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-center min-h-[120px]">
+                            <div className="w-12 h-12 mb-2 rounded-xl bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center shadow-lg">
+                                <TrendingUp className="w-6 h-6 text-white" />
+                            </div>
+                            <h3 className="font-bold text-sm text-slate-900 dark:text-white mb-1">Data Viz</h3>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">Charts & insights</p>
+                        </div>
+                    </motion.div>
                 </div>
             </MobileContentContainer>
 
