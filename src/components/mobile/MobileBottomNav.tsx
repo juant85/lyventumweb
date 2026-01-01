@@ -4,6 +4,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Icon } from '../ui/Icon';
 import { AppRoute } from '../../types';
 import { motion } from 'framer-motion';
+import { useLanguage } from '../../contexts/LanguageContext';
+import { localeKeys } from '../../i18n/locales';
 
 interface MobileBottomNavProps {
     onScanClick: () => void;
@@ -16,6 +18,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
     onMoreClick,
     pendingScans = 0
 }) => {
+    const { t } = useLanguage();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -58,8 +61,8 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
                 <Icon
                     name={icon as any}
                     className={`w-6 h-6 transition-all duration-200 ${active
-                            ? 'text-primary-600 dark:text-primary-400 scale-110'
-                            : 'text-slate-500 dark:text-slate-400 group-active:scale-95'
+                        ? 'text-primary-600 dark:text-primary-400 scale-110'
+                        : 'text-slate-500 dark:text-slate-400 group-active:scale-95'
                         }`}
                 />
 
@@ -78,8 +81,8 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
             {/* Label */}
             <span
                 className={`text-[10px] font-medium mt-0.5 transition-colors ${active
-                        ? 'text-primary-600 dark:text-primary-400 font-semibold'
-                        : 'text-slate-500 dark:text-slate-400'
+                    ? 'text-primary-600 dark:text-primary-400 font-semibold'
+                    : 'text-slate-500 dark:text-slate-400'
                     }`}
             >
                 {label}
@@ -93,7 +96,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
             {/* Home / Dashboard */}
             <NavButton
                 icon="home"
-                label="Home"
+                label={t(localeKeys.home)}
                 onClick={() => navigate(AppRoute.Dashboard)}
                 active={isActive([AppRoute.Dashboard, AppRoute.DataVisualization, '/sessions'])}
             />
@@ -101,7 +104,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
             {/* Live / Analytics - Replaces Events to emphasize Real-Time */}
             <NavButton
                 icon="activity"
-                label="Live"
+                label={t(localeKeys.live)}
                 onClick={() => navigate(AppRoute.RealTimeAnalytics)}
                 active={isActive(AppRoute.RealTimeAnalytics)}
             />
@@ -129,7 +132,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
             {/* Attendees */}
             <NavButton
                 icon="users"
-                label="People"
+                label={t(localeKeys.people)}
                 onClick={() => navigate(AppRoute.AttendeeProfiles)}
                 active={isActive([AppRoute.AttendeeProfiles, AppRoute.AttendeeRegistration, '/attendees'])}
             />
@@ -137,7 +140,7 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
             {/* More / Menu */}
             <NavButton
                 icon="menu"
-                label="More"
+                label={t(localeKeys.more)}
                 onClick={onMoreClick}
                 active={false}
             />

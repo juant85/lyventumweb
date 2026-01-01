@@ -103,6 +103,7 @@ const CompactHeader: React.FC<{ currentEvent: any; onEventSwitcherClick: () => v
 );
 
 const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
+    const { t } = useLanguage();
     const { currentUser } = useAuth();
     const { currentEvent, setSelectedEventId, availableEvents } = useSelectedEvent();
     const scrollDirection = useScrollDirection();
@@ -244,8 +245,8 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
                     >
                         <Icon name="menu" className="w-5 h-5 text-primary-600 dark:text-primary-400" />
                         <div className="flex-1 text-left">
-                            <p className="font-semibold text-slate-900 dark:text-white">Full Menu</p>
-                            <p className="text-xs text-slate-500 dark:text-slate-400">Access all navigation</p>
+                            <p className="font-semibold text-slate-900 dark:text-white">{t(localeKeys.fullMenu)}</p>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">{t(localeKeys.accessAllNavigation)}</p>
                         </div>
                     </button>
                 </div>
