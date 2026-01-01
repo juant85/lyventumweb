@@ -113,7 +113,6 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isEventSwitcherOpen, setIsEventSwitcherOpen] = useState(false);
-    const [isMoreSheetOpen, setIsMoreSheetOpen] = useState(false);
 
     // Check if we're on the events list page
     const isOnEventsPage = location.pathname === AppRoute.SuperAdminEvents;
@@ -131,10 +130,6 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
 
     const handleScanClick = () => {
         navigate(AppRoute.QRScanner);
-    };
-
-    const handleMoreClick = () => {
-        setIsMoreSheetOpen(true);
     };
 
     return (
@@ -210,8 +205,8 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
             </AnimatePresence>
 
             <MobileBottomNav
-                onScanClick={handleScanClick}
-                onMoreClick={handleMoreClick}
+                onScanClick={() => { }}
+                onMoreClick={() => setIsMenuOpen(true)}
                 pendingScans={0}
             />
 
@@ -229,28 +224,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
                 onCreateEvent={() => navigate(AppRoute.SuperAdminEvents)}
             />
 
-            {/* More Bottom Sheet */}
-            <BottomSheet
-                isOpen={isMoreSheetOpen}
-                onClose={() => setIsMoreSheetOpen(false)}
-                title="More Options"
-            >
-                <div className="space-y-2">
-                    <button
-                        onClick={() => {
-                            setIsMoreSheetOpen(false);
-                            setIsMenuOpen(true);
-                        }}
-                        className="w-full flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-800 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-                    >
-                        <Icon name="menu" className="w-5 h-5 text-primary-600 dark:text-primary-400" />
-                        <div className="flex-1 text-left">
-                            <p className="font-semibold text-slate-900 dark:text-white">{t(localeKeys.fullMenu)}</p>
-                            <p className="text-xs text-slate-500 dark:text-slate-400">{t(localeKeys.accessAllNavigation)}</p>
-                        </div>
-                    </button>
-                </div>
-            </BottomSheet>
+            {/* BottomSheet removed - More button now directly opens sidebar */}
         </div>
     );
 };
