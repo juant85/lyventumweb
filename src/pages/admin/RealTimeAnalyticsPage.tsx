@@ -12,6 +12,7 @@ import { FunnelIcon, PresentationChartLineIcon, BuildingStorefrontIcon, UsersGro
 import { useLanguage } from '../../contexts/LanguageContext';
 import { localeKeys } from '../../i18n/locales';
 import LiveIndicator from '../../components/mobile/LiveIndicator';
+import MobileContentContainer from '../../components/mobile/MobileContentContainer';
 
 // Custom Tooltip for charts
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -217,58 +218,64 @@ const RealTimeAnalyticsPage: React.FC = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-1"><EventFunnel data={funnelData} /></div>
-        <div className="lg:col-span-2">
-          <Card title={t(localeKeys.sessionPerformance)} icon={<PresentationChartLineIcon className="w-6 h-6 text-blue-500" />}>
-            <div className="h-72 mt-4">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={sessionPerformance} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-                  <XAxis dataKey="name" stroke={tickColor} fontSize={12} tickLine={false} axisLine={false} />
-                  <YAxis stroke={tickColor} fontSize={12} tickLine={false} axisLine={false} allowDecimals={false} />
-                  <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(100, 116, 139, 0.1)' }} />
-                  <Bar dataKey="attendees" fill={barColor} radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </Card>
+      <MobileContentContainer>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-1"><EventFunnel data={funnelData} /></div>
+          <div className="lg:col-span-2">
+            <Card title={t(localeKeys.sessionPerformance)} icon={<PresentationChartLineIcon className="w-6 h-6 text-blue-500" />}>
+              <div className="h-72 mt-4">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={sessionPerformance} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+                    <XAxis dataKey="name" stroke={tickColor} fontSize={12} tickLine={false} axisLine={false} />
+                    <YAxis stroke={tickColor} fontSize={12} tickLine={false} axisLine={false} allowDecimals={false} />
+                    <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(100, 116, 139, 0.1)' }} />
+                    <Bar dataKey="attendees" fill={barColor} radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </Card>
+          </div>
         </div>
-      </div>
+      </MobileContentContainer>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2"><BoothLeaderboard data={boothLeaderboard} /></div>
-        <div className="lg:col-span-1">
-          <Card title={t(localeKeys.attendeeEngagement)} icon={<UsersGroupIcon className="w-6 h-6 text-purple-500" />}>
-            <div className="h-72 mt-4 flex items-center justify-center">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie data={attendeeEngagement} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} labelLine={false} label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}>
-                    {attendeeEngagement.map((entry, index) => (<Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />))}
-                  </Pie>
-                  <Tooltip content={<CustomTooltip />} />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </Card>
+      <MobileContentContainer>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2"><BoothLeaderboard data={boothLeaderboard} /></div>
+          <div className="lg:col-span-1">
+            <Card title={t(localeKeys.attendeeEngagement)} icon={<UsersGroupIcon className="w-6 h-6 text-purple-500" />}>
+              <div className="h-72 mt-4 flex items-center justify-center">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie data={attendeeEngagement} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} labelLine={false} label={({ name, percent }) => `${name} ${((percent ?? 0) * 100).toFixed(0)}%`}>
+                      {attendeeEngagement.map((entry, index) => (<Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />))}
+                    </Pie>
+                    <Tooltip content={<CustomTooltip />} />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </Card>
+          </div>
         </div>
-      </div>
+      </MobileContentContainer>
 
-      <Card title={t(localeKeys.eventActivityByHour)} icon={<ClockIcon className="w-6 h-6 text-teal-500" />}>
-        <div className="h-80 mt-4">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={activityHeatmap} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-              <defs><linearGradient id="areaColor" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={areaColor} stopOpacity={0.4} /><stop offset="95%" stopColor={areaColor} stopOpacity={0} /></linearGradient></defs>
-              <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-              <XAxis dataKey="hour" stroke={tickColor} fontSize={12} tickLine={false} axisLine={false} />
-              <YAxis stroke={tickColor} fontSize={12} tickLine={false} axisLine={false} allowDecimals={false} />
-              <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(100, 116, 139, 0.1)' }} />
-              <Area type="monotone" dataKey="scans" stroke={areaColor} fill="url(#areaColor)" strokeWidth={2} />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-      </Card>
+      <MobileContentContainer>
+        <Card title={t(localeKeys.eventActivityByHour)} icon={<ClockIcon className="w-6 h-6 text-teal-500" />}>
+          <div className="h-80 mt-4">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={activityHeatmap} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+                <defs><linearGradient id="areaColor" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor={areaColor} stopOpacity={0.4} /><stop offset="95%" stopColor={areaColor} stopOpacity={0} /></linearGradient></defs>
+                <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+                <XAxis dataKey="hour" stroke={tickColor} fontSize={12} tickLine={false} axisLine={false} />
+                <YAxis stroke={tickColor} fontSize={12} tickLine={false} axisLine={false} allowDecimals={false} />
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(100, 116, 139, 0.1)' }} />
+                <Area type="monotone" dataKey="scans" stroke={areaColor} fill="url(#areaColor)" strokeWidth={2} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+      </MobileContentContainer>
 
     </div>
   );

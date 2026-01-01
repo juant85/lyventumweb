@@ -19,6 +19,7 @@ import TemplateSelector from '../../components/reports/TemplateSelector';
 import TemplatePreview from '../../components/reports/TemplatePreview';
 import { getTemplateById } from '../../utils/reportTemplates';
 import { useIsMobile } from '../../hooks/useIsMobile';
+import MobileContentContainer from '../../components/mobile/MobileContentContainer';
 
 
 const ReportsPage: React.FC = () => {
@@ -383,160 +384,162 @@ const ReportsPage: React.FC = () => {
                 )}
 
                 {/* Original/Legacy Options */}
-                <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'} gap-8`}>
-                    <Card title={t(localeKeys.eventSummaryReport)}>
-                        <p className="text-sm text-slate-600 mb-4">
-                            {t(localeKeys.eventSummaryDesc)}
-                        </p>
-                        <Button
-                            onClick={handleGenerateSummaryWithCharts}
-                            disabled={!!isGenerating || scans.length === 0}
-                            leftIcon={<Icon name="chartPie" className="w-5 h-5" />}
-                            variant="primary"
-                        >
-                            {isGenerating === 'summary-charts' ? t(localeKeys.renderingCharts) : t(localeKeys.downloadFullReport)}
-                        </Button>
-                        {scans.length === 0 && <p className="text-xs text-slate-500 mt-2">{t(localeKeys.noScanData)}</p>}
-                    </Card>
+                <MobileContentContainer>
+                    <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'} gap-8`}>
+                        <Card title={t(localeKeys.eventSummaryReport)}>
+                            <p className="text-sm text-slate-600 mb-4">
+                                {t(localeKeys.eventSummaryDesc)}
+                            </p>
+                            <Button
+                                onClick={handleGenerateSummaryWithCharts}
+                                disabled={!!isGenerating || scans.length === 0}
+                                leftIcon={<Icon name="chartPie" className="w-5 h-5" />}
+                                variant="primary"
+                            >
+                                {isGenerating === 'summary-charts' ? t(localeKeys.renderingCharts) : t(localeKeys.downloadFullReport)}
+                            </Button>
+                            {scans.length === 0 && <p className="text-xs text-slate-500 mt-2">{t(localeKeys.noScanData)}</p>}
+                        </Card>
 
-                    <Card title={t(localeKeys.boothSpecificReport)}>
-                        <p className="text-sm text-slate-600 mb-4">
-                            {t(localeKeys.boothSpecificDesc)}
-                        </p>
-                        <div className="space-y-4">
-                            <Select
-                                label={t(localeKeys.selectABooth)}
-                                id="booth-report-select"
-                                options={[{ value: '', label: t(localeKeys.selectABooth) }, ...boothOptions]}
-                                value={selectedBoothId}
-                                onChange={(e) => setSelectedBoothId(e.target.value)}
-                                disabled={!!isGenerating || booths.length === 0}
-                                wrapperClassName="!mb-0"
-                            />
-                            <div className="flex flex-wrap gap-2">
-                                <Button
-                                    onClick={handleGenerateBoothReport}
-                                    disabled={!!isGenerating || !selectedBoothId}
-                                >
-                                    {isGenerating === 'booth' ? 'Generating PDF...' : t(localeKeys.downloadBoothPdf)}
-                                </Button>
-                                <Button
-                                    onClick={handleExportBoothLeads}
-                                    disabled={!!isGenerating || !selectedBoothId}
-                                    variant="secondary"
-                                    leftIcon={<Icon name="download" className="w-5 h-5" />}
-                                >
-                                    {isGenerating === 'booth-csv' ? 'Exporting...' : t(localeKeys.exportLeadsToCsv)}
-                                </Button>
-                            </div>
-                        </div>
-                        {booths.length === 0 && <p className="text-xs text-slate-500 mt-2">No booths configured for this event.</p>}
-
-                        {/* Scan Details Table */}
-                        {selectedBoothId && (
-                            <div className="mt-6">
-                                <h3 className="text-lg font-semibold mb-3 text-slate-800 dark:text-slate-100">
-                                    Scans for {getBoothById(selectedBoothId)?.companyName || 'Selected Booth'}
-                                </h3>
-                                <div className="overflow-x-auto">
-                                    <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
-                                        <thead className="bg-slate-50 dark:bg-slate-700">
-                                            <tr>
-                                                <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Timestamp</th>
-                                                <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Attendee</th>
-                                                <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Organization</th>
-                                                <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
-                                                <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Expected Booth</th>
-                                                <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Notes</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
-                                            {scans.filter(s => s.boothId === selectedBoothId).map(scan => {
-                                                const attendee = attendees.find(a => a.id === scan.attendeeId);
-                                                const expectedBooth = scan.expectedBoothId ? getBoothById(scan.expectedBoothId) : null;
-
-                                                return (
-                                                    <tr key={scan.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50">
-                                                        <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-600 dark:text-slate-400">
-                                                            {new Date(scan.timestamp).toLocaleString()}
-                                                        </td>
-                                                        <td className="px-4 py-3 whitespace-nowrap">
-                                                            <div className="text-sm font-medium text-slate-900 dark:text-slate-100">
-                                                                {attendee?.name || scan.attendeeName || 'Unknown'}
-                                                            </div>
-                                                        </td>
-                                                        <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-600 dark:text-slate-400">
-                                                            {attendee?.organization || 'N/A'}
-                                                        </td>
-                                                        <td className="px-4 py-3 whitespace-nowrap">
-                                                            {scan.scanStatus === 'EXPECTED' && (
-                                                                <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
-                                                                    ✅ Expected
-                                                                </span>
-                                                            )}
-                                                            {scan.scanStatus === 'WALK_IN' && (
-                                                                <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
-                                                                    🚶 Walk-in
-                                                                </span>
-                                                            )}
-                                                            {scan.scanStatus === 'WRONG_BOOTH' && (
-                                                                <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300">
-                                                                    ⚠️ Wrong Booth
-                                                                </span>
-                                                            )}
-                                                            {scan.scanStatus === 'OUT_OF_SCHEDULE' && (
-                                                                <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
-                                                                    ⏰ Out of Schedule
-                                                                </span>
-                                                            )}
-                                                            {!scan.scanStatus && (
-                                                                <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300">
-                                                                    Regular
-                                                                </span>
-                                                            )}
-                                                        </td>
-                                                        <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-600 dark:text-slate-400">
-                                                            {expectedBooth ? (
-                                                                <span className="font-medium">{expectedBooth.companyName}</span>
-                                                            ) : (
-                                                                <span className="text-slate-400 dark:text-slate-500">-</span>
-                                                            )}
-                                                        </td>
-                                                        <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-400">
-                                                            {scan.notes || '-'}
-                                                        </td>
-                                                    </tr>
-                                                );
-                                            })}
-                                        </tbody>
-                                    </table>
+                        <Card title={t(localeKeys.boothSpecificReport)}>
+                            <p className="text-sm text-slate-600 mb-4">
+                                {t(localeKeys.boothSpecificDesc)}
+                            </p>
+                            <div className="space-y-4">
+                                <Select
+                                    label={t(localeKeys.selectABooth)}
+                                    id="booth-report-select"
+                                    options={[{ value: '', label: t(localeKeys.selectABooth) }, ...boothOptions]}
+                                    value={selectedBoothId}
+                                    onChange={(e) => setSelectedBoothId(e.target.value)}
+                                    disabled={!!isGenerating || booths.length === 0}
+                                    wrapperClassName="!mb-0"
+                                />
+                                <div className="flex flex-wrap gap-2">
+                                    <Button
+                                        onClick={handleGenerateBoothReport}
+                                        disabled={!!isGenerating || !selectedBoothId}
+                                    >
+                                        {isGenerating === 'booth' ? 'Generating PDF...' : t(localeKeys.downloadBoothPdf)}
+                                    </Button>
+                                    <Button
+                                        onClick={handleExportBoothLeads}
+                                        disabled={!!isGenerating || !selectedBoothId}
+                                        variant="secondary"
+                                        leftIcon={<Icon name="download" className="w-5 h-5" />}
+                                    >
+                                        {isGenerating === 'booth-csv' ? 'Exporting...' : t(localeKeys.exportLeadsToCsv)}
+                                    </Button>
                                 </div>
                             </div>
-                        )}
-                    </Card>
+                            {booths.length === 0 && <p className="text-xs text-slate-500 mt-2">No booths configured for this event.</p>}
 
-                    {/* NEW: Trade Show Lead Export */}
-                    {isTradeShow && (
-                        <Card title="📊 Trade Show Lead Export">
-                            <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-                                Export complete list of captured leads with timestamps and engagement metrics.
-                            </p>
-                            <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg mb-4">
-                                <p className="text-xs text-slate-700 dark:text-slate-300">
-                                    <strong>Export includes:</strong> Unique leads, email, organization, first contact timestamp, total scans, and return visitor indicator.
-                                </p>
-                            </div>
-                            <Button
-                                onClick={handleExportTradeShowLeads}
-                                disabled={isGenerating === 'trade-show-csv'}
-                                variant="primary"
-                                leftIcon={<Icon name="download" className="w-5 h-5" />}
-                            >
-                                {isGenerating === 'trade-show-csv' ? 'Exporting...' : 'Export Lead List (CSV)'}
-                            </Button>
+                            {/* Scan Details Table */}
+                            {selectedBoothId && (
+                                <div className="mt-6">
+                                    <h3 className="text-lg font-semibold mb-3 text-slate-800 dark:text-slate-100">
+                                        Scans for {getBoothById(selectedBoothId)?.companyName || 'Selected Booth'}
+                                    </h3>
+                                    <div className="overflow-x-auto">
+                                        <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
+                                            <thead className="bg-slate-50 dark:bg-slate-700">
+                                                <tr>
+                                                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Timestamp</th>
+                                                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Attendee</th>
+                                                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Organization</th>
+                                                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
+                                                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Expected Booth</th>
+                                                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Notes</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
+                                                {scans.filter(s => s.boothId === selectedBoothId).map(scan => {
+                                                    const attendee = attendees.find(a => a.id === scan.attendeeId);
+                                                    const expectedBooth = scan.expectedBoothId ? getBoothById(scan.expectedBoothId) : null;
+
+                                                    return (
+                                                        <tr key={scan.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50">
+                                                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-600 dark:text-slate-400">
+                                                                {new Date(scan.timestamp).toLocaleString()}
+                                                            </td>
+                                                            <td className="px-4 py-3 whitespace-nowrap">
+                                                                <div className="text-sm font-medium text-slate-900 dark:text-slate-100">
+                                                                    {attendee?.name || scan.attendeeName || 'Unknown'}
+                                                                </div>
+                                                            </td>
+                                                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-600 dark:text-slate-400">
+                                                                {attendee?.organization || 'N/A'}
+                                                            </td>
+                                                            <td className="px-4 py-3 whitespace-nowrap">
+                                                                {scan.scanStatus === 'EXPECTED' && (
+                                                                    <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
+                                                                        ✅ Expected
+                                                                    </span>
+                                                                )}
+                                                                {scan.scanStatus === 'WALK_IN' && (
+                                                                    <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+                                                                        🚶 Walk-in
+                                                                    </span>
+                                                                )}
+                                                                {scan.scanStatus === 'WRONG_BOOTH' && (
+                                                                    <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300">
+                                                                        ⚠️ Wrong Booth
+                                                                    </span>
+                                                                )}
+                                                                {scan.scanStatus === 'OUT_OF_SCHEDULE' && (
+                                                                    <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                                                                        ⏰ Out of Schedule
+                                                                    </span>
+                                                                )}
+                                                                {!scan.scanStatus && (
+                                                                    <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-slate-100 text-slate-800 dark:bg-slate-700 dark:text-slate-300">
+                                                                        Regular
+                                                                    </span>
+                                                                )}
+                                                            </td>
+                                                            <td className="px-4 py-3 whitespace-nowrap text-sm text-slate-600 dark:text-slate-400">
+                                                                {expectedBooth ? (
+                                                                    <span className="font-medium">{expectedBooth.companyName}</span>
+                                                                ) : (
+                                                                    <span className="text-slate-400 dark:text-slate-500">-</span>
+                                                                )}
+                                                            </td>
+                                                            <td className="px-4 py-3 text-sm text-slate-600 dark:text-slate-400">
+                                                                {scan.notes || '-'}
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                })}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            )}
                         </Card>
-                    )}
-                </div>
+
+                        {/* NEW: Trade Show Lead Export */}
+                        {isTradeShow && (
+                            <Card title="📊 Trade Show Lead Export">
+                                <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+                                    Export complete list of captured leads with timestamps and engagement metrics.
+                                </p>
+                                <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg mb-4">
+                                    <p className="text-xs text-slate-700 dark:text-slate-300">
+                                        <strong>Export includes:</strong> Unique leads, email, organization, first contact timestamp, total scans, and return visitor indicator.
+                                    </p>
+                                </div>
+                                <Button
+                                    onClick={handleExportTradeShowLeads}
+                                    disabled={isGenerating === 'trade-show-csv'}
+                                    variant="primary"
+                                    leftIcon={<Icon name="download" className="w-5 h-5" />}
+                                >
+                                    {isGenerating === 'trade-show-csv' ? 'Exporting...' : 'Export Lead List (CSV)'}
+                                </Button>
+                            </Card>
+                        )}
+                    </div>
+                </MobileContentContainer>
             </div>
         </>
     );
