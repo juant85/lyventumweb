@@ -143,34 +143,42 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
                     duration: 0.3,
                     ease: [0.4, 0, 0.2, 1]
                 }}
-                className="fixed top-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-b border-slate-200 dark:border-slate-800 shadow-sm px-4 flex items-center safe-area-top overflow-hidden"
+                className="fixed top-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg border-b border-slate-200 dark:border-slate-800 shadow-sm px-5 flex items-center safe-area-top overflow-hidden"
             >
                 {/* Menu Button - LEFT SIDE */}
                 <button
                     onClick={() => setIsMenuOpen(true)}
-                    className="p-2 hover:bg-white/10 rounded-lg transition-colors text-slate-600 dark:text-slate-300 mr-3"
+                    className="p-2 hover:bg-white/10 rounded-lg transition-colors text-slate-600 dark:text-slate-300 mr-2"
                     aria-label="Open menu"
                 >
                     <Icon name="menu" className="w-6 h-6" />
                 </button>
 
-                <AnimatePresence mode="wait">
-                    {headerMode === 'expanded' && (
-                        <ExpandedHeader
-                            key="expanded"
-                            currentEvent={currentEvent}
-                            currentUser={currentUser}
-                            onEventSwitcherClick={() => setIsEventSwitcherOpen(true)}
-                        />
+                {/* Lyventum Branding + Event Badge - CENTER */}
+                <div className="flex items-center gap-3 flex-1">
+                    {/* Lyventum Logo/Wordmark */}
+                    <div className="flex items-center gap-2">
+                        <span className="text-xl font-black bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
+                            LYVENTUM
+                        </span>
+                    </div>
+
+                    {/* Event Badge (if event selected) */}
+                    {currentEvent && (
+                        <div className="flex items-center gap-2 px-2 py-1 rounded-md bg-slate-100 dark:bg-slate-800">
+                            {currentEvent.eventLogoUrl ? (
+                                <img src={currentEvent.eventLogoUrl} alt="Event" className="h-5 w-5 rounded object-contain" />
+                            ) : (
+                                <div className="h-5 w-5 rounded bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center text-white font-bold text-[10px]">
+                                    {currentEvent.name?.[0] || 'E'}
+                                </div>
+                            )}
+                            <span className="text-xs font-medium text-slate-700 dark:text-slate-300 truncate max-w-[100px]">
+                                {currentEvent.name}
+                            </span>
+                        </div>
                     )}
-                    {headerMode === 'compact' && (
-                        <CompactHeader
-                            key="compact"
-                            currentEvent={currentEvent}
-                            onEventSwitcherClick={() => setIsEventSwitcherOpen(true)}
-                        />
-                    )}
-                </AnimatePresence>
+                </div>
 
                 {/* User Display - RIGHT SIDE */}
                 {currentUser && (
