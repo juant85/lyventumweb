@@ -577,6 +577,25 @@ export const localeKeys = {
       feature2: 'plans.fallback.feature2'
     }
   },
+
+  // Mobile Dashboard & Bottom Nav (NEW)
+  eventOverview: 'eventOverview',
+  quickActions: 'quickActions',
+  sessions: 'sessions',
+  booths: 'booths',
+  attendees: 'attendees',
+  scans: 'scans',
+
+  // Mobile Bottom Navigation (NEW)
+  home: 'home',
+  live: 'live',
+  people: 'people',
+  more: 'more',
+
+  // Mobile Bottom Sheet (NEW)
+  moreOptions: 'moreOptions',
+  fullMenu: 'fullMenu',
+  accessAllNavigation: 'accessAllNavigation',
 } as const;
 
 // This type helps ensure that only valid keys are used with the `t` function.
@@ -1171,6 +1190,25 @@ export const en = {
   [localeKeys.viewModeCards]: 'Cards',
   [localeKeys.viewModeMap]: 'Map',
   [localeKeys.upgradeForMap]: 'Upgrade to Professional for Map',
+
+  // Mobile Dashboard & Bottom Nav
+  [localeKeys.eventOverview]: 'Event Overview',
+  [localeKeys.quickActions]: 'Quick Actions',
+  [localeKeys.sessions]: 'Sessions',
+  [localeKeys.booths]: 'Booths',
+  [localeKeys.attendees]: 'Attendees',
+  [localeKeys.scans]: 'Scans',
+
+  // Mobile Bottom Navigation
+  [localeKeys.home]: 'Home',
+  [localeKeys.live]: 'Live',
+  [localeKeys.people]: 'People',
+  [localeKeys.more]: 'More',
+
+  // Mobile Bottom Sheet
+  [localeKeys.moreOptions]: 'More Options',
+  [localeKeys.fullMenu]: 'Full Menu',
+  [localeKeys.accessAllNavigation]: 'Access all navigation',
 };
 
 // Flattened Spanish translations
@@ -1762,6 +1800,25 @@ export const es = {
   [localeKeys.viewModeCards]: 'Tarjetas',
   [localeKeys.viewModeMap]: 'Mapa',
   [localeKeys.upgradeForMap]: 'Actualiza a Professional para Mapa',
+
+  // Mobile Dashboard & Bottom Nav
+  [localeKeys.eventOverview]: 'Resumen del Evento',
+  [localeKeys.quickActions]: 'Acciones Rápidas',
+  [localeKeys.sessions]: 'Sesiones',
+  [localeKeys.booths]: 'Stands',
+  [localeKeys.attendees]: 'Asistentes',
+  [localeKeys.scans]: 'Escaneos',
+
+  // Mobile Bottom Navigation
+  [localeKeys.home]: 'Inicio',
+  [localeKeys.live]: 'En Vivo',
+  [localeKeys.people]: 'Personas',
+  [localeKeys.more]: 'Más',
+
+  // Mobile Bottom Sheet
+  [localeKeys.moreOptions]: 'Más Opciones',
+  [localeKeys.fullMenu]: 'Menú Completo',
+  [localeKeys.accessAllNavigation]: 'Accede a toda la navegación',
 };
 
 export type Locale = typeof en;
