@@ -1,20 +1,24 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { useEventData } from '../../../contexts/EventDataContext';
 import { Attendee } from '../../../types';
 import Input from '../../ui/Input';
 import MobileCard from '../MobileCard';
+import SwipeableListItem from '../SwipeableListItem';
 import { UserIcon, UserPlusIcon, MagnifyingGlassIcon } from '../../Icons';
 import MobileEmptyState from '../MobileEmptyState';
 import ListSkeleton from '../ListSkeleton';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import Button from '../../ui/Button';
+import { staggerContainer, staggerItem } from '../../../utils/animations';
 
 interface MobileAttendeeListProps {
     onAddClick: () => void;
     onEditClick?: (attendee: Attendee) => void;
+    onDeleteClick?: (attendee: Attendee) => void;
 }
 
-const MobileAttendeeList: React.FC<MobileAttendeeListProps> = ({ onAddClick, onEditClick }) => {
+const MobileAttendeeList: React.FC<MobileAttendeeListProps> = ({ onAddClick, onEditClick, onDeleteClick }) => {
     const { attendees, loadingData } = useEventData();
     const { t } = useLanguage();
     const [searchTerm, setSearchTerm] = useState('');
@@ -110,34 +114,48 @@ const MobileAttendeeList: React.FC<MobileAttendeeListProps> = ({ onAddClick, onE
                 </div>
             </div>
 
-            <div className="space-y-3 px-1">
+            <motion.div
+                className="space-y-3 px-1"
+                variants={staggerContainer}
+                initial="hidden"
+                animate="visible"
+            >
                 {loadingData ? (
                     <ListSkeleton count={5} type="card" />
                 ) : filteredAttendees.length > 0 ? (
-                    filteredAttendees.map(attendee => (
-                        <MobileCard
+                    filteredAttendees.map((attendee, index) => (
+                        <motion.div
                             key={attendee.id}
-                            title={attendee.name}
-                            subtitle={attendee.organization}
-                            icon={<UserIcon className="w-5 h-5 text-slate-500" />}
-                            badge={attendee.checkInTime ? (
-                                <span className="bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wide">
-                                    Checked In
-                                </span>
-                            ) : undefined}
-                            onClick={() => onEditClick && onEditClick(attendee)}
-                            actions={
-                                <div className="text-xs text-slate-400 mt-2 flex items-center gap-2">
-                                    {attendee.email && <span>{attendee.email}</span>}
-                                    {attendee.position && (
-                                        <>
-                                            <span>•</span>
-                                            <span>{attendee.position}</span>
-                                        </>
-                                    )}
-                                </div>
-                            }
-                        />
+                            variants={staggerItem}
+                        >
+                            <SwipeableListItem
+                                onEdit={onEditClick ? () => onEditClick(attendee) : undefined}
+                                onDelete={onDeleteClick ? () => onDeleteClick(attendee) : undefined}
+                            >
+                                <MobileCard
+                                    title={attendee.name}
+                                    subtitle={attendee.organization}
+                                    icon={<UserIcon className="w-5 h-5 text-slate-500" />}
+                                    badge={attendee.checkInTime ? (
+                                        <span className="bg-green-100 text-green-700 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wide">
+                                            Checked In
+                                        </span>
+                                    ) : undefined}
+                                    onClick={() => onEditClick && onEditClick(attendee)}
+                                    actions={
+                                        <div className="text-xs text-slate-400 mt-2 flex items-center gap-2">
+                                            {attendee.email && <span>{attendee.email}</span>}
+                                            {attendee.position && (
+                                                <>
+                                                    <span>•</span>
+                                                    <span>{attendee.position}</span>
+                                                </>
+                                            )}
+                                        </div>
+                                    }
+                                />
+                            </SwipeableListItem>
+                        </motion.div>
                     ))
                 ) : (
                     <MobileEmptyState
@@ -148,8 +166,8 @@ const MobileAttendeeList: React.FC<MobileAttendeeListProps> = ({ onAddClick, onE
                         onAction={searchTerm ? undefined : onAddClick}
                     />
                 )}
-            </div>
-        </div>
+        </motion.div>
+        </div >
     );
 };
 

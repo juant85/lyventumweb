@@ -8,7 +8,7 @@ interface QuickStatCardProps {
     label: string;
     value: number | string;
     icon?: string;
-    color?: 'blue' | 'green' | 'purple' | 'orange' | 'red' | 'teal';
+    color?: 'blue' | 'green' | 'purple' | 'orange' | 'red' | 'teal' | 'amber' | 'pink';
     // Premium features
     trend?: number; // % change (positive or negative)
     sparklineData?: number[]; // Array of historical values
@@ -31,6 +31,8 @@ const QuickStatCard: React.FC<QuickStatCardProps> = ({
         orange: '#f97316',
         red: '#ef4444',
         teal: '#14b8a6',
+        amber: '#f59e0b',
+        pink: '#ec4899',
     };
 
     // Define colors for the new layout
@@ -41,6 +43,8 @@ const QuickStatCard: React.FC<QuickStatCardProps> = ({
         orange: 'bg-orange-100 dark:bg-orange-900',
         red: 'bg-red-100 dark:bg-red-900',
         teal: 'bg-teal-100 dark:bg-teal-900',
+        amber: 'bg-amber-100 dark:bg-amber-900',
+        pink: 'bg-pink-100 dark:bg-pink-900',
     };
 
     const iconTextColorMap = {
@@ -50,6 +54,8 @@ const QuickStatCard: React.FC<QuickStatCardProps> = ({
         orange: 'text-orange-600 dark:text-orange-400',
         red: 'text-red-600 dark:text-red-400',
         teal: 'text-teal-600 dark:text-teal-400',
+        amber: 'text-amber-600 dark:text-amber-400',
+        pink: 'text-pink-600 dark:text-pink-400',
     };
 
     const iconShadowColorMap = {
@@ -59,6 +65,8 @@ const QuickStatCard: React.FC<QuickStatCardProps> = ({
         orange: 'shadow-orange-500/20',
         red: 'shadow-red-500/20',
         teal: 'shadow-teal-500/20',
+        amber: 'shadow-amber-500/20',
+        pink: 'shadow-pink-500/20',
     };
 
     const bgColor = iconBgColorMap[color] || iconBgColorMap.blue;
@@ -88,8 +96,8 @@ const QuickStatCard: React.FC<QuickStatCardProps> = ({
                             {/* Trend Indicator */}
                             {trend !== undefined && (
                                 <div className={`flex items-center gap-0.5 text-xs font-semibold ${trend > 0 ? 'text-green-600 dark:text-green-400' :
-                                        trend < 0 ? 'text-red-600 dark:text-red-400' :
-                                            'text-slate-500 dark:text-slate-400'
+                                    trend < 0 ? 'text-red-600 dark:text-red-400' :
+                                        'text-slate-500 dark:text-slate-400'
                                     }`}>
                                     {trend > 0 && <TrendingUp className="w-3 h-3" />}
                                     {trend < 0 && <TrendingDown className="w-3 h-3" />}
