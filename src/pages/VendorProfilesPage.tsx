@@ -241,9 +241,9 @@ const VendorProfilesPage: React.FC = () => {
         duplicates={reviewingGroup || []}
         onMerge={handleMerge}
       />
-      <div className="space-y-6">
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-slate-100 flex items-center font-montserrat">
-          <BuildingStorefrontIcon className="w-8 h-8 mr-3 text-brandBlue" /> Vendor Staff Profiles
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 space-y-6">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-slate-100 flex items-center font-montserrat">
+          <BuildingStorefrontIcon className="w-6 h-6 sm:w-8 sm:h-8 mr-2 sm:mr-3 text-brandBlue" /> Vendor Staff Profiles
         </h1>
 
         {duplicateGroups.length > 0 && (
