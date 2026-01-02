@@ -18,6 +18,7 @@ import { useLanguage } from '../../../contexts/LanguageContext';
 import { localeKeys } from '../../../i18n/locales';
 import { generateMetricTrendData } from '../../../utils/trendCalculations';
 import PullToRefreshIndicator from '../PullToRefreshIndicator';
+import QuickActions from '../../dashboard/QuickActions';
 
 /**
  * Universal Event Management Dashboard for Mobile
@@ -450,147 +451,10 @@ const EventManagementDashboard: React.FC = () => {
                     </div>
                 )}
 
-                {/* Quick Actions - Modern Premium Design */}
+                {/* Quick Actions - Dynamic from useDashboardPreferences */}
                 <MobileContentContainer className="mb-6">
                     <h2 className="text-lg font-bold mb-4 text-slate-900 dark:text-white">{t(localeKeys.quickActions)}</h2>
-                    <div className="grid grid-cols-2 gap-4">
-                        {/* Sessions */}
-                        <motion.div
-                            drag={false}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.05, duration: 0.3 }}
-                            whileHover={{ y: -2 }}
-                            whileTap={{ scale: 0.98 }}
-                            onClick={() => navigate(AppRoute.SessionSettings)}
-                            className="relative group cursor-pointer"
-                        >
-                            <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl opacity-0 group-hover:opacity-30 blur transition-opacity" />
-                            <div className="relative bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-md hover:shadow-xl transition-all border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-center min-h-[120px]">
-                                <div className="w-12 h-12 mb-2 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg">
-                                    <Calendar className="w-6 h-6 text-white" />
-                                </div>
-                                <h3 className="font-bold text-sm text-slate-900 dark:text-white mb-1">Sessions</h3>
-                                <p className="text-xs text-slate-500 dark:text-slate-400">{eventStats.sessions} configured</p>
-                            </div>
-                        </motion.div>
-
-                        {/* Booths Setup */}
-                        <motion.div
-                            drag={false}
-                            whileHover={{ y: -2 }}
-                            whileTap={{ scale: 0.98 }}
-                            onClick={() => navigate(AppRoute.BoothSetup)}
-                            className="relative group cursor-pointer"
-                        >
-                            <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl opacity-0 group-hover:opacity-30 blur transition-opacity" />
-                            <div className="relative bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-md hover:shadow-xl transition-all border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-center min-h-[120px]">
-                                <div className="w-12 h-12 mb-2 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg">
-                                    <Store className="w-6 h-6 text-white" />
-                                </div>
-                                <h3 className="font-bold text-sm text-slate-900 dark:text-white mb-1">Booths Setup</h3>
-                                <p className="text-xs text-slate-500 dark:text-slate-400">{eventStats.booths} configured</p>
-                            </div>
-                        </motion.div>
-
-                        {/* Check-In */}
-                        <motion.div
-                            drag={false}
-                            whileHover={{ y: -2 }}
-                            whileTap={{ scale: 0.98 }}
-                            onClick={() => navigate(AppRoute.CheckInDesk)}
-                            className="relative group cursor-pointer"
-                        >
-                            <div className="absolute -inset-0.5 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl opacity-0 group-hover:opacity-30 blur transition-opacity" />
-                            <div className="relative bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-md hover:shadow-xl transition-all border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-center min-h-[120px]">
-                                <div className="w-12 h-12 mb-2 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
-                                    <CheckCircle className="w-6 h-6 text-white" />
-                                </div>
-                                <h3 className="font-bold text-sm text-slate-900 dark:text-white mb-1">Check-In</h3>
-                                <p className="text-xs text-slate-500 dark:text-slate-400">Scan attendees</p>
-                            </div>
-                        </motion.div>
-
-                        {/* Attendees */}
-                        <motion.div
-                            drag={false}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.10, duration: 0.3 }}
-                            whileHover={{ y: -2 }}
-                            whileTap={{ scale: 0.98 }}
-                            onClick={() => navigate(AppRoute.AttendeeProfiles)}
-                            className="relative group cursor-pointer"
-                        >
-                            <div className="absolute -inset-0.5 bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl opacity-0 group-hover:opacity-30 blur transition-opacity" />
-                            <div className="relative bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-md hover:shadow-xl transition-all border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-center min-h-[120px]">
-                                <div className="w-12 h-12 mb-2 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg">
-                                    <Users className="w-6 h-6 text-white" />
-                                </div>
-                                <h3 className="font-bold text-sm text-slate-900 dark:text-white mb-1">Attendees</h3>
-                                <p className="text-xs text-slate-500 dark:text-slate-400">{eventStats.attendees} registered</p>
-                            </div>
-                        </motion.div>
-
-                        {/* Live Monitor */}
-                        <motion.div
-                            drag={false}
-                            whileHover={{ y: -2 }}
-                            whileTap={{ scale: 0.98 }}
-                            onClick={() => navigate(AppRoute.RealTimeAnalytics)}
-                            className="relative group cursor-pointer"
-                        >
-                            <div className="absolute -inset-0.5 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-2xl opacity-0 group-hover:opacity-30 blur transition-opacity" />
-                            <div className="relative bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-md hover:shadow-xl transition-all border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-center min-h-[120px]">
-                                <div className="w-12 h-12 mb-2 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center shadow-lg">
-                                    <Activity className="w-6 h-6 text-white" />
-                                </div>
-                                <h3 className="font-bold text-sm text-slate-900 dark:text-white mb-1">Live Monitor</h3>
-                                <p className="text-xs text-slate-500 dark:text-slate-400">
-                                    {liveSession ? 'Real-time data' : 'No live session'}
-                                </p>
-                            </div>
-                        </motion.div>
-
-                        {/* Session Reports */}
-                        <motion.div
-                            drag={false}
-                            whileHover={{ y: -2 }}
-                            whileTap={{ scale: 0.98 }}
-                            onClick={() => navigate(AppRoute.Reports)}
-                            className="relative group cursor-pointer"
-                        >
-                            <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-violet-500 rounded-2xl opacity-0 group-hover:opacity-30 blur transition-opacity" />
-                            <div className="relative bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-md hover:shadow-xl transition-all border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-center min-h-[120px]">
-                                <div className="w-12 h-12 mb-2 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg">
-                                    <FileText className="w-6 h-6 text-white" />
-                                </div>
-                                <h3 className="font-bold text-sm text-slate-900 dark:text-white mb-1">Reports</h3>
-                                <p className="text-xs text-slate-500 dark:text-slate-400">Session analysis</p>
-                            </div>
-                        </motion.div>
-
-                        {/* Data Visualization - NEW! */}
-                        <motion.div
-                            drag={false}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.15, duration: 0.3 }}
-                            whileHover={{ y: -2 }}
-                            whileTap={{ scale: 0.98 }}
-                            onClick={() => navigate(AppRoute.DataVisualization)}
-                            className="relative group cursor-pointer"
-                        >
-                            <div className="absolute -inset-0.5 bg-gradient-to-r from-rose-500 to-pink-500 rounded-2xl opacity-0 group-hover:opacity-30 blur transition-opacity" />
-                            <div className="relative bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-md hover:shadow-xl transition-all border border-slate-200 dark:border-slate-700 flex flex-col items-center justify-center text-center min-h-[120px]">
-                                <div className="w-12 h-12 mb-2 rounded-xl bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center shadow-lg">
-                                    <TrendingUp className="w-6 h-6 text-white" />
-                                </div>
-                                <h3 className="font-bold text-sm text-slate-900 dark:text-white mb-1">Data Viz</h3>
-                                <p className="text-xs text-slate-500 dark:text-slate-400">Charts & insights</p>
-                            </div>
-                        </motion.div>
-                    </div>
+                    <QuickActions />
                 </MobileContentContainer>
 
                 {/* Quick Actions FAB with Bottom Sheet */}
