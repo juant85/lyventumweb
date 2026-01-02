@@ -1,73 +1,48 @@
 // src/components/dashboard/QuickActions.tsx
 import React from 'react';
-import { Search, Map, BarChart3, FileText } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { AppRoute } from '../../types';
-import Button from '../ui/Button';
+import { useDashboardPreferences } from '../../hooks/useDashboardPreferences';
+import QuickActionCard from './QuickActionCard';
 
 interface QuickActionsProps {
     onAction?: (action: string) => void;
+    isEditing?: boolean;
+    onRemoveCard?: (cardId: string) => void;
 }
 
-const QuickActions: React.FC<QuickActionsProps> = ({ onAction }) => {
-    const navigate = useNavigate();
+const QuickActions: React.FC<QuickActionsProps> = ({
+    onAction,
+    isEditing = false,
+    onRemoveCard
+}) => {
+    const { enabledCards, isLoading } = useDashboardPreferences();
 
-    const actions = [
-        {
-            id: 'find-attendee',
-            label: 'Find Attendee',
-            icon: <Search className="w-4 h-4" />,
-            onClick: () => {
-                onAction?.('find-attendee');
-                navigate(AppRoute.AttendeeLocator);
-            },
-            variant: 'primary' as const,
-        },
-        {
-            id: 'view-booths',
-            label: 'View Booths',
-            icon: <Map className="w-4 h-4" />,
-            onClick: () => {
-                onAction?.('view-booths');
-                navigate(AppRoute.DataVisualization);
-            },
-            variant: 'neutral' as const,
-        },
-        {
-            id: 'analytics',
-            label: 'Analytics',
-            icon: <BarChart3 className="w-4 h-4" />,
-            onClick: () => {
-                onAction?.('analytics');
-                navigate(AppRoute.RealTimeAnalytics);
-            },
-            variant: 'neutral' as const,
-        },
-        {
-            id: 'reports',
-            label: 'Reports',
-            icon: <FileText className="w-4 h-4" />,
-            onClick: () => {
-                onAction?.('reports');
-                navigate(AppRoute.Reports);
-            },
-            variant: 'neutral' as const,
-        },
-    ];
+    if (isLoading) {
+        return (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {[1, 2, 3, 4].map(i => (
+                    <div key={i} className="h-24 bg-slate-200 dark:bg-slate-700 rounded-xl animate-pulse" />
+                ))}
+            </div>
+        );
+    }
+
+    if (enabledCards.length === 0) {
+        return (
+            <div className="text-center py-8 text-slate-500 dark:text-slate-400">
+                No Quick Actions configured. Click "Edit" to add cards.
+            </div>
+        );
+    }
 
     return (
-        <div className="flex flex-wrap gap-2">
-            {actions.map(action => (
-                <Button
-                    key={action.id}
-                    onClick={action.onClick}
-                    variant={action.variant}
-                    size="sm"
-                    className="flex items-center gap-2"
-                >
-                    {action.icon}
-                    <span className="hidden sm:inline">{action.label}</span>
-                </Button>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {enabledCards.map(card => (
+                <QuickActionCard
+                    key={card.id}
+                    card={card}
+                    isEditing={isEditing}
+                    onRemove={onRemoveCard}
+                />
             ))}
         </div>
     );
