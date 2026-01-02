@@ -191,8 +191,8 @@ const RealTimeAnalyticsPage: React.FC = () => {
 
   if (dataError || (scans.length === 0 && !loadingData)) {
     return (
-      <div className="space-y-6">
-        <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100 font-montserrat px-5">{t(localeKeys.analyticsTitle)}</h1>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-6">
+        <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-slate-100 font-montserrat">{t(localeKeys.analyticsTitle)}</h1>
         <Card title={t(localeKeys.analyticsUnavailable)}>
           <p className="text-slate-500 dark:text-slate-300">{dataError ? `Error: ${dataError}` : "There is no data for the selected event to generate analytics."}</p>
         </Card>
@@ -204,7 +204,7 @@ const RealTimeAnalyticsPage: React.FC = () => {
     <div className={`space-y-6 ${isMobile ? 'pb-28' : ''}`}>
       <div className="px-5">
         <div className="flex justify-between items-start mb-2">
-          <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100 font-montserrat">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-slate-100 font-montserrat">
             Analytics & Insights
           </h1>
           <LiveIndicator
