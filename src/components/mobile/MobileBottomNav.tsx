@@ -103,33 +103,13 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
                 active={isActive([AppRoute.Dashboard, AppRoute.DataVisualization, '/sessions'])}
             />
 
-            {/* Live / Analytics - Replaces Events to emphasize Real-Time */}
+            {/* Live / Analytics */}
             <NavButton
                 icon="activity"
                 label={t(localeKeys.live)}
                 onClick={() => navigate(AppRoute.RealTimeAnalytics)}
                 active={isActive(AppRoute.RealTimeAnalytics)}
             />
-
-            {/* QR Scanner FAB - Center */}
-            <motion.button
-                whileTap={{ scale: 0.9 }}
-                onClick={() => navigate(AppRoute.QRScanner)}
-                className="absolute -top-8 left-1/2 -translate-x-1/2 w-16 h-16 bg-gradient-to-br from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white rounded-full shadow-2xl flex items-center justify-center focus:outline-none focus:ring-4 focus:ring-primary-500/50 transition-all"
-                aria-label="QR Scanner"
-            >
-                <Icon name="scan" className="w-7 h-7" />
-                {/* Scan Badge */}
-                {pendingScans > 0 && (
-                    <motion.span
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1.5"
-                    >
-                        {pendingScans > 99 ? '99+' : pendingScans}
-                    </motion.span>
-                )}
-            </motion.button>
 
             {/* Attendees */}
             <NavButton
@@ -139,12 +119,13 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
                 active={isActive([AppRoute.AttendeeProfiles, AppRoute.AttendeeRegistration, '/attendees'])}
             />
 
-            {/* More / Menu */}
+            {/* QR Scanner */}
             <NavButton
-                icon="menu"
-                label={t(localeKeys.more)}
-                onClick={onMoreClick}
-                active={false}
+                icon="scan"
+                label="Scan"
+                onClick={() => navigate(AppRoute.QRScanner)}
+                active={isActive(AppRoute.QRScanner)}
+                badge={pendingScans}
             />
         </nav>
     );
