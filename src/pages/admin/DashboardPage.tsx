@@ -321,6 +321,11 @@ const DashboardPage: React.FC = () => {
             <p className="text-lg text-slate-500 font-medium">{currentEvent?.name}</p>
           </div>
         </div>
+        
+        {/* Quick Actions - Always Available */}
+        <Card>
+          <DashboardCustomizer />
+        </Card>
         <Card title={t(localeKeys.sessionInProgress)}>
           <div className="text-center py-10">
             <Icon name="signal" className="w-12 h-12 mx-auto text-slate-400" />
