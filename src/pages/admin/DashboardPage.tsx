@@ -293,8 +293,8 @@ const DashboardPage: React.FC = () => {
 
   if (dataError) {
     return (
-      <div className="space-y-6">
-        <h1 className="text-3xl font-bold">{t(localeKeys.dashboardTitle)}</h1>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-6">
+        <h1 className="text-2xl sm:text-3xl font-bold">{t(localeKeys.dashboardTitle)}</h1>
         <Card title={t(localeKeys.error)} className="border-accent-600 bg-accent-50">
           <p className="text-accent-700 font-semibold">{dataError}</p>
           <Button onClick={() => fetchData(true)} size="md" variant="accent" leftIcon={<Icon name="refresh" className="w-4 h-4" />} className="mt-4">Try Again</Button>
