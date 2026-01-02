@@ -190,8 +190,9 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
                                                 <motion.div
                                                     animate={{ rotate: isOpen ? 180 : 0 }}
                                                     transition={{ duration: 0.2 }}
+                                                    className="flex items-center justify-center"
                                                 >
-                                                    <Icon name="chevronDown" className="w-3 h-3" />
+                                                    <Icon name="chevronDown" className="w-5 h-5" />
                                                 </motion.div>
                                             </button>
 
