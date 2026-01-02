@@ -182,7 +182,11 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
 
                 {/* User Display - RIGHT SIDE */}
                 {currentUser && (
-                    <div className="flex items-center gap-2 ml-auto">
+                    <button
+                        onClick={() => setIsMenuOpen(true)}
+                        className="flex items-center gap-2 ml-auto hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg px-2 py-1 -mr-2 transition-colors"
+                        aria-label="Open user menu"
+                    >
                         <Avatar
                             name={currentUser.username || currentUser.email || 'User'}
                             size="sm"
@@ -192,7 +196,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
                                 {currentUser.username?.split(' ')[0] || currentUser.username || 'User'}
                             </span>
                         </div>
-                    </div>
+                    </button>
                 )}
             </motion.header>
 

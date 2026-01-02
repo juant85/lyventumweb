@@ -50,9 +50,11 @@ const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
             {/* Active Indicator - Top Bar */}
             {active && (
                 <motion.div
-                    layoutId="activeTab"
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    exit={{ scaleX: 0 }}
                     className="absolute -top-[2px] left-1/2 -translate-x-1/2 w-12 h-1 bg-gradient-to-r from-primary-500 to-accent-500 rounded-full shadow-lg shadow-primary-500/50"
-                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    transition={{ type: "spring", bounce: 0.15, duration: 0.4 }}
                 />
             )}
 
