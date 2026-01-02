@@ -602,7 +602,7 @@ const QRScannerPage: React.FC = () => {
           )}
 
           {/* Bottom Controls */}
-          <div className="bg-gradient-to-t from-black/90 to-transparent p-4 pb-8 safe-area-bottom relative z-10">
+          <div className="bg-gradient-to-t from-black/90 to-transparent p-4 pb-24 safe-area-bottom relative z-10 mb-20">
             {/* Manual Entry Form */}
             <form onSubmit={handleManualSubmit} className="space-y-3 max-w-md mx-auto">
               <Input
