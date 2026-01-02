@@ -561,7 +561,7 @@ const BoothSetupPage: React.FC = () => {
 
                 <div className="text-center">
                   <p className="text-xs text-slate-400 mb-2">Need to update vendors or settings?</p>
-                  <Button variant="secondary" className="w-full justify-center" onClick={() => setEditingBooth(selectedBooth)}>
+                  <Button variant="secondary" className="w-full max-w-xs mx-auto justify-center" onClick={() => setEditingBooth(selectedBooth)}>
                     Manage Booth Settings
                   </Button>
                 </div>

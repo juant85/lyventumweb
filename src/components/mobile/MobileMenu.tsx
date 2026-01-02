@@ -246,7 +246,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
                         <div className="p-4 border-t border-slate-100 dark:border-slate-800 bg-gradient-to-t from-slate-50/30 to-transparent dark:from-slate-800/30 pb-safe">
                             <button
                                 onClick={handleLogout}
-                                className="w-full flex items-center justify-center gap-2 p-3 rounded-xl bg-gradient-to-r from-red-50 to-red-100/50 dark:from-red-900/10 dark:to-red-900/5 text-red-600 dark:text-red-400 hover:from-red-100 hover:to-red-200/50 dark:hover:from-red-900/20 dark:hover:to-red-900/10 transition-all font-semibold text-sm shadow-sm border border-red-100 dark:border-red-900/20"
+                                className="w-full max-w-xs mx-auto flex items-center justify-center gap-2 p-3 rounded-xl bg-gradient-to-r from-red-50 to-red-100/50 dark:from-red-900/10 dark:to-red-900/5 text-red-600 dark:text-red-400 hover:from-red-100 hover:to-red-200/50 dark:hover:from-red-900/20 dark:hover:to-red-900/10 transition-all font-semibold text-sm shadow-sm border border-red-100 dark:border-red-900/20"
                             >
                                 <Icon name="logout" className="w-4 h-4" />
                                 Sign Out

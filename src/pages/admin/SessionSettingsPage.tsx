@@ -624,7 +624,7 @@ const SessionSettingsPage: React.FC = () => {
                         <div className="space-y-4">
                             <Button
                                 variant="primary"
-                                className="w-full py-3 shadow-lg"
+                                className="w-full max-w-sm mx-auto py-3 shadow-lg"
                                 onClick={handleMobileCreate}
                                 leftIcon={<PlusCircleIcon className="w-5 h-5" />}
                             >
