@@ -12,7 +12,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { localeKeys } from '../../i18n/locales';
 import ActivityFeed from '../../components/dashboard/ActivityFeed';
 import SessionCountdown from '../../components/dashboard/SessionCountdown';
-import QuickActions from '../../components/dashboard/QuickActions';
+import DashboardCustomizer from '../../components/dashboard/DashboardCustomizer';
 import AlertIndicators from '../../components/dashboard/AlertIndicators';
 import FeaturesOverview from '../../components/features/FeaturesOverview';
 import { useEventTypeConfig } from '../../contexts/EventTypeConfigContext';
@@ -392,7 +392,7 @@ const DashboardPage: React.FC = () => {
 
       {/* Quick Actions and Countdown */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <QuickActions />
+        <DashboardCustomizer />
         <SessionCountdown session={liveSession} />
       </div>
 
