@@ -578,13 +578,17 @@ const QRScannerPage: React.FC = () => {
                       text-align: center !important;
                       display: flex !important;
                       justify-content: center !important;
+                      align-items: center !important;
                     }
                     #qr-scanner-container__dashboard_section_csr span { 
                       display: none !important; 
                     }
+                    /* Camera permission button - centered with transform */
                     #html5-qrcode-button-camera-permission {
-                      margin: 0 auto !important;
-                      display: block !important;
+                      position: relative !important;
+                      left: 50% !important;
+                      transform: translateX(-50%) !important;
+                      margin: 0 !important;
                     }
                   `}</style>
                   <div id="qr-scanner-container" className="w-full h-full"></div>
@@ -622,8 +626,8 @@ const QRScannerPage: React.FC = () => {
             </div>
           )}
 
-          {/* Bottom Controls - Extra padding to clear fixed footer */}
-          <div className="bg-gradient-to-t from-black/90 to-transparent p-4 pb-32 safe-area-bottom relative z-10">
+          {/* Bottom Controls - Increased padding to prevent footer overlap */}
+          <div className="bg-gradient-to-t from-black/90 to-transparent p-4 pb-40 safe-area-bottom relative z-10">
             {/* Manual Entry Form */}
             <form onSubmit={handleManualSubmit} className="space-y-3 max-w-md mx-auto">
               <Input
