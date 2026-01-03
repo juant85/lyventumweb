@@ -641,10 +641,10 @@ const QRScannerPage: React.FC = () => {
             </div>
           )}
 
-          {/* Bottom Controls - CRITICAL: Inline style for padding since Tailwind pb-48 not working */}
+          {/* Bottom Controls - Balanced padding for footer clearance */}
           <div
             className="bg-gradient-to-t from-black/90 to-transparent p-4 safe-area-bottom relative z-10"
-            style={{ paddingBottom: '12rem' }}
+            style={{ paddingBottom: '6rem' }}
           >
             {/* Manual Entry Form */}
             <form onSubmit={handleManualSubmit} className="space-y-3 max-w-md mx-auto">
