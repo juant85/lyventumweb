@@ -20,7 +20,7 @@ export const AVAILABLE_CARDS: QuickActionCard[] = [
     {
         id: 'vendor-profiles',
         label: 'Vendors',
-        icon: 'buildingStorefront',
+        icon: 'briefcase',
         route: AppRoute.VendorProfiles,
         category: 'manage',
         order: 1,
@@ -29,7 +29,7 @@ export const AVAILABLE_CARDS: QuickActionCard[] = [
     {
         id: 'check-in-desk',
         label: 'Check-in Desk',
-        icon: 'clipboard',
+        icon: 'checkCircle',
         route: AppRoute.CheckInDesk,
         category: 'manage',
         order: 2,
@@ -58,7 +58,7 @@ export const AVAILABLE_CARDS: QuickActionCard[] = [
     {
         id: 'booth-setup',
         label: 'Booths',
-        icon: 'store',
+        icon: 'booth',
         route: AppRoute.BoothSetup,
         category: 'configure',
         order: 5,
@@ -67,7 +67,7 @@ export const AVAILABLE_CARDS: QuickActionCard[] = [
     {
         id: 'email-settings',
         label: 'Email Settings',
-        icon: 'envelope',
+        icon: 'mail',
         route: AppRoute.EmailSettings,
         category: 'configure',
         order: 6,
@@ -87,7 +87,7 @@ export const AVAILABLE_CARDS: QuickActionCard[] = [
     {
         id: 'real-time-analytics',
         label: 'Analytics',
-        icon: 'barChart',
+        icon: 'analytics',
         route: AppRoute.RealTimeAnalytics,
         category: 'analyze',
         order: 8,
@@ -96,7 +96,7 @@ export const AVAILABLE_CARDS: QuickActionCard[] = [
     {
         id: 'reports',
         label: 'Reports',
-        icon: 'fileText',
+        icon: 'reports',
         route: AppRoute.Reports,
         category: 'analyze',
         order: 9,
@@ -105,7 +105,7 @@ export const AVAILABLE_CARDS: QuickActionCard[] = [
     {
         id: 'data-visualization',
         label: 'Data Visualization',
-        icon: 'barChart',
+        icon: 'visualize',
         route: AppRoute.DataVisualization,
         category: 'analyze',
         order: 10,
@@ -125,7 +125,7 @@ export const AVAILABLE_CARDS: QuickActionCard[] = [
     {
         id: 'master-import',
         label: 'Master Import',
-        icon: 'arrowUpTray',
+        icon: 'upload',
         route: AppRoute.MasterImport,
         category: 'tools',
         order: 12,
@@ -134,7 +134,7 @@ export const AVAILABLE_CARDS: QuickActionCard[] = [
     {
         id: 'data-editor',
         label: 'Data Editor',
-        icon: 'pencilSquare',
+        icon: 'database',
         route: AppRoute.DataEditor,
         category: 'tools',
         order: 13,
