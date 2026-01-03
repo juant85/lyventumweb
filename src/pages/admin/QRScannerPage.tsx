@@ -510,13 +510,25 @@ const QRScannerPage: React.FC = () => {
                   <p className="text-sm text-white/80">Booth {activeBooth.physicalId}</p>
                 )}
               </div>
-              <button
-                onClick={handleLogout}
-                className="ml-3 min-h-[44px] min-w-[44px] bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-colors"
-                aria-label="Close"
-              >
-                <Icon name="close" size={24} />
-              </button>
+              <div className="flex items-center gap-2">
+                {/* Kiosk Mode Toggle - NEW */}
+                {activeBooth && (
+                  <button
+                    onClick={handleToggleKioskMode}
+                    className="min-h-[44px] min-w-[44px] bg-primary-500/80 hover:bg-primary-600/80 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-colors"
+                    aria-label="Toggle Kiosk Mode"
+                  >
+                    <Icon name="grid" size={20} />
+                  </button>
+                )}
+                <button
+                  onClick={handleLogout}
+                  className="min-h-[44px] min-w-[44px] bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-colors"
+                  aria-label="Close"
+                >
+                  <Icon name="close" size={24} />
+                </button>
+              </div>
             </div>
 
             {/* Pending Scans Badge */}
