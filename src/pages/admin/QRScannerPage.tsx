@@ -574,8 +574,17 @@ const QRScannerPage: React.FC = () => {
                       width: 100% !important; 
                       min-height: 100% !important; 
                     }
+                    #qr-scanner-container__dashboard_section_csr { 
+                      text-align: center !important;
+                      display: flex !important;
+                      justify-content: center !important;
+                    }
                     #qr-scanner-container__dashboard_section_csr span { 
                       display: none !important; 
+                    }
+                    #html5-qrcode-button-camera-permission {
+                      margin: 0 auto !important;
+                      display: block !important;
                     }
                   `}</style>
                   <div id="qr-scanner-container" className="w-full h-full"></div>
@@ -613,8 +622,8 @@ const QRScannerPage: React.FC = () => {
             </div>
           )}
 
-          {/* Bottom Controls */}
-          <div className="bg-gradient-to-t from-black/90 to-transparent p-4 pb-24 safe-area-bottom relative z-10 mb-20">
+          {/* Bottom Controls - Extra padding to clear fixed footer */}
+          <div className="bg-gradient-to-t from-black/90 to-transparent p-4 pb-32 safe-area-bottom relative z-10">
             {/* Manual Entry Form */}
             <form onSubmit={handleManualSubmit} className="space-y-3 max-w-md mx-auto">
               <Input
