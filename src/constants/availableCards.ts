@@ -87,7 +87,7 @@ export const AVAILABLE_CARDS: QuickActionCard[] = [
     {
         id: 'real-time-analytics',
         label: 'Analytics',
-        icon: 'chartBar',
+        icon: 'barChart',
         route: AppRoute.RealTimeAnalytics,
         category: 'analyze',
         order: 8,
@@ -96,7 +96,7 @@ export const AVAILABLE_CARDS: QuickActionCard[] = [
     {
         id: 'reports',
         label: 'Reports',
-        icon: 'document',
+        icon: 'fileText',
         route: AppRoute.Reports,
         category: 'analyze',
         order: 9,
@@ -105,7 +105,7 @@ export const AVAILABLE_CARDS: QuickActionCard[] = [
     {
         id: 'data-visualization',
         label: 'Data Visualization',
-        icon: 'chartBar',
+        icon: 'barChart',
         route: AppRoute.DataVisualization,
         category: 'analyze',
         order: 10,
