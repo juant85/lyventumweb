@@ -34,7 +34,8 @@ export const mapSessionFromDb = (dbSession: SessionWithCapacities): Session => (
   location: (dbSession as any).location,
   description: (dbSession as any).description,
   speaker: (dbSession as any).speaker,
-  maxCapacity: (dbSession as any).max_capacity
+  maxCapacity: (dbSession as any).max_capacity,
+  config: (dbSession as any).config
 });
 
 export const mapBoothFromDb = (dbBooth: Database['public']['Tables']['booths']['Row']): Booth => ({

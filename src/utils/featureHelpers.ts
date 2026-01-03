@@ -137,6 +137,7 @@ export function getFeatureName(featureKey: Feature): string {
         [Feature.SPONSORSHIP]: 'Sponsorship',
         [Feature.ATTENDEE_IMPORT]: 'Attendee Import',
         [Feature.SCANNER]: 'Scanner',
+        [Feature.MY_EVENTS]: 'My Events',
     };
     return names[featureKey] || featureKey;
 }
@@ -182,6 +183,7 @@ export function getFeatureDescription(featureKey: Feature): string {
         [Feature.SPONSORSHIP]: 'Manage sponsorship tiers and sponsors',
         [Feature.ATTENDEE_IMPORT]: 'Import attendees from various sources',
         [Feature.SCANNER]: 'QR Code Scanner functionality',
+        [Feature.MY_EVENTS]: 'View and manage your assigned events',
     };
     return descriptions[featureKey] || 'No description available';
 }

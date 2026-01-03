@@ -26,6 +26,7 @@ const ReportsPage: React.FC = () => {
     const { sessions, scans, allConfiguredBooths: booths, attendees, loadingData, dataError, getBoothById } = useEventData();
     const { currentEvent, selectedEventId } = useSelectedEvent();
     const { config, isTradeShow } = useEventTypeConfig(); // NEW
+    const labels = config.labels; // Dynamic nomenclature labels
     const { t } = useLanguage();
     const isMobile = useIsMobile();
 
@@ -58,7 +59,7 @@ const ReportsPage: React.FC = () => {
             boothCounts[boothId] = (boothCounts[boothId] || 0) + 1;
         });
         return Object.entries(boothCounts)
-            .map(([boothId, count]) => ({ name: getBoothById(boothId)?.companyName || `Booth ${boothId.slice(-4)}`, Traffic: count }))
+            .map(([boothId, count]) => ({ name: getBoothById(boothId)?.companyName || `${labels.scanningPoint} ${boothId.slice(-4)}`, Traffic: count }))
             .sort((a, b) => b.Traffic - a.Traffic).slice(0, 5);
     }, [scans, getBoothById]);
 
@@ -438,7 +439,7 @@ const ReportsPage: React.FC = () => {
                             {selectedBoothId && (
                                 <div className="mt-6">
                                     <h3 className="text-lg font-semibold mb-3 text-slate-800 dark:text-slate-100">
-                                        Scans for {getBoothById(selectedBoothId)?.companyName || 'Selected Booth'}
+                                        Scans for {getBoothById(selectedBoothId)?.companyName || `Selected ${labels.scanningPoint}`}
                                     </h3>
                                     <div className="overflow-x-auto">
                                         <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
@@ -448,7 +449,7 @@ const ReportsPage: React.FC = () => {
                                                     <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Attendee</th>
                                                     <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Organization</th>
                                                     <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
-                                                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Expected Booth</th>
+                                                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Expected {labels.scanningPoint}</th>
                                                     <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Notes</th>
                                                 </tr>
                                             </thead>
@@ -483,7 +484,7 @@ const ReportsPage: React.FC = () => {
                                                                 )}
                                                                 {scan.scanStatus === 'WRONG_BOOTH' && (
                                                                     <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300">
-                                                                        ⚠️ Wrong Booth
+                                                                        ⚠️ Wrong {labels.scanningPoint}
                                                                     </span>
                                                                 )}
                                                                 {scan.scanStatus === 'OUT_OF_SCHEDULE' && (

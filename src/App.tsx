@@ -79,9 +79,13 @@ const BoothChallenge = lazy(() => import('./pages/attendee/BoothChallenge'));
 const AttendeeStats = lazy(() => import('./pages/attendee/AttendeeStats'));
 
 const AttendeeDashboardPage = lazy(() => import('./pages/admin/AttendeeDashboardPage'));
+const MyEventsPage = lazy(() => import('./pages/admin/MyEventsPage'));
+const FeaturesPage = lazy(() => import('./pages/admin/FeaturesPage'));
+const ActivityLogPage = lazy(() => import('./pages/admin/ActivityLogPage'));
 
 // Temporary: Icon Test Page for verification
 const IconTestPage = lazy(() => import('./pages/IconTestPage'));
+const SessionSimulationPage = lazy(() => import('./pages/debug/SessionSimulationPage'));
 
 const queryClient = new QueryClient();
 
@@ -127,12 +131,16 @@ const AppRoutes: React.FC = () => {
 
       {/* Temporary: Icon Test Page */}
       <Route path="/icon-test" element={<IconTestPage />} />
+      <Route path="/debug/simulation" element={<ProtectedRoute allowedRoles={['admin', 'organizer', 'superadmin']}><SessionSimulationPage /></ProtectedRoute>} />
 
       {/* Booth-specific Scanner Route (now allows organizers too) */}
       <Route path={AppRoute.QRScanner} element={<ProtectedRoute allowedRoles={['admin', 'organizer', 'superadmin']} boothAccessOrRoles={true}><QRScannerPage /></ProtectedRoute>} />
 
       {/* Protected Routes for Organizers/Admins */}
       <Route path={AppRoute.Dashboard} element={<ProtectedRoute allowedRoles={['admin', 'organizer', 'superadmin']}><DashboardPage /></ProtectedRoute>} />
+      <Route path={AppRoute.MyEvents} element={<ProtectedRoute allowedRoles={['admin', 'organizer', 'superadmin']}><MyEventsPage /></ProtectedRoute>} />
+      <Route path={AppRoute.Features} element={<ProtectedRoute allowedRoles={['admin', 'organizer', 'superadmin']}><FeaturesPage /></ProtectedRoute>} />
+      <Route path={AppRoute.ActivityLog} element={<ProtectedRoute allowedRoles={['admin', 'organizer', 'superadmin']}><ActivityLogPage /></ProtectedRoute>} />
       <Route path={AppRoute.DataVisualization} element={<ProtectedRoute allowedRoles={['admin', 'organizer', 'superadmin']}><FeatureGuard featureKey={Feature.DATA_VISUALIZATION}><DataVisualizationPage /></FeatureGuard></ProtectedRoute>} />
       <Route path={AppRoute.SessionSettings} element={<ProtectedRoute allowedRoles={['admin', 'organizer', 'superadmin']}><FeatureGuard featureKey={Feature.SESSION_SETTINGS}><SessionSettingsPage /></FeatureGuard></ProtectedRoute>} />
       <Route path={AppRoute.TracksSettings} element={<ProtectedRoute allowedRoles={['admin', 'organizer', 'superadmin']}><FeatureGuard featureKey={Feature.TRACKS}><TracksSettingsPage /></FeatureGuard></ProtectedRoute>} />

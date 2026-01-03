@@ -9,6 +9,15 @@ import { useSelectedEvent } from './SelectedEventContext';
  * Feature flags and UI preferences for each event type
  */
 export interface EventTypeConfig {
+    // === NOMENCLATURE LABELS ===
+    // These adapt the UI terminology based on event type
+    labels: {
+        scanningPoint: string;        // "Booth" | "Session" | "Station" | "Checkpoint"
+        scanningPointPlural: string;  // "Booths" | "Sessions" | "Stations" | "Checkpoints"
+        action: string;               // "Visit" | "Check-in" | "Scan" | "Register"
+        actionPast: string;           // "Visited" | "Checked in" | "Scanned" | "Registered"
+    };
+
     // Core features
     requirePreRegistration: boolean;
     allowWalkIns: boolean;
@@ -32,6 +41,12 @@ export interface EventTypeConfig {
  */
 export const DEFAULT_CONFIGS: Record<EventType, EventTypeConfig> = {
     vendor_meetings: {
+        labels: {
+            scanningPoint: 'Booth',
+            scanningPointPlural: 'Booths',
+            action: 'Visit',
+            actionPast: 'Visited',
+        },
         requirePreRegistration: true,
         allowWalkIns: true,
         enableBoothAssignments: true,
@@ -45,20 +60,32 @@ export const DEFAULT_CONFIGS: Record<EventType, EventTypeConfig> = {
         leadEnrichmentRequired: false,
     },
     conference: {
+        labels: {
+            scanningPoint: 'Session',
+            scanningPointPlural: 'Sessions',
+            action: 'Check-in',
+            actionPast: 'Checked in',
+        },
         requirePreRegistration: true,
         allowWalkIns: true,
-        enableBoothAssignments: false, // Key difference: no booth assignments
-        enableSessionConflicts: true,  // Detect overlapping sessions
+        enableBoothAssignments: false,
+        enableSessionConflicts: true,
         enableCapacityLimits: true,
         defaultScanMode: 'session',
         showVendorAnalytics: false,
-        showSessionAnalytics: true,    // Show attendance metrics
+        showSessionAnalytics: true,
         showLeadCaptureMetrics: false,
         autoCreateWalkIns: true,
         leadEnrichmentRequired: false,
     },
     trade_show: {
-        requirePreRegistration: false, // Open event
+        labels: {
+            scanningPoint: 'Station',
+            scanningPointPlural: 'Stations',
+            action: 'Scan',
+            actionPast: 'Scanned',
+        },
+        requirePreRegistration: false,
         allowWalkIns: true,
         enableBoothAssignments: false,
         enableSessionConflicts: false,
@@ -66,11 +93,17 @@ export const DEFAULT_CONFIGS: Record<EventType, EventTypeConfig> = {
         defaultScanMode: 'auto',
         showVendorAnalytics: false,
         showSessionAnalytics: false,
-        showLeadCaptureMetrics: true,  // Focus on leads captured
+        showLeadCaptureMetrics: true,
         autoCreateWalkIns: true,
         leadEnrichmentRequired: false,
     },
     hybrid: {
+        labels: {
+            scanningPoint: 'Checkpoint',
+            scanningPointPlural: 'Checkpoints',
+            action: 'Register',
+            actionPast: 'Registered',
+        },
         requirePreRegistration: true,
         allowWalkIns: true,
         enableBoothAssignments: true,

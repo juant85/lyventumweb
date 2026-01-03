@@ -20,7 +20,8 @@ import { supabase } from '../../supabaseClient';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import MobileCard from '../../components/mobile/MobileCard';
 import SwipeableCard from '../../components/ui/SwipeableCard';
-import { BuildingStorefrontIcon } from '../../components/Icons'; // Ensure icon is imported
+import { BuildingStorefrontIcon } from '../../components/Icons';
+import { useEventTypeConfig } from '../../contexts/EventTypeConfigContext';
 
 const BoothProfileModal: React.FC<{
   booth: Booth | null;
@@ -302,6 +303,8 @@ const BoothSetupPage: React.FC = () => {
   const { booths, addBooth, updateBooth, deleteBooth, loading, regenerateAllBoothAccessCodes } = useBooths();
   const { selectedEventId } = useSelectedEvent();
   const { t } = useLanguage();
+  const { config } = useEventTypeConfig();
+  const labels = config.labels;
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [editingBooth, setEditingBooth] = useState<Booth | null>(null);
@@ -421,7 +424,7 @@ const BoothSetupPage: React.FC = () => {
                 <button onClick={handleMobileBack} className="p-2 mr-2 -ml-2 text-slate-600 dark:text-slate-300">
                   <ArrowLeftIcon className="w-6 h-6" />
                 </button>
-                <h1 className="text-lg font-bold truncate">Booth Details</h1>
+                <h1 className="text-lg font-bold truncate">{labels.scanningPoint} Details</h1>
                 <button
                   onClick={() => selectedBooth && setEditingBooth(selectedBooth)}
                   className="ml-auto p-2 text-primary-600 dark:text-primary-400 font-semibold text-sm"
@@ -431,7 +434,7 @@ const BoothSetupPage: React.FC = () => {
               </div>
             ) : (
               <div className="flex items-center justify-between w-full">
-                <h1 className="text-xl font-bold flex items-center"><CogIcon className="w-6 h-6 mr-2 text-primary-600" /> Booths</h1>
+                <h1 className="text-xl font-bold flex items-center"><CogIcon className="w-6 h-6 mr-2 text-primary-600" /> {labels.scanningPointPlural}</h1>
                 <Button size="sm" onClick={() => setIsAddModalOpen(true)} leftIcon={<PlusCircleIcon className="w-4 h-4" />}>Add</Button>
               </div>
             )}
@@ -447,9 +450,9 @@ const BoothSetupPage: React.FC = () => {
                   <Button onClick={handleRegenerateCodes} variant="secondary" className="w-full text-xs" size="sm" leftIcon={<ArrowPathIcon className="w-4 h-4" />}>{t(localeKeys.regenerateCode)}</Button>
                 </div>
 
-                {loading ? <p className="text-center py-4 text-slate-500">Loading booths...</p> : filteredBooths.length === 0 ? (
+                {loading ? <p className="text-center py-4 text-slate-500">Loading {labels.scanningPointPlural.toLowerCase()}...</p> : filteredBooths.length === 0 ? (
                   <div className="text-center py-10 bg-slate-50 dark:bg-slate-800 rounded-xl border border-dashed border-slate-300 dark:border-slate-700">
-                    <p className="text-slate-500">{searchTerm ? 'No matches found.' : 'No booths yet.'}</p>
+                    <p className="text-slate-500">{searchTerm ? 'No matches found.' : `No ${labels.scanningPointPlural.toLowerCase()} yet.`}</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -562,7 +565,7 @@ const BoothSetupPage: React.FC = () => {
                 <div className="text-center">
                   <p className="text-xs text-slate-400 mb-2">Need to update vendors or settings?</p>
                   <Button variant="secondary" className="w-full max-w-xs mx-auto justify-center" onClick={() => setEditingBooth(selectedBooth)}>
-                    Manage Booth Settings
+                    Manage {labels.scanningPoint} Settings
                   </Button>
                 </div>
               </div>

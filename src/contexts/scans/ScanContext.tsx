@@ -1,6 +1,7 @@
 // src/contexts/scans/ScanContext.tsx
 import React, { createContext, useState, useContext, ReactNode, useCallback, useEffect, useRef, useMemo } from 'react';
 import { ScanRecord, PendingScanPayload, ScanResult, ScanStatus, ScanResultDetails } from '../../types';
+import { SessionConfig } from '../../types/sessionConfig';
 import { supabase } from '../../supabaseClient';
 import { RealtimeChannel } from '@supabase/supabase-js';
 import { useSelectedEvent } from '../SelectedEventContext';
@@ -232,11 +233,12 @@ export const ScanProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             // Get session details
             const { data: sessionData } = await supabase
                 .from('sessions')
-                .select('name, start_time, end_time')
+                .select('name, start_time, end_time, config')
                 .eq('id', sessionId)
                 .single();
 
             sessionName = sessionData?.name;
+            const sessionConfig = sessionData?.config as SessionConfig | null;
             details.sessionName = sessionName;
 
             // Check if attendee is registered for THIS session
@@ -253,11 +255,20 @@ export const ScanProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 scanType = 'regular';
                 details.isRegistered = true;
             } else {
-                // NOT registered for this session - check for conflicts
-                if (sessionData) {
-                    const { data: conflictingRegs } = await supabase
-                        .from('session_registrations')
-                        .select(`
+                // Check if pre-assignment is REQUIRED by config
+                if (sessionConfig?.requiresPreAssignment) {
+                    status = 'WRONG_BOOTH'; // Flag as error
+                    scanType = 'regular';
+                    details.isRegistered = false;
+                    details.expectedBoothName = '⛔ Registration Required';
+                    console.log(`[Smart Scan] Rejected walk-in: Configuration requires pre-assignment.`);
+                } else {
+                    // Normal walk-in logic
+                    // NOT registered for this session - check for conflicts
+                    if (sessionData) {
+                        const { data: conflictingRegs } = await supabase
+                            .from('session_registrations')
+                            .select(`
                             id,
                             session_id,
                             sessions!inner (
@@ -267,30 +278,31 @@ export const ScanProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                                 end_time
                             )
                         `)
-                        .eq('attendee_id', attendeeId)
-                        .neq('session_id', sessionId);
+                            .eq('attendee_id', attendeeId)
+                            .neq('session_id', sessionId);
 
-                    // Check for time overlap
-                    const conflicts = conflictingRegs?.filter((reg: any) => {
-                        const s = reg.sessions;
-                        return (
-                            new Date(s.end_time) >= new Date(sessionData.start_time) &&
-                            new Date(s.start_time) <= new Date(sessionData.end_time)
-                        );
-                    }) || [];
+                        // Check for time overlap
+                        const conflicts = conflictingRegs?.filter((reg: any) => {
+                            const s = reg.sessions;
+                            return (
+                                new Date(s.end_time) >= new Date(sessionData.start_time) &&
+                                new Date(s.start_time) <= new Date(sessionData.end_time)
+                            );
+                        }) || [];
 
-                    if (conflicts.length > 0) {
-                        // CONFLICT DETECTED: Registered in overlapping session
-                        const conflictSession = (conflicts[0] as any).sessions;
-                        status = 'WALK_IN';
-                        scanType = 'regular';
-                        details.isRegistered = false;
-                        details.expectedBoothName = `⚠️ Debería estar en: ${conflictSession.name}`;
-                    } else {
-                        // Walk-in (no conflict)
-                        status = 'WALK_IN';
-                        scanType = 'regular';
-                        details.isRegistered = false;
+                        if (conflicts.length > 0) {
+                            // CONFLICT DETECTED: Registered in overlapping session
+                            const conflictSession = (conflicts[0] as any).sessions;
+                            status = 'WALK_IN';
+                            scanType = 'regular';
+                            details.isRegistered = false;
+                            details.expectedBoothName = `⚠️ Debería estar en: ${conflictSession.name}`;
+                        } else {
+                            // Walk-in (no conflict)
+                            status = 'WALK_IN';
+                            scanType = 'regular';
+                            details.isRegistered = false;
+                        }
                     }
                 }
             }
@@ -337,9 +349,17 @@ export const ScanProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
                 if (!attendeeRegistration) {
                     // SCENARIO 3: Walk-in (not registered for this session)
-                    status = 'WALK_IN';
-                    scanType = 'regular'; // Still valid scan, just unexpected
-                    details.isRegistered = false;
+                    // Check config first
+                    if (operationalDetails.session?.config?.requiresPreAssignment) {
+                        status = 'WRONG_BOOTH';
+                        scanType = 'regular';
+                        details.isRegistered = false;
+                        details.expectedBoothName = '⛔ Registration Required';
+                    } else {
+                        status = 'WALK_IN';
+                        scanType = 'regular'; // Still valid scan, just unexpected
+                        details.isRegistered = false;
+                    }
                 } else if (attendeeRegistration.expected_booth_id === boothId) {
                     // SCENARIO 1: EXPECTED (correct booth!) ✅
                     status = 'EXPECTED';

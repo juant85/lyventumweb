@@ -153,7 +153,7 @@ export const EventDataProvider: React.FC<{ children: ReactNode }> = ({ children 
       const { data: eventAttendeeLinksData, error: eventAttendeeLinksError } = await supabase.from('event_attendees').select('attendee_id, check_in_time').eq('event_id', selectedEventId);
       if (eventAttendeeLinksError) throw new Error(`Attendee Links: ${eventAttendeeLinksError.message}`);
 
-      const { data: sessionsData, error: sessionsError } = await supabase.from('sessions').select('id, name, start_time, end_time, event_id, session_booth_capacities(booth_id, capacity)').eq('event_id', selectedEventId).returns<SessionWithCapacities[]>();
+      const { data: sessionsData, error: sessionsError } = await supabase.from('sessions').select('id, name, start_time, end_time, event_id, session_type, location, description, speaker, max_capacity, config, session_booth_capacities(booth_id, capacity)').eq('event_id', selectedEventId).returns<SessionWithCapacities[]>();
       if (sessionsError) throw new Error(`Sessions: ${sessionsError.message}`);
 
       setBooths(sortBooths((boothsData ?? []).map(mapBoothFromDb)));
@@ -648,7 +648,8 @@ export const EventDataProvider: React.FC<{ children: ReactNode }> = ({ children 
       location: details?.location,
       description: details?.description,
       speaker: details?.speaker,
-      max_capacity: details?.maxCapacity
+      max_capacity: details?.maxCapacity,
+      config: details?.config as any // Add config to payload
     };
     const { data: newSessionData, error: sessionError } = await supabase.from('sessions').insert(payload).select().single();
 
@@ -671,7 +672,8 @@ export const EventDataProvider: React.FC<{ children: ReactNode }> = ({ children 
       location: updatedSession.location,
       description: updatedSession.description,
       speaker: updatedSession.speaker,
-      max_capacity: updatedSession.maxCapacity
+      max_capacity: updatedSession.maxCapacity,
+      config: updatedSession.config as any // Add config to payload
     };
     const { data, error: sessionError } = await supabase.from('sessions').update(sessionPayload).eq('id', updatedSession.id).select().single();
     if (sessionError) return { success: false, message: `Failed to update session: ${sessionError.message}` };

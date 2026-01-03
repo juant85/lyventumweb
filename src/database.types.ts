@@ -307,6 +307,58 @@ export interface Database {
           booth_layout_config?: any | null
         }
       }
+      feature_packages: {
+        Row: {
+          id: string
+          key: string
+          name: string
+          description: string | null
+          icon: string | null
+          features: string[]
+          category: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          key: string
+          name: string
+          description?: string | null
+          icon?: string | null
+          features: string[]
+          category?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          key?: string
+          name?: string
+          description?: string | null
+          icon?: string | null
+          features?: string[]
+          category?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      plan_packages: {
+        Row: {
+          plan_id: string
+          package_id: string
+          created_at: string
+        }
+        Insert: {
+          plan_id: string
+          package_id: string
+          created_at?: string
+        }
+        Update: {
+          plan_id?: string
+          package_id?: string
+          created_at?: string
+        }
+      }
       features: {
         Row: {
           id: string
@@ -551,6 +603,7 @@ export interface Database {
           speaker: string | null
           max_capacity: number | null
           access_code: string
+          config: Json | null
         }
         Insert: {
           id?: string
@@ -564,6 +617,7 @@ export interface Database {
           speaker?: string | null
           max_capacity?: number | null
           access_code?: string
+          config?: Json | null
         }
         Update: {
           id?: string
@@ -577,6 +631,7 @@ export interface Database {
           speaker?: string | null
           max_capacity?: number | null
           access_code?: string
+          config?: Json | null
         }
       }
       event_users: {

@@ -24,6 +24,9 @@ import BulkRegistrationModal from '../../components/admin/BulkRegistrationModal'
 import { PresentationChartLineIcon, BuildingStorefrontIcon, MapIcon, UsersGroupIcon as IconUsersGroup } from '../../components/Icons';
 import { MobileCard, SpeedDialFAB, MobileEmptyState } from '../../components/mobile';
 import SwipeableCard from '../../components/ui/SwipeableCard';
+import SessionConfigEditor from '../../components/admin/SessionConfigEditor';
+import { useSessionConfig } from '../../hooks/useSessionConfig';
+import { useFeatureAccess } from '../../hooks/useFeatureAccess';
 
 
 const formatDateForInput = (dateValue: string | Date): string => {
@@ -231,6 +234,17 @@ const SessionSettingsPage: React.FC = () => {
 
     const { getCapacity, loading: loadingCapacities } = useBoothCapacity(selectedSessionId);
 
+    // --- Session Config System ---
+    const sessionToEdit = useMemo(() => sessions.find(s => s.id === selectedSessionId), [sessions, selectedSessionId]);
+    const { config: sessionConfig, updateConfig: updateSessionConfig, resetConfig: resetSessionConfig, isValid: isSessionConfigValid } = useSessionConfig(isCreatingNew ? null : sessionToEdit);
+    const [showAdvancedConfig, setShowAdvancedConfig] = useState(false);
+
+    // Feature Gating - Check if event's plan allows session config
+    const { hasPackage, isLoading: isLoadingFeatures } = useFeatureAccess();
+    // TODO: Feature gating query returns empty packages, needs DB investigation
+    // const canConfigureSessions = hasPackage('session_conference_tools');
+    const canConfigureSessions = true; // Temporarily enabled for all users
+
     const handleDeleteSession = async (id: string) => {
         if (window.confirm('Delete this session? This cannot be undone.')) {
             try {
@@ -410,7 +424,8 @@ const SessionSettingsPage: React.FC = () => {
                 location,
                 description,
                 speaker,
-                // maxCapacity
+                maxCapacity: maxCapacity ? parseInt(String(maxCapacity)) : null,
+                config: sessionConfig as any // Add config
             };
 
             if (isCreatingNew) {
@@ -478,6 +493,7 @@ const SessionSettingsPage: React.FC = () => {
         setDescription('');
         setSpeaker('');
         setMaxCapacity('');
+        resetSessionConfig(); // Reset config
     };
 
     const handleMobileBack = () => {
@@ -818,6 +834,53 @@ const SessionSettingsPage: React.FC = () => {
                                 </>
                             )}
 
+                            {/* Advanced Configuration - Mobile */}
+                            <div className="border-t border-slate-200 dark:border-slate-700 my-4 pt-4">
+                                <div className="flex items-center justify-between mb-3">
+                                    <h3 className="text-base font-medium text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                                        Advanced Configuration
+                                        {!canConfigureSessions && !isLoadingFeatures && (
+                                            <span className="px-2 py-0.5 rounded text-xs bg-slate-100 text-slate-500 font-normal border border-slate-200">
+                                                Premium
+                                            </span>
+                                        )}
+                                    </h3>
+                                    <Button
+                                        type="button"
+                                        variant="neutral"
+                                        size="sm"
+                                        onClick={() => setShowAdvancedConfig(!showAdvancedConfig)}
+                                        disabled={!canConfigureSessions && !isLoadingFeatures}
+                                    >
+                                        {showAdvancedConfig ? 'Hide' : 'Configure'}
+                                    </Button>
+                                </div>
+
+                                {!canConfigureSessions && !isLoadingFeatures && (
+                                    <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-center mb-3">
+                                        <p className="text-xs text-slate-600">Upgrade to Professional plan for advanced scanning rules.</p>
+                                    </div>
+                                )}
+
+                                {showAdvancedConfig && (
+                                    <div className="animate-fadeIn bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700 mb-4">
+                                        <SessionConfigEditor
+                                            config={sessionConfig}
+                                            onChange={updateSessionConfig}
+                                            disabled={isSubmitting || loadingData}
+                                        />
+                                        {!isSessionConfigValid && (
+                                            <p className="text-xs text-red-500 mt-2">
+                                                * Please fix configuration errors before saving.
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Spacer for fixed bottom button */}
+                            <div className="h-24"></div>
+
                             <div className="fixed bottom-0 left-0 right-0 p-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
                                 <Button
                                     type="submit"
@@ -883,7 +946,7 @@ const SessionSettingsPage: React.FC = () => {
                     onSave={handleBulkRegistration}
                 />
             )}
-            <div className="space-y-8">
+            <div className="space-y-8 pb-40">
                 <div className="flex justify-between items-center">
                     <h1 className="text-3xl font-bold flex items-center"><CogIcon className="w-8 h-8 mr-3 text-primary-600" /> Session Settings</h1>
                     {sessions.length > 0 && (
@@ -1045,6 +1108,39 @@ const SessionSettingsPage: React.FC = () => {
                                         disabled={isSubmitting || loadingData}
                                         required
                                     />
+                                </div>
+
+                                {/* Advanced Configuration */}
+                                <div className="border-t border-slate-200 dark:border-slate-700 my-6 pt-6">
+                                    <div className="flex items-center justify-between mb-4">
+                                        <h3 className="text-lg font-medium text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                                            Advanced Configuration
+                                        </h3>
+                                        <Button
+                                            type="button"
+                                            variant="neutral"
+                                            size="sm"
+                                            onClick={() => setShowAdvancedConfig(!showAdvancedConfig)}
+                                            title="Configure advanced scanning rules"
+                                        >
+                                            {showAdvancedConfig ? 'Hide Settings' : 'Configure Scanning Rules'}
+                                        </Button>
+                                    </div>
+
+                                    {showAdvancedConfig && (
+                                        <div className="animate-fadeIn bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
+                                            <SessionConfigEditor
+                                                config={sessionConfig}
+                                                onChange={updateSessionConfig}
+                                                disabled={isSubmitting || loadingData}
+                                            />
+                                            {!isSessionConfigValid && (
+                                                <p className="text-sm text-red-500 mt-2">
+                                                    * Please fix configuration errors before saving.
+                                                </p>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="flex justify-end pt-2 border-t border-slate-200 dark:border-slate-700">

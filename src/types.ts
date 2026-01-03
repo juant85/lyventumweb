@@ -1,5 +1,6 @@
 // src/types.ts
 import { Json } from './database.types';
+import { SessionConfig } from './types/sessionConfig';
 
 // === EVENT TYPE SYSTEM ===
 
@@ -95,6 +96,9 @@ export interface Session {
   description?: string | null;
   speaker?: string | null;
   maxCapacity?: number | null;
+
+  // NEW: Flexible session configuration
+  config?: SessionConfig; // Defines scanning behavior, capacity, and context-specific settings
 }
 
 export interface ScanRecord {
@@ -241,6 +245,9 @@ export enum AppRoute {
   Sponsorship = "/sponsorship",
   AttendeeImport = "/attendee-registration",
   Scanner = "/qr-scanner",
+  MyEvents = "/my-events",
+  Features = "/features",
+  ActivityLog = "/activity-log",
 }
 
 export interface CsvProcessingError {

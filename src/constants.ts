@@ -8,6 +8,12 @@ export const APP_NAME = "LyVenTum";
 
 export const NAVIGATION_LINKS: { category: LocaleKeys; links: { path: AppRoute; labelKey: LocaleKeys; title: string; icon: IconName; featureKey: Feature }[] }[] = [
   {
+    category: localeKeys.navCategoryMyEvents,
+    links: [
+      { path: AppRoute.MyEvents, labelKey: localeKeys.navLinkMyEvents, title: "My Events Portal", icon: 'calendar', featureKey: Feature.MY_EVENTS },
+    ]
+  },
+  {
     category: localeKeys.navCategoryCheckIn,
     links: [
       { path: AppRoute.CheckInDesk, labelKey: localeKeys.navLinkCheckInDesk, title: "Main Event Check-in", icon: 'registration', featureKey: Feature.CHECK_IN_DESK },

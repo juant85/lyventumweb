@@ -87,6 +87,7 @@ const QRScannerPage: React.FC = () => {
   const { currentUser } = useAuth();
   const { t } = useLanguage();
   const { config, isVendorMeeting, isConference, isTradeShow } = useEventTypeConfig(); // NEW
+  const labels = config.labels; // Dynamic nomenclature labels
 
   const [activeBooth, setActiveBooth] = useState<Booth | null>(null);
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null); // For session scanner mode
@@ -522,7 +523,7 @@ const QRScannerPage: React.FC = () => {
                   {activeBooth?.companyName || 'QR Scanner'}
                 </h1>
                 {activeBooth && (
-                  <p className="text-sm text-white/80">Booth {activeBooth.physicalId}</p>
+                  <p className="text-sm text-white/80">{labels.scanningPoint} {activeBooth.physicalId}</p>
                 )}
               </div>
               <div className="flex items-center gap-2">

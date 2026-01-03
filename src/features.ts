@@ -63,4 +63,5 @@ export enum Feature {
   SPONSORSHIP = 'feature_sponsorship',
   ATTENDEE_IMPORT = 'feature_attendee_import',
   SCANNER = 'feature_scanner',
+  MY_EVENTS = 'feature_my_events',
 }

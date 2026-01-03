@@ -26,8 +26,8 @@ export interface SessionContextType {
     error: string | null;
 
     // CRUD Operations
-    addSession: (sessionName: string, startTime: string, endTime: string) => Promise<{ success: boolean; message: string; newSession?: Session }>;
-    updateSession: (updatedSession: Pick<Session, 'id' | 'name' | 'startTime' | 'endTime'>) => Promise<{ success: boolean; message: string; updatedSession?: Session }>;
+    addSession: (sessionName: string, startTime: string, endTime: string, details?: Partial<Session>) => Promise<{ success: boolean; message: string; newSession?: Session }>;
+    updateSession: (updatedSession: Pick<Session, 'id' | 'name' | 'startTime' | 'endTime'> & Partial<Session>) => Promise<{ success: boolean; message: string; updatedSession?: Session }>;
     addSessionsBatch: (sessions: { name: string; startTime: string; endTime: string }[]) => Promise<{ success: boolean; data: Session[]; errors: { name: string, error: string }[] }>;
 
     // Capacities
@@ -67,7 +67,7 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({ children })
         try {
             const { data: sessionsData, error: sessionsError } = await supabase
                 .from('sessions')
-                .select('id, name, start_time, end_time, event_id, session_booth_capacities(booth_id, capacity)')
+                .select('id, name, start_time, end_time, event_id, config, session_booth_capacities(booth_id, capacity)')
                 .eq('event_id', selectedEventId)
                 .returns<SessionWithCapacities[]>();
 
@@ -116,14 +116,21 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({ children })
 
     // --- CRUD Operations ---
 
-    const addSession = useCallback(async (sessionName: string, startTime: string, endTime: string) => {
+    const addSession = useCallback(async (sessionName: string, startTime: string, endTime: string, details?: Partial<Session>) => {
         if (!selectedEventId) return { success: false, message: 'No event selected.' };
 
         const payload: Database['public']['Tables']['sessions']['Insert'] = {
             name: sessionName,
             start_time: startTime,
             end_time: endTime,
-            event_id: selectedEventId
+            event_id: selectedEventId,
+            session_type: details?.sessionType || 'meeting',
+            location: details?.location,
+            description: details?.description,
+            speaker: details?.speaker,
+            max_capacity: details?.maxCapacity,
+            config: details?.config as any,
+            access_code: crypto.randomUUID().slice(0, 8).toUpperCase()
         };
 
         const { data: newSessionData, error: sessionError } = await supabase
@@ -144,11 +151,17 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({ children })
         return { success: true, message: 'Session created successfully.', newSession: createdSession };
     }, [selectedEventId, fetchSessions]);
 
-    const updateSession = useCallback(async (updatedSession: Pick<Session, 'id' | 'name' | 'startTime' | 'endTime'>) => {
+    const updateSession = useCallback(async (updatedSession: Pick<Session, 'id' | 'name' | 'startTime' | 'endTime'> & Partial<Session>) => {
         const sessionPayload: Database['public']['Tables']['sessions']['Update'] = {
             name: updatedSession.name,
             start_time: updatedSession.startTime,
-            end_time: updatedSession.endTime
+            end_time: updatedSession.endTime,
+            session_type: updatedSession.sessionType,
+            location: updatedSession.location,
+            description: updatedSession.description,
+            speaker: updatedSession.speaker,
+            max_capacity: updatedSession.maxCapacity,
+            config: updatedSession.config as any
         };
 
         const { data, error: sessionError } = await supabase
@@ -180,6 +193,7 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({ children })
             start_time: session.startTime,
             end_time: session.endTime,
             event_id: selectedEventId,
+            access_code: crypto.randomUUID().slice(0, 8).toUpperCase()
         }));
 
         if (sessionsToUpsert.length === 0) {

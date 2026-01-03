@@ -59,6 +59,8 @@ export const localeKeys = {
   navLinkManageAttendees: 'navLinkManageAttendees',
   navLinkManagePlans: 'navLinkManagePlans',
   navLinkManageCompanies: 'navLinkManageCompanies',
+  navCategoryMyEvents: 'navCategoryMyEvents',
+  navLinkMyEvents: 'navLinkMyEvents',
 
   // Public Pages (Landing, Pricing, etc.)
   landingTitle: 'landingTitle',
@@ -659,6 +661,8 @@ export const en = {
   [localeKeys.navLinkManageAttendees]: 'All Attendees',
   [localeKeys.navLinkManagePlans]: 'Manage Plans',
   [localeKeys.navLinkManageCompanies]: 'Manage Companies',
+  [localeKeys.navCategoryMyEvents]: 'My Events',
+  [localeKeys.navLinkMyEvents]: 'My Events',
 
   // Public Pages
   [localeKeys.landingBadge]: 'The #1 Event Platform',
@@ -1269,6 +1273,8 @@ export const es = {
   [localeKeys.navLinkManageAttendees]: 'Todos los Asistentes',
   [localeKeys.navLinkManagePlans]: 'Planes de Suscripción',
   [localeKeys.navLinkManageCompanies]: 'Gestionar Empresas',
+  [localeKeys.navCategoryMyEvents]: 'Mis Eventos',
+  [localeKeys.navLinkMyEvents]: 'Mis Eventos',
 
   // Public Pages
   [localeKeys.eventAccess]: 'Acceso al Evento',
