@@ -296,8 +296,7 @@ const QRScannerPage: React.FC = () => {
     // This prevents the scanner from immediately re-scanning the same QR
   }, [playSound, vibrateDevice, handleSubmitScan]);
 
-  useEffect(() => {
-    // Only initialize scanner when either booth or session is active
+  useEffect(() => {    // Only initialize scanner when either booth or session is active
     if (!activeBooth && !activeSessionId) return;
 
     // If showing scan result (and not in kiosk mode), don't init scanner (it's unmounted from DOM)
@@ -339,13 +338,29 @@ const QRScannerPage: React.FC = () => {
     scannerRef.current = newScanner;
     console.log('QR Scanner initialized successfully');
 
+    // Mobile fix: Center camera permission button after scanner renders
+    if (isMobile) {
+      setTimeout(() => {
+        const permissionBtn = document.getElementById('html5-qrcode-button-camera-permission');
+        if (permissionBtn && permissionBtn.parentElement) {
+          // Center the parent DIV which contains the button
+          const parent = permissionBtn.parentElement;
+          parent.style.setProperty('text-align', 'center', 'important');
+          parent.style.setProperty('display', 'flex', 'important');
+          parent.style.setProperty('justify-content', 'center', 'important');
+          parent.style.setProperty('width', '100%', 'important');
+          console.log('Applied mobile centering fix to camera button parent');
+        }
+      }, 150); // Slightly longer delay
+    }
+
     return () => {
       if (scannerRef.current) {
         scannerRef.current.clear().catch((err: any) => console.warn('Failed to clear scanner on unmount', err));
         scannerRef.current = null;
       }
     };
-  }, [activeBooth, activeSessionId, onScanSuccess, isKioskMode, scanResult]); // Re-init when scanner context changes
+  }, [activeBooth, activeSessionId, onScanSuccess, isKioskMode, scanResult, isMobile]); // Re-init when scanner context changes
 
   const handleManualSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -626,8 +641,11 @@ const QRScannerPage: React.FC = () => {
             </div>
           )}
 
-          {/* Bottom Controls - Increased padding to prevent footer overlap */}
-          <div className="bg-gradient-to-t from-black/90 to-transparent p-4 pb-40 safe-area-bottom relative z-10">
+          {/* Bottom Controls - CRITICAL: Inline style for padding since Tailwind pb-48 not working */}
+          <div
+            className="bg-gradient-to-t from-black/90 to-transparent p-4 safe-area-bottom relative z-10"
+            style={{ paddingBottom: '12rem' }}
+          >
             {/* Manual Entry Form */}
             <form onSubmit={handleManualSubmit} className="space-y-3 max-w-md mx-auto">
               <Input
