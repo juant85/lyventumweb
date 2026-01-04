@@ -19,6 +19,7 @@ import { MobileEventSwitcher } from './navigation';
 import BottomSheet from '../ui/BottomSheet';
 import { useDarkMode } from '../../hooks/useDarkMode';
 import QuickProfileMenu from './QuickProfileMenu';
+import { useNotifications } from '../../contexts/NotificationContext';
 
 interface MobileLayoutProps {
     children: ReactNode;
@@ -122,6 +123,10 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
     const isSuperAdmin = currentUser?.role === 'superadmin';
     const { isDarkMode, toggle: toggleDarkMode } = useDarkMode();
 
+    // Notification state - show prompt when user has permission but isn't subscribed
+    const { isSupported, hasPermission, isSubscribed } = useNotifications();
+    const showNotificationPrompt = isSupported && hasPermission && !isSubscribed;
+
     const getHeaderMode = (): HeaderMode => {
         if (scrollY < 50) return 'expanded';
         if (scrollDirection === 'down') return 'hidden';
@@ -216,12 +221,15 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
                                     name={currentUser.username || currentUser.email || 'User'}
                                     size="sm"
                                 />
-                                {/* Notification pulse indicator - can be connected to a notifications context */}
-                                <motion.div
-                                    animate={{ scale: [1, 1.2, 1] }}
-                                    transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-                                    className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-gradient-to-br from-red-500 to-rose-600 rounded-full border-2 border-white dark:border-slate-900 shadow-lg shadow-red-500/50"
-                                />
+                                {/* Notification pulse indicator - shows when notifications not enabled */}
+                                {showNotificationPrompt && (
+                                    <motion.div
+                                        animate={{ scale: [1, 1.2, 1] }}
+                                        transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
+                                        className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-gradient-to-br from-red-500 to-rose-600 rounded-full border-2 border-white dark:border-slate-900 shadow-lg shadow-red-500/50"
+                                        title="Enable notifications"
+                                    />
+                                )}
                             </div>
                             <div className="hidden xs:flex flex-col">
                                 <span className="text-xs font-semibold text-slate-800 dark:text-white leading-tight truncate max-w-[80px]">
