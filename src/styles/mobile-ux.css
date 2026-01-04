@@ -86,10 +86,22 @@ input[type="radio"] {
   padding-right: env(safe-area-inset-right);
 }
 
-/* Improve mobile scrolling */
+/* Premium mobile scrolling - iOS elastic bounce */
 .mobile-scroll {
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
+  overscroll-behavior: auto;
+  /* Enable iOS bounce */
+}
+
+/* Global smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Enable bounce on main content container */
+body {
+  overscroll-behavior-y: auto;
 }
 
 /* Loading skeleton improvements */
