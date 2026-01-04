@@ -465,7 +465,7 @@ const EventManagementDashboard: React.FC = () => {
                 {/* Quick Actions FAB with Bottom Sheet */}
                 <QuickActionsFAB
                     actions={[
-                        { icon: 'settings', label: 'Customize Actions', description: 'Add or remove quick actions', color: 'warning', onClick: () => setIsCustomizing(true) },
+                        { icon: 'settings', label: 'Edit Shortcuts', description: 'Customize dashboard shortcuts', color: 'warning', onClick: () => setIsCustomizing(true) },
                         { icon: 'calendar', label: 'New Session', description: 'Create event session', color: 'primary', onClick: () => navigate('/sessions/new') },
                         { icon: 'users', label: 'Add Attendee', description: 'Register participant', color: 'success', onClick: () => navigate('/attendees/add') },
                         { icon: 'scan', label: 'Quick Scan', description: 'Open QR scanner', color: 'secondary', onClick: () => navigate(AppRoute.QRScanner) }

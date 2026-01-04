@@ -110,7 +110,7 @@ const DashboardCustomizer: React.FC<DashboardCustomizerProps> = ({
             <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
                 <div className="flex items-center gap-2">
                     <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-                        Quick Actions
+                        ⚡ Shortcuts
                     </h2>
                     {/* Mobile hint badge */}
                     {isMobile && !isEditing && enabledCards.length > 0 && (
