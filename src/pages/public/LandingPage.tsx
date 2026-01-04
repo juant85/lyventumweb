@@ -671,11 +671,9 @@ const LandingPage: React.FC = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{
-                  type: "spring",
-                  stiffness: 100,
-                  damping: 20,
-                  mass: 1,
-                  delay: index * 0.1
+                  duration: 0.4,
+                  ease: [0.25, 0.46, 0.45, 0.94],
+                  delay: index * 0.08
                 }}
                 className="group relative p-6 md:p-8 rounded-3xl
                            bg-gradient-to-br from-slate-800/40 via-slate-800/30 to-slate-900/40
