@@ -59,7 +59,7 @@ const MobileAttendeeForm: React.FC = () => {
 
             <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 shadow-sm border border-slate-100 dark:border-slate-700 space-y-4">
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                    <div className="flex gap-3">
+                    <div className="flex flex-col sm:flex-row gap-3">
                         <Input
                             label="First Name *"
                             name="firstName"
@@ -67,6 +67,7 @@ const MobileAttendeeForm: React.FC = () => {
                             onChange={handleChange}
                             placeholder="John"
                             className="text-base"
+                            wrapperClassName="flex-1 min-w-0"
                             required
                         />
                         <Input
@@ -76,6 +77,7 @@ const MobileAttendeeForm: React.FC = () => {
                             onChange={handleChange}
                             placeholder="Doe"
                             className="text-base"
+                            wrapperClassName="flex-1 min-w-0"
                             required
                         />
                     </div>

@@ -18,7 +18,7 @@ import { useLanguage } from '../../../contexts/LanguageContext';
 import { localeKeys } from '../../../i18n/locales';
 import { generateMetricTrendData } from '../../../utils/trendCalculations';
 import PullToRefreshIndicator from '../PullToRefreshIndicator';
-import QuickActions from '../../dashboard/QuickActions';
+import DashboardCustomizer from '../../dashboard/DashboardCustomizer';
 
 /**
  * Universal Event Management Dashboard for Mobile
@@ -38,6 +38,9 @@ const EventManagementDashboard: React.FC = () => {
 
     const [sessionRegistrations, setSessionRegistrations] = useState<(SessionRegistration & { boothName?: string })[]>([]);
     const [loadingRegistrations, setLoadingRegistrations] = useState(false);
+
+    // State for Quick Actions customization (controlled by FAB)
+    const [isCustomizing, setIsCustomizing] = useState(false);
 
     // Load registrations for live session
     useEffect(() => {
@@ -451,15 +454,18 @@ const EventManagementDashboard: React.FC = () => {
                     </div>
                 )}
 
-                {/* Quick Actions - Dynamic from useDashboardPreferences */}
+                {/* Quick Actions - Dynamic from useDashboardPreferences with Edit/Customize */}
                 <MobileContentContainer className="mb-6">
-                    <h2 className="text-lg font-bold mb-4 text-slate-900 dark:text-white">{t(localeKeys.quickActions)}</h2>
-                    <QuickActions />
+                    <DashboardCustomizer
+                        externalIsEditing={isCustomizing}
+                        onEditChange={setIsCustomizing}
+                    />
                 </MobileContentContainer>
 
                 {/* Quick Actions FAB with Bottom Sheet */}
                 <QuickActionsFAB
                     actions={[
+                        { icon: 'settings', label: 'Customize Actions', description: 'Add or remove quick actions', color: 'warning', onClick: () => setIsCustomizing(true) },
                         { icon: 'calendar', label: 'New Session', description: 'Create event session', color: 'primary', onClick: () => navigate('/sessions/new') },
                         { icon: 'users', label: 'Add Attendee', description: 'Register participant', color: 'success', onClick: () => navigate('/attendees/add') },
                         { icon: 'scan', label: 'Quick Scan', description: 'Open QR scanner', color: 'secondary', onClick: () => navigate(AppRoute.QRScanner) }

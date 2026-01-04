@@ -30,6 +30,7 @@ const MobileCard: React.FC<MobileCardProps> = ({
                 rounded-2xl 
                 p-5 
                 shadow-mobile-md 
+                overflow-hidden
                 ${onClick ? 'cursor-pointer touch-feedback active:shadow-mobile-lg' : ''}
                 ${className}
             `}
@@ -41,14 +42,14 @@ const MobileCard: React.FC<MobileCardProps> = ({
                     </div>
                 )}
                 <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-1">
-                        <h3 className="font-semibold text-base leading-snug text-slate-900 dark:text-white truncate">
+                    <div className="flex items-center justify-between mb-1 gap-2">
+                        <h3 className="font-semibold text-base leading-snug text-slate-900 dark:text-white truncate break-words">
                             {title}
                         </h3>
                         {badge}
                     </div>
                     {subtitle && (
-                        <p className="text-sm leading-relaxed text-slate-500 dark:text-slate-400 truncate">
+                        <p className="text-sm leading-relaxed text-slate-500 dark:text-slate-400 truncate break-words">
                             {subtitle}
                         </p>
                     )}

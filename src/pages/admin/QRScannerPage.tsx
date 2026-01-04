@@ -574,12 +574,14 @@ const QRScannerPage: React.FC = () => {
                 {/* Scanner injection container */}
                 <div className="absolute inset-0 rounded-3xl overflow-hidden">
                   <style>{`
+                    /* QR Scanner Container - Full centering */
                     #qr-scanner-container { 
                       width: 100% !important; 
                       height: 100% !important; 
                       display: flex !important; 
-                      justify-content: center; 
-                      align-items: center; 
+                      flex-direction: column !important;
+                      justify-content: center !important; 
+                      align-items: center !important; 
                     }
                     #qr-scanner-container video { 
                       object-fit: cover !important; 
@@ -588,23 +590,58 @@ const QRScannerPage: React.FC = () => {
                     }
                     #qr-scanner-container__scan_region { 
                       width: 100% !important; 
-                      min-height: 100% !important; 
-                    }
-                    #qr-scanner-container__dashboard_section_csr { 
-                      text-align: center !important;
+                      min-height: 100% !important;
                       display: flex !important;
                       justify-content: center !important;
                       align-items: center !important;
                     }
+                    /* Dashboard section - Camera permission container */
+                    #qr-scanner-container__dashboard_section_csr { 
+                      width: 100% !important;
+                      text-align: center !important;
+                      display: flex !important;
+                      flex-direction: column !important;
+                      justify-content: center !important;
+                      align-items: center !important;
+                      padding: 2rem !important;
+                    }
                     #qr-scanner-container__dashboard_section_csr span { 
                       display: none !important; 
                     }
-                    /* Camera permission button - centered with transform */
+                    /* All divs inside dashboard section - ensure centering */
+                    #qr-scanner-container__dashboard_section_csr > div,
+                    #qr-scanner-container__dashboard_section_csr > div > div {
+                      width: 100% !important;
+                      display: flex !important;
+                      flex-direction: column !important;
+                      justify-content: center !important;
+                      align-items: center !important;
+                    }
+                    /* Camera permission button - Premium centered styling */
                     #html5-qrcode-button-camera-permission {
                       position: relative !important;
-                      left: 50% !important;
-                      transform: translateX(-50%) !important;
-                      margin: 0 !important;
+                      left: auto !important;
+                      right: auto !important;
+                      transform: none !important;
+                      margin: 1rem auto !important;
+                      display: block !important;
+                      padding: 1rem 2rem !important;
+                      font-size: 1rem !important;
+                      font-weight: 600 !important;
+                      background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
+                      color: white !important;
+                      border: none !important;
+                      border-radius: 12px !important;
+                      cursor: pointer !important;
+                      transition: all 0.2s ease !important;
+                      box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.4) !important;
+                    }
+                    #html5-qrcode-button-camera-permission:hover {
+                      transform: translateY(-2px) !important;
+                      box-shadow: 0 6px 20px 0 rgba(59, 130, 246, 0.5) !important;
+                    }
+                    #html5-qrcode-button-camera-permission:active {
+                      transform: translateY(0) !important;
                     }
                   `}</style>
                   <div id="qr-scanner-container" className="w-full h-full"></div>

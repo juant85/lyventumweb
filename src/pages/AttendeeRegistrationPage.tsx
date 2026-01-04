@@ -334,75 +334,93 @@ const AttendeeRegistrationPage: React.FC = () => {
                 <>
                     <Card title="Step 2: Map Columns" icon={<TableCellsIcon className="w-6 h-6 text-primary-600" />}>
                         <p className="text-sm text-gray-600 dark:text-slate-300 mb-4">Match columns from your file. <strong>First Name, Last Name, and Organization</strong> must be mapped. Other columns can be imported as custom fields or ignored.</p>
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-sm">
-                                <thead className="bg-slate-100 dark:bg-slate-700">
-                                    <tr>
-                                        <th className="p-2 text-left font-semibold text-slate-600 dark:text-slate-300">Your File Header</th><th className="p-2 text-left font-semibold text-slate-600 dark:text-slate-300">Map to Field</th><th className="p-2 text-left font-semibold text-slate-600 dark:text-slate-300">Data Preview</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {fileHeaders.map(header => (
-                                        <tr key={header} className="border-b border-slate-100 dark:border-slate-700">
-                                            <td className="p-2 font-medium text-slate-800 dark:text-slate-200">{header}</td>
-                                            <td className="p-2 align-top">
-                                                <div className="flex flex-col gap-2">
-                                                    <Select
-                                                        value={columnMapping[header]?.type || IGNORE_FIELD}
-                                                        onChange={(e) => handleMappingChange(header, e.target.value)}
-                                                        options={[...KNOWN_FIELDS.map(f => ({ value: f.value, label: f.label, disabled: Object.values(columnMapping).some(m => (m as ColumnMapInfo).type === f.value) && (columnMapping[header] as ColumnMapInfo)?.type !== f.value })), { value: CUSTOM_FIELD, label: 'Custom Field' }, { value: IGNORE_FIELD, label: 'Ignore this column' }]}
-                                                        wrapperClassName="!mb-0" className="text-xs !py-1"
-                                                    />
-                                                    {columnMapping[header]?.type === CUSTOM_FIELD && <Input placeholder="Enter custom field name" value={columnMapping[header]?.customFieldName || ''} onChange={(e) => handleCustomNameChange(header, e.target.value)} wrapperClassName="!mb-0" className="!py-1 text-xs" aria-label={`Custom field name for ${header}`} />}
-                                                </div>
-                                            </td>
-                                            <td className="p-2 text-slate-500 dark:text-slate-400 italic truncate max-w-xs align-top" title={String(originalParsedData[0]?.[header] || '')}>{String(originalParsedData[0]?.[header] || '')}</td>
+                        <div className="relative">
+                            {/* Mobile scroll hint */}
+                            <div className="md:hidden text-xs text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1">
+                                <span>👆</span> Scroll horizontally to see all columns
+                            </div>
+                            {/* Scroll container with fade indicator */}
+                            <div className="overflow-x-auto">
+                                {/* Right scroll fade indicator */}
+                                <div className="absolute right-0 top-8 bottom-0 w-8 bg-gradient-to-l from-white dark:from-slate-800 to-transparent pointer-events-none z-10 md:hidden" />
+                                <table className="w-full text-sm">
+                                    <thead className="bg-slate-100 dark:bg-slate-700">
+                                        <tr>
+                                            <th className="p-2 text-left font-semibold text-slate-600 dark:text-slate-300">Your File Header</th><th className="p-2 text-left font-semibold text-slate-600 dark:text-slate-300">Map to Field</th><th className="p-2 text-left font-semibold text-slate-600 dark:text-slate-300">Data Preview</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {fileHeaders.map(header => (
+                                            <tr key={header} className="border-b border-slate-100 dark:border-slate-700">
+                                                <td className="p-2 font-medium text-slate-800 dark:text-slate-200">{header}</td>
+                                                <td className="p-2 align-top">
+                                                    <div className="flex flex-col gap-2">
+                                                        <Select
+                                                            value={columnMapping[header]?.type || IGNORE_FIELD}
+                                                            onChange={(e) => handleMappingChange(header, e.target.value)}
+                                                            options={[...KNOWN_FIELDS.map(f => ({ value: f.value, label: f.label, disabled: Object.values(columnMapping).some(m => (m as ColumnMapInfo).type === f.value) && (columnMapping[header] as ColumnMapInfo)?.type !== f.value })), { value: CUSTOM_FIELD, label: 'Custom Field' }, { value: IGNORE_FIELD, label: 'Ignore this column' }]}
+                                                            wrapperClassName="!mb-0" className="text-xs !py-1"
+                                                        />
+                                                        {columnMapping[header]?.type === CUSTOM_FIELD && <Input placeholder="Enter custom field name" value={columnMapping[header]?.customFieldName || ''} onChange={(e) => handleCustomNameChange(header, e.target.value)} wrapperClassName="!mb-0" className="!py-1 text-xs" aria-label={`Custom field name for ${header}`} />}
+                                                    </div>
+                                                </td>
+                                                <td className="p-2 text-slate-500 dark:text-slate-400 italic truncate max-w-xs align-top" title={String(originalParsedData[0]?.[header] || '')}>{String(originalParsedData[0]?.[header] || '')}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </Card>
 
                     <Card title={`Step 3: Review & Edit Data (${editableData.length} records)`}>
                         <p className="text-sm text-gray-600 dark:text-slate-300 mb-4">Review and edit the parsed attendee data. Add any missing information. All required fields (marked with *) must be filled for every row before importing.</p>
-                        <div className="overflow-x-auto max-h-[70vh]">
-                            <table className="w-full text-sm">
-                                <thead className="bg-slate-100 dark:bg-slate-700 sticky top-0 z-10">
-                                    <tr>
-                                        {reviewColumns.map(col => (
-                                            <th key={col.key} className="p-2 text-left font-semibold text-slate-600 dark:text-slate-300">
-                                                {col.label}
-                                                {Object.keys(FINAL_IMPORT_REQUIRED_FIELDS).includes(col.key) && <span className="text-red-500 ml-1">*</span>}
-                                            </th>
-                                        ))}
-                                        <th className="p-2 text-left font-semibold text-slate-600 dark:text-slate-300">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {editableData.map((row) => (
-                                        <tr key={row._tempId} className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50">
+                        <div className="relative">
+                            {/* Mobile scroll hint */}
+                            <div className="md:hidden text-xs text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1">
+                                <span>👆</span> Scroll horizontally to see all columns & edit data
+                            </div>
+                            {/* Scroll container */}
+                            <div className="overflow-x-auto max-h-[70vh]">
+                                {/* Right scroll fade indicator */}
+                                <div className="absolute right-0 top-8 bottom-0 w-8 bg-gradient-to-l from-white dark:from-slate-800 to-transparent pointer-events-none z-20 md:hidden" />
+                                <table className="w-full text-sm">
+                                    <thead className="bg-slate-100 dark:bg-slate-700 sticky top-0 z-10">
+                                        <tr>
                                             {reviewColumns.map(col => (
-                                                <td key={`${row._tempId}-${col.key}`} className="p-1">
-                                                    <Input
-                                                        id={`review-${row._tempId}-${col.key}`}
-                                                        value={String(row[col.key] || '')}
-                                                        onChange={(e) => handleDataChange(row._tempId, col.key, e.target.value)}
-                                                        wrapperClassName="!mb-0"
-                                                        className="!py-1 text-xs bg-white dark:bg-slate-800"
-                                                        error={validationErrors.has(row._tempId) && validationErrors.get(row._tempId)!.has(col.key) ? 'Required' : undefined}
-                                                    />
-                                                </td>
+                                                <th key={col.key} className="p-2 text-left font-semibold text-slate-600 dark:text-slate-300">
+                                                    {col.label}
+                                                    {Object.keys(FINAL_IMPORT_REQUIRED_FIELDS).includes(col.key) && <span className="text-red-500 ml-1">*</span>}
+                                                </th>
                                             ))}
-                                            <td className="p-1 text-center">
-                                                <Button size="sm" variant="link" onClick={() => handleDeleteRow(row._tempId)} className="text-accent-500" title="Delete Row"><TrashIcon className="w-4 h-4" /></Button>
-                                            </td>
+                                            <th className="p-2 text-left font-semibold text-slate-600 dark:text-slate-300">Actions</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {editableData.map((row) => (
+                                            <tr key={row._tempId} className="border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50">
+                                                {reviewColumns.map(col => (
+                                                    <td key={`${row._tempId}-${col.key}`} className="p-1">
+                                                        <Input
+                                                            id={`review-${row._tempId}-${col.key}`}
+                                                            value={String(row[col.key] || '')}
+                                                            onChange={(e) => handleDataChange(row._tempId, col.key, e.target.value)}
+                                                            wrapperClassName="!mb-0"
+                                                            className="!py-1 text-xs bg-white dark:bg-slate-800"
+                                                            error={validationErrors.has(row._tempId) && validationErrors.get(row._tempId)!.has(col.key) ? 'Required' : undefined}
+                                                        />
+                                                    </td>
+                                                ))}
+                                                <td className="p-1 text-center">
+                                                    <Button size="sm" variant="link" onClick={() => handleDeleteRow(row._tempId)} className="text-accent-500" title="Delete Row"><TrashIcon className="w-4 h-4" /></Button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <div className="mt-4 flex justify-between items-center flex-wrap gap-4">
+                        <div className="mt-4 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4">
                             <Button size="sm" variant="neutral" onClick={handleAddRow} leftIcon={<PlusCircleIcon className="w-4 h-4" />}>Add Row</Button>
                             <div title={importButtonTooltip}>
                                 <Button onClick={handleConfirmImport} disabled={!canImport} size="lg">

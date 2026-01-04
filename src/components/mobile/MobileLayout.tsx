@@ -17,6 +17,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { localeKeys } from '../../i18n/locales';
 import { MobileEventSwitcher } from './navigation';
 import BottomSheet from '../ui/BottomSheet';
+import { useDarkMode } from '../../hooks/useDarkMode';
 
 interface MobileLayoutProps {
     children: ReactNode;
@@ -117,6 +118,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
     // Check if we're on the events list page
     const isOnEventsPage = location.pathname === AppRoute.SuperAdminEvents;
     const isSuperAdmin = currentUser?.role === 'superadmin';
+    const { isDarkMode, toggle: toggleDarkMode } = useDarkMode();
 
     const getHeaderMode = (): HeaderMode => {
         if (scrollY < 50) return 'expanded';
@@ -181,23 +183,44 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
                 </div>
 
                 {/* User Display - RIGHT SIDE */}
-                {currentUser && (
-                    <button
-                        onClick={() => setIsMenuOpen(true)}
-                        className="flex items-center gap-2 ml-auto hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg px-2 py-1 -mr-2 transition-colors"
-                        aria-label="Open user menu"
+                <div className="flex items-center gap-1 ml-auto">
+                    {/* Dark Mode Toggle */}
+                    <motion.button
+                        whileTap={{ scale: 0.9 }}
+                        onClick={toggleDarkMode}
+                        className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors text-slate-600 dark:text-slate-300"
+                        aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
                     >
-                        <Avatar
-                            name={currentUser.username || currentUser.email || 'User'}
-                            size="sm"
-                        />
-                        <div className="hidden xs:flex flex-col">
-                            <span className="text-xs font-semibold text-slate-800 dark:text-white leading-tight truncate max-w-[80px]">
-                                {currentUser.username?.split(' ')[0] || currentUser.username || 'User'}
-                            </span>
-                        </div>
-                    </button>
-                )}
+                        <motion.div
+                            key={isDarkMode ? 'moon' : 'sun'}
+                            initial={{ rotate: -90, opacity: 0 }}
+                            animate={{ rotate: 0, opacity: 1 }}
+                            exit={{ rotate: 90, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                        >
+                            <Icon name={isDarkMode ? 'moon' : 'sun'} className="w-5 h-5" />
+                        </motion.div>
+                    </motion.button>
+
+                    {/* User Avatar */}
+                    {currentUser && (
+                        <button
+                            onClick={() => setIsMenuOpen(true)}
+                            className="flex items-center gap-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg px-2 py-1 -mr-2 transition-colors"
+                            aria-label="Open user menu"
+                        >
+                            <Avatar
+                                name={currentUser.username || currentUser.email || 'User'}
+                                size="sm"
+                            />
+                            <div className="hidden xs:flex flex-col">
+                                <span className="text-xs font-semibold text-slate-800 dark:text-white leading-tight truncate max-w-[80px]">
+                                    {currentUser.username?.split(' ')[0] || currentUser.username || 'User'}
+                                </span>
+                            </div>
+                        </button>
+                    )}
+                </div>
             </motion.header>
 
             <AnimatePresence mode="wait">

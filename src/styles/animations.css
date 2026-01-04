@@ -206,6 +206,21 @@
             #1e293b 75%);
 }
 
+/* Tailwind-compatible shimmer animation for skeleton loaders */
+.animate-shimmer {
+    animation: shimmer-slide 1.5s infinite;
+}
+
+@keyframes shimmer-slide {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
 /* Smooth Transitions */
 .transition-smooth {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);

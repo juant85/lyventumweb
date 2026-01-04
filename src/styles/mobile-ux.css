@@ -6,7 +6,7 @@
   min-height: 48px;
   display: flex;
   align-items: center;
-  justify-center: center;
+  justify-content: center;
 }
 
 .touch-target-sm {
@@ -57,7 +57,8 @@ textarea,
 select {
   min-height: 48px;
   padding: 0.75rem;
-  font-size: 16px; /* Prevents zoom on iOS */
+  font-size: 16px;
+  /* Prevents zoom on iOS */
 }
 
 /* Checkbox and radio minimum size */
@@ -93,23 +94,19 @@ input[type="radio"] {
 
 /* Loading skeleton improvements */
 .skeleton {
-  background: linear-gradient(
-    90deg,
-    theme('colors.slate.200') 25%,
-    theme('colors.slate.300') 50%,
-    theme('colors.slate.200') 75%
-  );
+  background: linear-gradient(90deg,
+      theme('colors.slate.200') 25%,
+      theme('colors.slate.300') 50%,
+      theme('colors.slate.200') 75%);
   background-size: 200% 100%;
   animation: loading 1.5s ease-in-out infinite;
 }
 
 .dark .skeleton {
-  background: linear-gradient(
-    90deg,
-    theme('colors.slate.800') 25%,
-    theme('colors.slate.700') 50%,
-    theme('colors.slate.800') 75%
-  );
+  background: linear-gradient(90deg,
+      theme('colors.slate.800') 25%,
+      theme('colors.slate.700') 50%,
+      theme('colors.slate.800') 75%);
   background-size: 200% 100%;
 }
 
@@ -117,6 +114,7 @@ input[type="radio"] {
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }
@@ -135,6 +133,7 @@ input[type="radio"] {
 
 /* High contrast mode support */
 @media (prefers-contrast: high) {
+
   button,
   a {
     border: 2px solid currentColor;
@@ -143,11 +142,66 @@ input[type="radio"] {
 
 /* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* ========================================
+   MOBILE-SPECIFIC UTILITIES
+   ======================================== */
+
+/* Scroll fade indicators for horizontal scroll containers */
+.scroll-fade-right {
+  position: relative;
+}
+
+.scroll-fade-right::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 2rem;
+  background: linear-gradient(to left, var(--bg-color, white), transparent);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.dark .scroll-fade-right::after {
+  --bg-color: theme('colors.slate.800');
+}
+
+/* Mobile card content safety */
+.mobile-card-content {
+  overflow: hidden;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+/* Mobile table wrapper with scroll hint */
+.mobile-table-wrapper {
+  position: relative;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Touch scroll momentum */
+.touch-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+/* Ensure touch targets in mobile forms */
+@media (max-width: 768px) {
+  .mobile-form-input {
+    min-height: 48px !important;
+    font-size: 16px !important;
+    /* Prevents iOS zoom */
   }
 }

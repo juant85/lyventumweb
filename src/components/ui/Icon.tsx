@@ -85,6 +85,10 @@ const iconMap = {
   phone: Lucide.Phone,
   search: Lucide.Search,
   filter: Lucide.Filter,
+
+  // Theme icons
+  sun: Lucide.Sun,
+  moon: Lucide.Moon,
 } as const;
 
 export type IconName = keyof typeof iconMap;
