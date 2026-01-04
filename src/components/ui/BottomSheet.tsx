@@ -15,13 +15,14 @@ const BottomSheet: React.FC<BottomSheetProps> = ({ isOpen, onClose, title, child
         <AnimatePresence>
             {isOpen && (
                 <>
-                    {/* Backdrop */}
+                    {/* Backdrop - Premium blur effect */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
                         onClick={onClose}
-                        className="fixed inset-0 bg-black/60 z-50 backdrop-blur-sm"
+                        className="fixed inset-0 bg-gradient-to-t from-black/70 via-black/50 to-black/40 z-50 backdrop-blur-md"
                     />
 
                     {/* Sheet */}
