@@ -89,6 +89,11 @@ const iconMap = {
   // Theme icons
   sun: Lucide.Sun,
   moon: Lucide.Moon,
+
+  // Kiosk mode icons
+  monitor: Lucide.Monitor,
+  tablet: Lucide.Tablet,
+  maximize: Lucide.Maximize,
 } as const;
 
 export type IconName = keyof typeof iconMap;

@@ -527,14 +527,15 @@ const QRScannerPage: React.FC = () => {
                 )}
               </div>
               <div className="flex items-center gap-2">
-                {/* Kiosk Mode Toggle - NEW */}
+                {/* Kiosk Mode Toggle - Improved with label */}
                 {activeBooth && (
                   <button
                     onClick={handleToggleKioskMode}
-                    className="min-h-[44px] min-w-[44px] bg-primary-500/80 hover:bg-primary-600/80 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-colors"
+                    className="min-h-[44px] px-4 bg-gradient-to-r from-primary-500/90 to-indigo-500/90 hover:from-primary-600/90 hover:to-indigo-600/90 backdrop-blur-sm rounded-full flex items-center gap-2 text-white transition-all shadow-lg shadow-primary-500/30"
                     aria-label="Toggle Kiosk Mode"
                   >
-                    <Icon name="grid" size={20} />
+                    <Icon name="monitor" size={18} />
+                    <span className="text-sm font-semibold">Kiosk</span>
                   </button>
                 )}
                 <button
@@ -656,6 +657,29 @@ const QRScannerPage: React.FC = () => {
                     }
                     #html5-qrcode-button-camera-permission:active {
                       transform: translateY(0) !important;
+                    }
+                    /* Zoom slider - subtle positioning */
+                    #qr-scanner-container input[type="range"] {
+                      position: fixed !important;
+                      bottom: 180px !important;
+                      left: 50% !important;
+                      transform: translateX(-50%) !important;
+                      width: 40% !important;
+                      max-width: 150px !important;
+                      height: 6px !important;
+                      opacity: 0.7 !important;
+                      border-radius: 6px !important;
+                      background: rgba(255,255,255,0.3) !important;
+                      z-index: 100 !important;
+                    }
+                    #qr-scanner-container input[type="range"]::-webkit-slider-thumb {
+                      appearance: none !important;
+                      width: 20px !important;
+                      height: 20px !important;
+                      background: white !important;
+                      border-radius: 50% !important;
+                      box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+                      cursor: pointer !important;
                     }
                   `}</style>
                   <div id="qr-scanner-container" className="w-full h-full"></div>
