@@ -512,9 +512,9 @@ const QRScannerPage: React.FC = () => {
   // ══════════════════════════════════════════════════════════════════════════
   if (isMobile) {
     return (
-      <div className="fixed inset-0 bg-black z-50">
+      <div className="fixed inset-0 bg-black z-50 overflow-y-auto">
         {/* Camera View */}
-        <div className="relative h-full flex flex-col">
+        <div className="relative min-h-full flex flex-col">
           {/* Compact Header */}
           <div className="bg-gradient-to-b from-black/80 to-transparent p-4 safe-area-top">
             <div className="flex justify-between items-center">
@@ -693,10 +693,10 @@ const QRScannerPage: React.FC = () => {
             </div>
           )}
 
-          {/* Bottom Controls - Balanced padding for footer clearance */}
+          {/* Bottom Controls - Fixed at bottom with proper clearance */}
           <div
-            className="bg-gradient-to-t from-black/90 to-transparent p-4 safe-area-bottom relative z-10"
-            style={{ paddingBottom: '6rem' }}
+            className="bg-gradient-to-t from-black/90 via-black/70 to-transparent p-4 pb-safe relative z-10"
+            style={{ paddingBottom: 'max(8rem, calc(env(safe-area-inset-bottom) + 6rem))' }}
           >
             {/* Manual Entry Form */}
             <form onSubmit={handleManualSubmit} className="space-y-3 max-w-md mx-auto">
