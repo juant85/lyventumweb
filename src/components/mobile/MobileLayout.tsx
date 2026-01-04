@@ -236,11 +236,11 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
             <AnimatePresence mode="wait">
                 <motion.main
                     key={location.pathname} // Triggers animation on route change
-                    initial={{ opacity: 0, x: 10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -10 }}
-                    transition={{ duration: 0.25, ease: "easeOut" }}
-                    className="transition-all duration-300"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    className="px-4 sm:px-6"
                     style={{ paddingTop: `${headerHeight + 16}px` }}
                 >
                     <MobileErrorBoundary>

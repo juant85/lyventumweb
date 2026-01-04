@@ -67,31 +67,25 @@ const StatsCard: React.FC<StatsCardProps> = ({ icon, label, value, trend, color,
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ scale: 1.02 }}
+      transition={{ duration: 0.3, delay, ease: [0.25, 0.46, 0.45, 0.94] }}
       className="group"
     >
-      <div className={`p-6 rounded-xl bg-gradient-to-br ${colorMap[color]} border border-slate-700/50 hover:border-${color}-500/50 transition-all duration300`}>
+      <div className={`p-4 sm:p-6 rounded-xl bg-gradient-to-br ${colorMap[color]} border border-slate-700/50 hover:border-slate-600/60 transition-colors duration-200`}>
         <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <p className="text-sm font-medium text-slate-400 mb-2">{label}</p>
-            <motion.p
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: delay + 0.2 }}
-              className="text-4xl font-bold text-white font-montserrat"
-            >
+          <div className="flex-1 min-w-0">
+            <p className="text-xs sm:text-sm font-medium text-slate-400 mb-1 sm:mb-2 truncate">{label}</p>
+            <p className="text-2xl sm:text-4xl font-bold text-white font-montserrat truncate">
               {value}
-            </motion.p>
+            </p>
             {trend && (
-              <p className="text-xs text-green-400 mt-2">
+              <p className="text-xs text-green-400 mt-1 sm:mt-2">
                 {trend}
               </p>
             )}
           </div>
-          <div className={`p-3 rounded-lg bg-slate-800/50 ${iconColorMap[color]} group-hover:scale-110 transition-transform duration-300`}>
+          <div className={`p-2 sm:p-3 rounded-lg bg-slate-800/50 ${iconColorMap[color]} flex-shrink-0`}>
             {icon}
           </div>
         </div>
