@@ -18,6 +18,7 @@ import { localeKeys } from '../../i18n/locales';
 import { MobileEventSwitcher } from './navigation';
 import BottomSheet from '../ui/BottomSheet';
 import { useDarkMode } from '../../hooks/useDarkMode';
+import QuickProfileMenu from './QuickProfileMenu';
 
 interface MobileLayoutProps {
     children: ReactNode;
@@ -114,6 +115,7 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isEventSwitcherOpen, setIsEventSwitcherOpen] = useState(false);
+    const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
     // Check if we're on the events list page
     const isOnEventsPage = location.pathname === AppRoute.SuperAdminEvents;
@@ -202,17 +204,25 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
                         </motion.div>
                     </motion.button>
 
-                    {/* User Avatar */}
+                    {/* User Avatar with notification indicator */}
                     {currentUser && (
                         <button
-                            onClick={() => setIsMenuOpen(true)}
-                            className="flex items-center gap-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg px-2 py-1 -mr-2 transition-colors"
-                            aria-label="Open user menu"
+                            onClick={() => setIsProfileMenuOpen(true)}
+                            className="relative flex items-center gap-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg px-2 py-1 -mr-2 transition-colors"
+                            aria-label="Open profile menu"
                         >
-                            <Avatar
-                                name={currentUser.username || currentUser.email || 'User'}
-                                size="sm"
-                            />
+                            <div className="relative">
+                                <Avatar
+                                    name={currentUser.username || currentUser.email || 'User'}
+                                    size="sm"
+                                />
+                                {/* Notification pulse indicator - can be connected to a notifications context */}
+                                <motion.div
+                                    animate={{ scale: [1, 1.2, 1] }}
+                                    transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
+                                    className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-gradient-to-br from-red-500 to-rose-600 rounded-full border-2 border-white dark:border-slate-900 shadow-lg shadow-red-500/50"
+                                />
+                            </div>
                             <div className="hidden xs:flex flex-col">
                                 <span className="text-xs font-semibold text-slate-800 dark:text-white leading-tight truncate max-w-[80px]">
                                     {currentUser.username?.split(' ')[0] || currentUser.username || 'User'}
@@ -257,6 +267,16 @@ const MobileLayout: React.FC<MobileLayoutProps> = ({ children }) => {
                 onClose={() => setIsEventSwitcherOpen(false)}
                 onEventSelect={(eventId) => setSelectedEventId(eventId)}
                 onCreateEvent={() => navigate(AppRoute.SuperAdminEvents)}
+            />
+
+            {/* Quick Profile Menu - Opens on avatar click */}
+            <QuickProfileMenu
+                isOpen={isProfileMenuOpen}
+                onClose={() => setIsProfileMenuOpen(false)}
+                onOpenFullMenu={() => {
+                    setIsProfileMenuOpen(false);
+                    setIsMenuOpen(true);
+                }}
             />
 
             {/* BottomSheet removed - More button now directly opens sidebar */}
