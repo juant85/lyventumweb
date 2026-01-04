@@ -581,7 +581,8 @@ const QRScannerPage: React.FC = () => {
                       display: flex !important; 
                       flex-direction: column !important;
                       justify-content: center !important; 
-                      align-items: center !important; 
+                      align-items: center !important;
+                      overflow: visible !important;
                     }
                     #qr-scanner-container video { 
                       object-fit: cover !important; 
@@ -594,16 +595,29 @@ const QRScannerPage: React.FC = () => {
                       display: flex !important;
                       justify-content: center !important;
                       align-items: center !important;
+                      overflow: visible !important;
                     }
-                    /* Dashboard section - Camera permission container */
+                    /* Dashboard section - Camera permission container - FIXED */
                     #qr-scanner-container__dashboard_section_csr { 
-                      width: 100% !important;
+                      position: absolute !important;
+                      top: 50% !important;
+                      left: 50% !important;
+                      transform: translate(-50%, -50%) !important;
+                      width: 80% !important;
+                      max-width: 280px !important;
                       text-align: center !important;
                       display: flex !important;
                       flex-direction: column !important;
                       justify-content: center !important;
                       align-items: center !important;
-                      padding: 2rem !important;
+                      padding: 1.5rem !important;
+                      background: rgba(255, 255, 255, 0.95) !important;
+                      border-radius: 20px !important;
+                      box-shadow: 0 10px 40px rgba(0,0,0,0.15) !important;
+                      z-index: 10 !important;
+                    }
+                    .dark #qr-scanner-container__dashboard_section_csr {
+                      background: rgba(30, 41, 59, 0.95) !important;
                     }
                     #qr-scanner-container__dashboard_section_csr span { 
                       display: none !important; 
@@ -619,22 +633,22 @@ const QRScannerPage: React.FC = () => {
                     }
                     /* Camera permission button - Premium centered styling */
                     #html5-qrcode-button-camera-permission {
-                      position: relative !important;
-                      left: auto !important;
-                      right: auto !important;
-                      transform: none !important;
-                      margin: 1rem auto !important;
-                      display: block !important;
-                      padding: 1rem 2rem !important;
-                      font-size: 1rem !important;
+                      width: auto !important;
+                      min-width: 200px !important;
+                      margin: 0.5rem auto !important;
+                      padding: 1rem 1.5rem !important;
+                      font-size: 0.9rem !important;
                       font-weight: 600 !important;
                       background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
                       color: white !important;
                       border: none !important;
-                      border-radius: 12px !important;
+                      border-radius: 14px !important;
                       cursor: pointer !important;
                       transition: all 0.2s ease !important;
                       box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.4) !important;
+                      white-space: normal !important;
+                      text-align: center !important;
+                      line-height: 1.3 !important;
                     }
                     #html5-qrcode-button-camera-permission:hover {
                       transform: translateY(-2px) !important;
